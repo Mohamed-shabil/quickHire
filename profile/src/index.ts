@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import {app} from './app'
-import {AppError} from "@quickhire/common";
+import {AppError} from '@quickhire/common'
 
 const start = async() =>{
     if(!process.env.JWT_KEY){
@@ -14,16 +14,14 @@ const start = async() =>{
 
         await mongoose.connect(process.env.MONGO_URI)
 
-        console.log("[AUTH DB] Database Connected Successfully!")
+        console.log("[PROFILE DB] Database Connected Successfully!")
 
     }catch(err){
-
         console.error(err);
-
     }
     app.listen(3000,()=>{ 
 
-        console.log('[AUTH SERVICE] Listening on port 3000!');
+        console.log('[PROFILE SERVICE] Listening on port 3000!');
     })
 }
 
