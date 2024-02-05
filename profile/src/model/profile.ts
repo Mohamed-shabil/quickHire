@@ -1,6 +1,10 @@
 import mongoose, { Schema, InferSchemaType } from 'mongoose';
 
 const profileSchema = new Schema({
+    userId:{
+        type:String,
+        required:true
+    },
     profileType:{
         type:String,
         enum:['personal','organisation','group']
@@ -8,6 +12,10 @@ const profileSchema = new Schema({
     fullName: {
         type:String,
         required: true,
+    },
+    headline:{
+        type:String,
+        required:true
     },
     email:{
         type: String,
@@ -30,11 +38,11 @@ const profileSchema = new Schema({
         type:String,
         default:''
     },
-    experience:[{
-        organisation: String,
+    organisations:[{
+        name: String,
         startDate: Date,
         endDate: Date,
-        position:"String"
+        position: String
     }],
     education:[{
         school: String,
@@ -54,7 +62,8 @@ const profileSchema = new Schema({
         links:[String]
     }],
     followers:[{
-        type: mongoose.Types.ObjectId
+        type: mongoose.Types.ObjectId,
+        ref:'profile'
     }],
     following:[{
         type: mongoose.Types.ObjectId
@@ -63,7 +72,6 @@ const profileSchema = new Schema({
 })
 
 type Profile = InferSchemaType<typeof profileSchema>
-
-const ProfileModel = mongoose.model('User',profileSchema)
+const ProfileModel = mongoose.model('Profile',profileSchema)
 
 export { ProfileModel }
