@@ -3,6 +3,7 @@ import AppError from "../utils/appError";
 import { UserModel as User } from "../model/user";
 import bcrypt from 'bcryptjs';
 import jwt from "jsonwebtoken";
+import nodemailer from 'nodemailer';
 
 // Signup
 export const signup = async (req:Request, res:Response, next:NextFunction) => {
@@ -35,6 +36,17 @@ export const signup = async (req:Request, res:Response, next:NextFunction) => {
         
         await user.save();
 
+        // Send Otp 
+
+        const transporter = nodemailer.createTransport({
+            service: 'Gmail', 
+            auth: {
+                user: process.env.EMAIL, 
+                pass: process.env.PASSWORD 
+            }
+        })
+
+
         const payload = {
             name:user.name,
             email:user.email,
@@ -47,6 +59,7 @@ export const signup = async (req:Request, res:Response, next:NextFunction) => {
               Date.now() + 30 * 24 * 60 * 60 * 1000
             ),
         };
+
         res.cookie("jwt", token, cookieOptions);
         return res.status(201).json({
             status:"success",
@@ -113,3 +126,4 @@ export const logout = (req:Request, res:Response)=>{
         data: null
     })
 }
+

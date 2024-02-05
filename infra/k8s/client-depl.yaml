@@ -11,10 +11,10 @@ spec:
     metadata:
       labels:
         app: client
-    spec:   
+    spec:
       containers:
         - name: client
-          image: us.gcr.io/quickhire-dev-412913/client
+          image: us.gcr.io/quickhire-dev-412913/client:ca40f2b-dirty
 ---
 apiVersion: v1
 kind: Service

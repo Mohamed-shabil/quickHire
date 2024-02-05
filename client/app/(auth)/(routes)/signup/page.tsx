@@ -54,9 +54,12 @@ export default function Signup() {
     });
 
     const onSubmit = async(values : z.infer<typeof formSchema>)=>{
+        console.log('Form Submitting');
         axios.post('https://quickhire.com/api/users/signup',values).then(res=>{
+            console.log(res);
             return router.push('/')
         }).catch(err=>{
+            console.log(err);
             toast({
                 variant: "destructive",
                 title: err.response.data.error,

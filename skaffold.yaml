@@ -3,21 +3,21 @@ kind: Config
 deploy:
   kubectl:
     manifests:
-      - ./infra/k8s/auth-depl.yaml
+      - ./infra/k8s/*.yaml
 build:
   googleCloudBuild:
     projectId: quickhire-dev-412913
   artifacts:
-    - image: us.gcr.io/quickhire-dev-412913/auth
-      context: auth
+    - image: us.gcr.io/quickhire-dev-412913/profile
+      context: profile
       docker:
         dockerfile: Dockerfile
       sync:
         manual:
           - src: "src/**/*.ts"
             dest: .
-    - image: us.gcr.io/quickhire-dev-412913/profile
-      context: profile
+    - image: us.gcr.io/quickhire-dev-412913/auth
+      context: auth
       docker:
         dockerfile: Dockerfile
       sync:
@@ -30,5 +30,5 @@ build:
         dockerfile: Dockerfile
       sync:
         manual:
-          - src: "src/**/*.ts"
+          - src: "**/*.ts"
             dest: .
