@@ -16,11 +16,21 @@ const userSchema = new Schema({
     password:{
         type:String,
         required:true
+    },
+    resetPasswordToken:{
+        type:String,
+    },
+    resetPasswordExpires:{
+        type: Date,
+    },
+    verified:{
+        type: Boolean,
+        default:false
     }
 })
 
-type User = InferSchemaType<typeof userSchema>
+type UserType = InferSchemaType<typeof userSchema>
 
-const UserModel = mongoose.model('User',userSchema)
+const User = mongoose.model('User',userSchema)
 
-export {UserModel}
+export { User,UserType };

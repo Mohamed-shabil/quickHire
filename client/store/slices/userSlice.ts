@@ -1,6 +1,5 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";import axios from "axios";
-import { root } from "postcss";
-import rootReducer from "../reducers";
+import { createSlice } from "@reduxjs/toolkit";
+
 
 
 const userSlice = createSlice({

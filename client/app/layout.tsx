@@ -4,7 +4,7 @@ import { Inter } from "next/font/google";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import Navabar from '@/components/navbar'
+import { Toaster } from "@/components/ui/toaster"
 import {Providers} from '@/store/provider'
 import store from "@/store/store";
 const inter = Inter({ subsets: ["latin"] });
@@ -29,8 +29,8 @@ export default function RootLayout({
                 disableTransitionOnChange
                 >
               <Providers>
-                <Navabar/>
                 {children}
+                <Toaster />
               </Providers>
           </ThemeProvider>
       </body>
