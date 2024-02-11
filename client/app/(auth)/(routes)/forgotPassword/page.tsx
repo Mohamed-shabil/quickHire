@@ -12,9 +12,11 @@ import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { setClose,setOpen } from "@/store/slices/modalSlice";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/reducers";
 
 const Forgotpassword = () => {
-    const [show,setShow] = useState(false);
+    const [disable,setDisable] = useState(false);
     const dispatch = useDispatch();
     const formSchema = z.object({
         email:z.string().email({
@@ -28,12 +30,16 @@ const Forgotpassword = () => {
         },
         mode:"onTouched"
     });
-    
+
+    const open = useSelector((state:RootState)=>state.modal.open)
+
+
     const onSubmit = async(values : z.infer<typeof formSchema>)=>{
         console.log(values);
         axios.post('http://localhost:3001/api/users/forgotPassword',values).then(res=>{
             console.log(res);
             dispatch(setOpen());
+            setDisable(true);
         }).catch(err=>{
             console.log(err);
         })
@@ -43,7 +49,7 @@ const Forgotpassword = () => {
     
     return (
         <>
-            <AlertModal show={show} title="Reset Password Link Sent" description="a reset password email with a link is send to your account, please check it out!" />
+            <AlertModal  title="Reset Password Link Sent" description="a reset password email with a link is send to your account, please check it out!" />
             <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
                 <div className="mx-auto max-w-lg">
                     <h1 className="text-center text-2xl font-bold text-blue-600 sm:text-3xl">Reset your Password</h1>
@@ -61,14 +67,14 @@ const Forgotpassword = () => {
                                         <p className="text-center text-lg font-medium">Enter your registered Email</p>
                                         <FormLabel className="sr-only"></FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Email" {...field} />
+                                                <Input placeholder="Email" disabled={disable} {...field} />
                                             </FormControl>
                                         <FormMessage />
                                     </FormItem>
                             )}
                             />
                             <Button
-                                disabled={isLoading} 
+                                disabled={isLoading || disable} 
                                 type="submit"
                                 className="block w-full rounded-lg bg-blue-600 px-5 py-3 text-sm font-medium text-white"
                             >

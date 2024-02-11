@@ -15,6 +15,8 @@ import { forgotPasswordRouter } from './routes/forgotPassword';
 import { resentOtpRouter } from './routes/resendOtp';
 import { verifyOtpRouter } from './routes/verifyOtp';
 import { resetPasswordRouter } from './routes/resetPassword';
+import session from 'express-session'
+import passport from 'passport';
 
 export const app = express();
 
@@ -33,6 +35,12 @@ app.set('trust proxy',true);
 
 app.use(json());
 
+app.use(session({
+    secret : process.env.SESSSION_SECRET!,
+    saveUninitialized: true,
+    resave: true
+}));
+
 app.use(urlencoded({ extended: true }))
 
 app.use(cookieParser());
@@ -40,6 +48,8 @@ app.use(cookieParser());
 app.use(morgan('dev'));
 
 app.use(currentUser);
+
+app.use(passport.initialize());
 
 app.use(signupRouter);
 app.use(verifyOtpRouter);

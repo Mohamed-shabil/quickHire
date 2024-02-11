@@ -11,15 +11,12 @@ const profileSchema = new Schema({
     },
     fullName: {
         type:String,
-        required: true,
     },
     headline:{
         type:String,
-        required:true
     },
     email:{
         type: String,
-        required:true,
         unique:true
     },
     username:{
@@ -38,40 +35,41 @@ const profileSchema = new Schema({
         type:String,
         default:''
     },
-    organisations:[{
-        name: String,
+    experience:[{
+        companyName: String,
         startDate: Date,
         endDate: Date,
         position: String
     }],
     education:[{
         school: String,
-        startDate: Date,
-        endDate: Date,
+        startDate: String,
+        endDate: String,
         degree: String,
         grade : String
     }],
     projects:[{
         projectName:String,
         description: String,
-        Skills: [String],
+        skills: [String],
         currentlyWorkingOn:Boolean,
-        startDate:Date,
-        endDate:Date,
+        startDate: String,
+        endDate: String,
         image:String,
         links:[String]
     }],
     followers:[{
-        type: mongoose.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref:'profile'
     }],
     following:[{
-        type: mongoose.Types.ObjectId
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'profile'
     }]
-
 })
 
 type Profile = InferSchemaType<typeof profileSchema>
+
 const ProfileModel = mongoose.model('Profile',profileSchema)
 
-export { ProfileModel }
+export { ProfileModel as Profile };

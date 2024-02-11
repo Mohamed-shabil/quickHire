@@ -14,13 +14,12 @@ import { setClose } from "@/store/slices/modalSlice";
 import { useDispatch,useSelector } from "react-redux"; 
 
 interface alertModalProps{
-    show:boolean;
     title:string;
     description:string;
 }
 
 
-const AlertModal = ({show,title,description,}:alertModalProps) => {
+const AlertModal = ({title,description,}:alertModalProps) => {
     const dispatch = useDispatch();
     const onClose =()=>{
         dispatch(setClose());

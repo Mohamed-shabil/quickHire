@@ -27,7 +27,7 @@ async(req:Request,res:Response)=>{
             throw new BadRequestError('Account does not exist')
         }
 
-        const isValidPassword = await bcrypt.compare(password,existingUser.password);
+        const isValidPassword = await bcrypt.compare(password,existingUser.password!);
 
         const payload = {
             _id:existingUser._id,

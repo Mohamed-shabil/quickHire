@@ -11,11 +11,9 @@ const userSchema = new Schema({
     },
     phone:{
         type:String,
-        required: true
     },
     password:{
         type:String,
-        required:true
     },
     resetPasswordToken:{
         type:String,

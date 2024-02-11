@@ -1,21 +1,23 @@
 "use client"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import axios from "axios";
+import {useDispatch } from "react-redux";
+import { setUserData } from '@/store/slices/userSlice'
+
+import { Separator } from "@/components/ui/separator";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import axios from "axios";
 import { toast, useToast } from "@/components/ui/use-toast";
 import { Check, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {useDispatch } from "react-redux";
-import { setUserData } from '@/store/slices/userSlice'
-import { useRouter } from "next/navigation";
 
 export default function Signup() {
     const [show,setShow] = useState(false);
@@ -81,10 +83,18 @@ export default function Signup() {
             
         })
     }
+    const googleAuth = ()=>{
+        axios.get('http://localhost:3001/api/users/oauth/google').then(res=>{
+            console.log('res:', res);
+
+        }).catch(err=>{
+            console.log(err);
+        })
+    }
     const isLoading = form.formState.isSubmitting;
 
   return (
-    <section className="bg-white">
+    <section className="w-full">
         <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
             <aside className="relative block h-16 lg:order-last lg:col-span-5 lg:h-full xl:col-span-6">
                 <Image
@@ -112,7 +122,14 @@ export default function Signup() {
                     Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eligendi nam dolorum aliquam,
                     quibusdam aperiam voluptatum.
                 </p>
-
+                <div className="col-span-6 flex items-center justify-center py-7 ">
+                    <Link href={'/api/auth/signin'}>
+                        <Button variant={"secondary"} onClick={googleAuth} className="w-full max-w-60 border gap-2">
+                            <Image src={'/google.png'} alt={"google"} width={20} height={20}/>
+                            Signin with Google
+                        </Button>
+                    </Link>
+                </div>
                 <Form {...form} >
                     <form onSubmit={form.handleSubmit(onSubmit)} className="mt-8 grid grid-cols-6 gap-6">
                         <div className="col-span-6 sm:col-span-3">
