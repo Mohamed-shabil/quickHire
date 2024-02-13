@@ -122,14 +122,14 @@ export default function Signup() {
                     Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eligendi nam dolorum aliquam,
                     quibusdam aperiam voluptatum.
                 </p>
-                <div className="col-span-6 flex items-center justify-center py-7 ">
+                {/* <div className="col-span-6 flex items-center justify-center py-7 ">
                     <Link href={'/api/auth/signin'}>
                         <Button variant={"secondary"} onClick={googleAuth} className="w-full max-w-60 border gap-2">
                             <Image src={'/google.png'} alt={"google"} width={20} height={20}/>
                             Signin with Google
                         </Button>
                     </Link>
-                </div>
+                </div> */}
                 <Form {...form} >
                     <form onSubmit={form.handleSubmit(onSubmit)} className="mt-8 grid grid-cols-6 gap-6">
                         <div className="col-span-6 sm:col-span-3">
@@ -245,7 +245,7 @@ export default function Signup() {
                             />
                         </div>
 
-                        <div className="col-span-6">
+                        {/* <div className="col-span-6">
                             <div className="grid grid-cols-2 gap-4">
                                 <FormField
                                     name="OtpMethod"
@@ -282,7 +282,7 @@ export default function Signup() {
                                     )}
                                 />
                             </div>
-                        </div>
+                        </div> */}
                         <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
                             <Button
                                 type="submit"

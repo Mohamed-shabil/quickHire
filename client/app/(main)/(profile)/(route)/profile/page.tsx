@@ -1,20 +1,9 @@
 "use client";
-import { Input } from "@/components/ui/input";
-import { toast } from "@/components/ui/use-toast";
-import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
-import router from "next/router";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import Image from "next/image";
-import { Separator } from "@/components/ui/separator";
-import Link from "next/link";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
@@ -23,62 +12,30 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
+import { AboutFormModal } from "@/components/Modals/aboutFormModal";
 import { Button } from "@/components/ui/button";
-import { Building2, CalendarClock, Gem, MapPin, MoreVertical, Pencil, Plus, User } from "lucide-react";
+import { MoreVertical, } from "lucide-react";
+import { useSelector,useDispatch } from "react-redux";
+import { setClose,setOpen } from "@/store/slices/modalSlice";
+import { RootState } from "@/store/reducers";
+import axios from "axios";
+import { useEffect } from "react";
 const Profile = () => {
-  const formSchema = z.object({
-    email: z.string().email({
-      message: "Invalid email format",
-    }),
-    password: z.string().min(4, {
-      message: "Password must be 4 characters long",
-    }),
-    name: z.string().min(3, {
-      message: "Username must be 4 characters long",
-    }),
-    phone: z
-      .string()
-      .min(10, {
-        message: "Phone number must be 10 numbers long",
-      })
-      .max(10, {
-        message: "Phone number can't be morethan 10 numbers long",
-      })
-      .refine((value) => !isNaN(Number(value)), {
-        message: "Phone number must be a valid number.",
-      }),
-    ConfirmPassword: z.string().min(4, {
-      message: "Password must be 4 characters long",
-    }),
-  });
-  const form = useForm({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-      name: "",
-      phone: "",
-      ConfirmPassword: "",
-    },
-  });
+  const dispatch = useDispatch();
+  
+  const type = useSelector((state:RootState)=>state.modal.type)
+  axios.defaults.withCredentials = true;
+  
+  useEffect(()=>{
+    axios.get('http://localhost:3002/api/profile/get').then(res=>{
+      console.log(res);
+    });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    axios
-      .post("https://quickhire.com/api/users/signup", values)
-      .then((res) => {
-        return router.push("/");
-      })
-      .catch((err) => {
-        toast({
-          variant: "destructive",
-          title: err.response.data.error,
-        });
-      });
-  };
-  const isLoading = form.formState.isSubmitting;
+  },[])
 
   return (
     <div className="w-full pt-4">
+      <AboutFormModal/>
       <div className="lg:container md:container w-full px-2">
         <Image src={'/coverImage.png'} width={1000} height={300} alt={"cover Image"} className="w-full rounded-t-md"/>
         <div className="flex justify-center flex-col w-full items-center -mt-10 md:-mt-12 lg:-mt-16 mb-10">
@@ -91,22 +48,20 @@ const Profile = () => {
                 <Button variant="outline">Add Profile Sections</Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem>Add About Section</DropdownMenuItem>
-                <DropdownMenuItem>Add Experience Section</DropdownMenuItem>
-                <DropdownMenuItem>Add Education Section</DropdownMenuItem>
+                <DropdownMenuItem onClick={()=>dispatch(setOpen('AboutFormModal'))}>Add About Section</DropdownMenuItem>
+                <DropdownMenuItem onClick={()=>dispatch(setOpen('ExpirienceFormModal'))}>Add Experience Section</DropdownMenuItem>
+                <DropdownMenuItem onClick={()=>dispatch(setOpen('EducationFormModal'))}>Add Education Section</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
             <Button ><MoreVertical /></Button>
           </div>
         </div>
-
         <Tabs defaultValue="profile" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="profile">Profile</TabsTrigger>
             <TabsTrigger value="posts">Posts</TabsTrigger>
           </TabsList>
           <TabsContent value="profile">
-            
             
           </TabsContent>
           <TabsContent value="posts">

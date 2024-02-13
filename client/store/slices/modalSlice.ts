@@ -1,25 +1,33 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+export type ModalType = "AboutFormModal" | "EducationFormModal" | "experience"
+
 interface ModalState {
     open: boolean;
+    type:ModalType | null
 }
 
+
 const initialState: ModalState = {
-    open: false
+    open: false,
+    type: null,
 }
 
 const modalSlice = createSlice({
     name: 'modal',
     initialState,
     reducers: {
-        setOpen: (state) => {
+        setOpen: (state,action) => {
             state.open = true;
+            state.type = action.payload
         },
         setClose: (state) => {
             state.open = false;
         }
     },
 });
+
+
 
 export const { setClose, setOpen } = modalSlice.actions;
 export default modalSlice.reducer;

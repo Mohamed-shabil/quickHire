@@ -22,7 +22,9 @@ const profileSchema = new Schema({
     username:{
         type: String,
         required:true,
-        unique:true,
+    },
+    phone:{
+        type:String
     },
     avatar:{
         type: String,

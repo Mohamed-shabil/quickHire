@@ -9,6 +9,7 @@ import { body, validationResult } from 'express-validator'
 import catchAsync from '../utils/catchAsync'
 import bcrypt from 'bcryptjs';
 import OtpVerification from '../model/otp';
+import { userCreatedProducer } from '../events/producers/userCreatedProducers'
 const router = express.Router();
 
 
@@ -108,8 +109,11 @@ router.post('/api/users/signup',[
         ),
         withCredintials : true
     }
+
+    await userCreatedProducer(payload);
+
     res.cookie('jwt',token,cookieOption)
-    res.status(200).json({
+    return res.status(200).json({
         user,
         token
     })

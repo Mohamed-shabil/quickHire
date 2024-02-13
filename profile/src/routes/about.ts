@@ -31,6 +31,7 @@ router.post('/api/profile/about',[
     userProfile.bio = bio;
     
     await userProfile.save();
+    
     return res.status(200).json({
         status:'success',
         about:{
@@ -41,5 +42,31 @@ router.post('/api/profile/about',[
         }
     });
 }))
+
+
+router.get('/api/profile/about/get',catchAsync(async(req,res)=>{
+    const currentUser = req.currentUser;
+    if(!currentUser){
+        throw new NotAutherizedError();
+    }
+    const profile = await Profile.findOne({userId:currentUser._id});
+    if(!profile){
+        throw new NotAutherizedError();
+    }
+
+    return res.status(200).json({
+        status:"success",
+        about:{
+            username:profile.username,
+            fullName:profile.fullName,
+            headline:profile.headline,
+            bio:profile.bio
+        }
+    })
+
+}))
+
+
+
 
 export {router as aboutRouter}
