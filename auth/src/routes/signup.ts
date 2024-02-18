@@ -10,8 +10,9 @@ import catchAsync from '../utils/catchAsync'
 import bcrypt from 'bcryptjs';
 import OtpVerification from '../model/otp';
 import { userCreatedProducer } from '../events/producers/userCreatedProducers'
-const router = express.Router();
+import { createSendToken } from '../utils/createSendToken';
 
+const router = express.Router();
 
 router.post('/api/users/signup',[
     body('name')
@@ -71,7 +72,7 @@ router.post('/api/users/signup',[
         token:hashedOtp,
         otp
     })
-
+    console.log(userOtp);
     const transporter = nodemailer.createTransport({
         service:'Gmail',
         auth:{
@@ -95,28 +96,17 @@ router.post('/api/users/signup',[
             res.send('success');
         }
     })
-    
+
     const payload = {
-        _id:user._id,
+        _id:user._id.toString(),
         email:user.email,
-        phone:user.phone,
         name:user.name,
-    }
-    const token = jwt.sign(payload,process.env.JWT_KEY!)
-    const cookieOption = {
-        expires: new Date(
-            Date.now() + 30 * 24 * 60 * 60 * 1000
-        ),
-        withCredintials : true
+        ...(user.phone &&{phone:user.phone})
     }
 
-    await userCreatedProducer(payload);
-
-    res.cookie('jwt',token,cookieOption)
-    return res.status(200).json({
-        user,
-        token
-    })
+    userCreatedProducer(payload);
+    
+    createSendToken(payload,res);
 }));
 
 

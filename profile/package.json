@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@quickhire/common": "^1.0.4",
+    "@quickhire/common": "^1.0.21",
     "@types/cookie-parser": "^1.4.6",
     "@types/cors": "^2.8.17",
     "@types/morgan": "^1.9.9",
@@ -21,7 +21,7 @@
     "express-validator": "^7.0.1",
     "jsonwebtoken": "^9.0.2",
     "kafkajs": "^2.2.4",
-    "mongoose": "^8.1.1",
+    "mongoose": "^8.1.2",
     "morgan": "^1.10.0",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.3.3"

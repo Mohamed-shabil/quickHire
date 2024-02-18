@@ -19,7 +19,7 @@ const start = async() =>{
         console.error(err);
 
     }
-    app.listen(3002,()=>{ 
+    app.listen(3003,()=>{ 
 
         console.log('[PROFILE SERVICE] Listening on port 3002!');
     })

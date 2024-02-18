@@ -6,28 +6,32 @@ import { BadRequestError, NotAutherizedError, requireAuth, validateRequest } fro
 
 const router = express.Router();
 
-router.use(requireAuth);
-
-router.post('/api/profile/education',[
+router.post('/api/profile/education',requireAuth,[
     body('school')
         .notEmpty()
         .withMessage("School can't be Empty"),
     body('degree')
         .notEmpty()
         .withMessage("Degree Can't be Empty"),
-    body('startDate')
+    body('startMonth')
         .notEmpty()
-        .withMessage("Start Date can't be Empty"),
-    body('endDate')
+        .withMessage("Start Month can't be Empty"),
+    body('startYear')
         .notEmpty()
-        .withMessage("Degree Can't be Empty"),
+        .withMessage("Start Year can't be Empty"),
+    body('endMonth')
+        .notEmpty()
+        .withMessage("End Month Can't be Empty"),
+    body('endYear')
+        .notEmpty()
+        .withMessage("End Year Can't be Empty"),
     body('grade')
         .notEmpty()
-        .withMessage("grade Can't be empty"),
+        .withMessage("grade Can't be Empty"),
     validateRequest
 ],catchAsync(async(req:Request,res:Response)=>{
     const error = validationResult(req);
-    const {school, degree, startDate,endDate,grade} = req.body;
+    const {school, degree, startMonth, startYear, endMonth, endYear, grade} = req.body;
     const user = await Profile.findOne({userId:req.currentUser?._id});
     if(!user){
         throw new NotAutherizedError();
@@ -42,8 +46,14 @@ router.post('/api/profile/education',[
     user.education.push({   
         school,
         degree,
-        startDate,
-        endDate,
+        startDate:{
+            startMonth,
+            startYear
+        },
+        endDate:{
+            endMonth,
+            endYear
+        },
         grade
     });
     

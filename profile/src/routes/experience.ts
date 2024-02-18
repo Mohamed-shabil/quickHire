@@ -5,25 +5,30 @@ import catchAsync from '../utils/catchAsync';
 import { Profile } from '../model/profile';
 const router = express.Router();
 
-router.use(requireAuth);
-
-router.post('/api/profile/experience',[
+router.post('/api/profile/experience',requireAuth,[
     body('companyName')
         .notEmpty()
         .withMessage("Company Name can't empty"),
     body('position')
         .notEmpty()
         .withMessage("Position can't be Empty"),
-    body('startDate')
+    body('startMonth')
         .notEmpty()
-        .withMessage("Start Date can't be empty"),
-    body('endDate')
+        .withMessage("Start Month can't be Empty"),
+    body('startYear')
         .notEmpty()
-        .withMessage("End Date can't be Empty"),
+        .withMessage("Start Year can't be Empty"),
+    body('endMonth')
+        .notEmpty()
+        .withMessage("End Month Can't be Empty"),
+    body('endYear')
+        .notEmpty()
+        .withMessage("End Year Can't be Empty"),
     validateRequest,
 ],catchAsync(async (req:Request,res:Response)=>{
     const error = validationResult(req);
-    const {companyName, position, startDate, endDate} = req.body;
+
+    const {companyName, position, startMonth, startYear, endMonth, endYear} = req.body;
 
     const user = await Profile.findOne({userId:req.currentUser?._id});
     if(!user){
@@ -40,8 +45,14 @@ router.post('/api/profile/experience',[
 
     user.experience.push({
         companyName,
-        startDate,
-        endDate,
+        startDate:{
+            startMonth,
+            startYear
+        },
+        endDate:{
+            endMonth,
+            endYear
+        },
         position
     })
 

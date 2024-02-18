@@ -5,19 +5,21 @@ const profileSchema = new Schema({
         type:String,
         required:true
     },
+    fullName: String,
+    headline: String,
+    bio: String,
+    email:String,
+    portfolio:{
+        type:String,
+    },
+    customUrl:{
+        urlName : String,
+        url : String
+    },
+    location:String,
     profileType:{
         type:String,
         enum:['personal','organisation','group']
-    },
-    fullName: {
-        type:String,
-    },
-    headline:{
-        type:String,
-    },
-    email:{
-        type: String,
-        unique:true
     },
     username:{
         type: String,
@@ -26,27 +28,32 @@ const profileSchema = new Schema({
     phone:{
         type:String
     },
-    avatar:{
-        type: String,
-        default:""
-    },
-    bio:{
-        type: String
-    },
     coverImage:{
         type:String,
         default:''
     },
     experience:[{
         companyName: String,
-        startDate: Date,
-        endDate: Date,
+        startDate: {
+            startMonth:String,
+            startYear:String,
+        },
+        endDate: {
+            endMonth:String,
+            endYear:String
+        },
         position: String
     }],
     education:[{
         school: String,
-        startDate: String,
-        endDate: String,
+        startDate: {
+            startMonth:String,
+            startYear:String,
+        },
+        endDate: {
+            endMonth:String,
+            endYear:String
+        },
         degree: String,
         grade : String
     }],

@@ -1,5 +1,8 @@
 "use client"
 import * as z from "zod";
+import {auth} from '@/app/firebase'
+import { signInWithPopup, GoogleAuthProvider} from 'firebase/auth'
+import { useAuthState } from 'react-firebase-hooks/auth'
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import axios from "axios";
@@ -14,14 +17,13 @@ import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { toast, useToast } from "@/components/ui/use-toast";
-import { Check, Eye, EyeOff } from "lucide-react";
+import { Check, Eye, EyeOff, Loader2, X } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-
+import { useEffect, useState } from "react";
 export default function Signup() {
     const [show,setShow] = useState(false);
-    const [error,SetError] = useState([{}]);
+    const [user, setUser] = useAuthState(auth)
+    // const [error,SetError] = useState([{}]);
     const { toast } = useToast()
     const dispatch = useDispatch();
     const formSchema = z.object({
@@ -47,6 +49,11 @@ export default function Signup() {
         OtpMethod:z.string({
             required_error: "You need to select a otp type.",
         }),
+    }).refine(data=>{
+        return data.password === data.ConfirmPassword
+    },{
+        message:'Passwords are not same',
+        path: ['ConfirmPassword']
     });
 
     const form = useForm({  
@@ -67,7 +74,7 @@ export default function Signup() {
         console.log(values);
         axios.defaults.withCredentials = true;
         axios.post('http://localhost:3001/api/users/signup',values).then(res=>{
-            // console.log(res);
+            console.log(res);
             dispatch(setUserData(res.data.user));
             toast({
                 title: "Your account has been created ",
@@ -80,17 +87,35 @@ export default function Signup() {
             router.push('/verifyOtp');
         }).catch(err=>{
             console.log(err);
-            
+            toast({
+                title: "Something went Wrong",
+                description: err.response.data.errors[0].message || "",
+                action: (
+                  <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded"><X /></div>
+                ),
+              })
         })
     }
-    const googleAuth = ()=>{
-        axios.get('http://localhost:3001/api/users/oauth/google').then(res=>{
-            console.log('res:', res);
+    
+    console.log(process.env.FIREBASE_API);
+    // const signInWithGoogle = async ()=>{
+    //     const provider = new GoogleAuthProvider();
+    //     const result = await signInWithPopup(auth,provider)
+    //     if(user){
+    //         const payload = {
+    //             name:user.displayName,
+    //             email:user.email,
+    //             ...(user.phoneNumber && { phone: user.phoneNumber})
+    //         }
+    //         axios.post('http://localhost:3001/api/users/gAuth',payload).then(res=>{
+    //             dispatch(setUserData(res.data.user));
+    //             router.push('/');
+    //         }).catch((err)=>{
+    //             console.log(err);
+    //         })
+    //     }
+    // }
 
-        }).catch(err=>{
-            console.log(err);
-        })
-    }
     const isLoading = form.formState.isSubmitting;
 
   return (
@@ -122,14 +147,12 @@ export default function Signup() {
                     Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eligendi nam dolorum aliquam,
                     quibusdam aperiam voluptatum.
                 </p>
-                {/* <div className="col-span-6 flex items-center justify-center py-7 ">
-                    <Link href={'/api/auth/signin'}>
-                        <Button variant={"secondary"} onClick={googleAuth} className="w-full max-w-60 border gap-2">
-                            <Image src={'/google.png'} alt={"google"} width={20} height={20}/>
-                            Signin with Google
-                        </Button>
-                    </Link>
-                </div> */}
+                <div className="col-span-6 flex items-center justify-center py-7 ">
+                    {/* <Button variant={"secondary"} onClick={signInWithGoogle} className="w-full max-w-60 border gap-2">
+                        <Image src={'/google.png'} alt={"google"} width={20} height={20}/>
+                        Signin with Google
+                    </Button> */}
+                </div>
                 <Form {...form} >
                     <form onSubmit={form.handleSubmit(onSubmit)} className="mt-8 grid grid-cols-6 gap-6">
                         <div className="col-span-6 sm:col-span-3">
@@ -286,11 +309,12 @@ export default function Signup() {
                         <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
                             <Button
                                 type="submit"
+                                disabled={isLoading}
                                 className="inline-block shrink-0 rounded-md border border-blue-600
-                                bg-blue-600 px-12 py-3 text-sm font-medium text-white transition 
+                                bg-blue-600 px-12 text-center text-sm font-medium text-white transition 
                                 hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring
                                 active:text-blue-500">
-                                Create an account
+                                {isLoading ? <Loader2 className="animate-spin"/> : "Create an account"}
                             </Button>
 
                             <p className="mt-4 text-sm text-gray-500 sm:mt-0">

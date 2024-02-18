@@ -5,14 +5,14 @@ import { body, validationResult } from 'express-validator'
 import { Profile } from '../model/profile'
 export const router = express.Router();
 
-router.use(requireAuth);
 
-router.post('/api/profile/about',[
+
+router.post('/api/profile/about',requireAuth,[
     body('fullName')
         .notEmpty()
         .withMessage("Fist Name can't be empty"),
     body('bio')
-        .isLength({min:20,max:150})
+        .isLength({min:20})
         .withMessage('About Section Must be 20 to 150 characters long'),
     body('headline')
         .notEmpty()
@@ -34,38 +34,9 @@ router.post('/api/profile/about',[
     
     return res.status(200).json({
         status:'success',
-        about:{
-            username:userProfile.username,
-            fullName,
-            headline,
-            bio,
-        }
+        profile:userProfile
     });
 }))
-
-
-router.get('/api/profile/about/get',catchAsync(async(req,res)=>{
-    const currentUser = req.currentUser;
-    if(!currentUser){
-        throw new NotAutherizedError();
-    }
-    const profile = await Profile.findOne({userId:currentUser._id});
-    if(!profile){
-        throw new NotAutherizedError();
-    }
-
-    return res.status(200).json({
-        status:"success",
-        about:{
-            username:profile.username,
-            fullName:profile.fullName,
-            headline:profile.headline,
-            bio:profile.bio
-        }
-    })
-
-}))
-
 
 
 

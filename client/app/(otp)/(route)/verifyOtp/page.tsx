@@ -12,10 +12,10 @@ import { z } from "zod";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
+import { RootState } from "@/store/reducers";
 
 const VerifyOtp = () => {
-    axios.defaults.withCredentials = true;
-    const user = useSelector((state)=> state.user);
+    const user = useSelector((state:RootState)=> state.user);
     console.log(user);
     const formSchema = z.object({
         otp:z.string().min(4,{
@@ -37,6 +37,7 @@ const VerifyOtp = () => {
 
     const onSubmit = async(values : z.infer<typeof formSchema>)=>{
         console.log(values);
+        axios.defaults.withCredentials = true;
         axios.post(`http://localhost:3001/api/users/verifyOtp`,values).then(res=>{
             console.log(res)
             toast({

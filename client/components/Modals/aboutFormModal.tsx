@@ -9,22 +9,23 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import axios from "axios"
 import { toast } from "../ui/use-toast"
-import { Check } from "lucide-react"
+import { Check, Router } from "lucide-react"
 import { Textarea } from "../ui/textarea"
 import { useSelector,useDispatch } from "react-redux"
 import { RootState } from "@/store/reducers";
-import {setClose} from '@/store/slices/modalSlice'
-import { ModalType } from "@/store/slices/modalSlice"
+import { setClose } from '@/store/slices/modalSlice'
+import useQuery from '@/hooks/useQuery'
+import { useRouter } from "next/navigation"
+
 export function AboutFormModal() {
   const dispatch = useDispatch();
-
+  const router = useRouter();
   const formSchema = z.object({
     fullName: z.string().min(4, {
       message: "Full name must be more than 4 characters long",
@@ -48,15 +49,26 @@ export function AboutFormModal() {
   });
   
   const onSubmit = (values:z.infer<typeof formSchema>)=>{
-    console.log(values);
-    axios.defaults.withCredentials = true;
-    axios.post('http://localhost:3002/api/profile/about',values).then(res=>{
+  //   console.log(values);
+  //   axios.defaults.withCredentials = true;
+  //   const {} = useQuery(
+  //     "POST",
+  //     "http://localhost:3002/api/profile/about",
+  //     values,
+  //       onSuccess:()=>{
+
+  //     }
+  //   )
+    
+    axios.post('http://localhost:3003/api/profile/about',values).then(res=>{
       toast({
-        title: "Profile Section Updated Successfully",
+        title: "Profile About Updated Successfully",
         action: (
           <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded"><Check /></div>
         ),
       })
+      onClose();
+      router.refresh();
     }).catch(err=>{
       console.log(err);
     })

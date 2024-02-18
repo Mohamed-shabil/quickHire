@@ -1,7 +1,7 @@
 import express,{Request, Response} from 'express'
 import catchAsync from '../utils/catchAsync';
 import { body, validationResult, } from 'express-validator'
-import { BadRequestError, validateRequest } from '@quickhire/common';
+import { BadRequestError, requireAuth, validateRequest } from '@quickhire/common';
 import OtpVerification from '../model/otp';
 import randomString from 'randomstring';
 import bcrypt from 'bcryptjs'
@@ -10,8 +10,9 @@ import { otpMail } from '../templates/otpEmail';
 import nodemailer from 'nodemailer'
 const router = express.Router();
 
-router.post('/api/users/sendOtp',catchAsync(async(req:Request,res:Response)=>{
+router.post('/api/users/sendOtp',requireAuth,catchAsync(async(req:Request,res:Response)=>{
     const error = validationResult(req);
+    console.log(req.currentUser);
     const UserOtp = await OtpVerification.findOne({owner:req.currentUser!._id});
     if(!UserOtp){
         throw new BadRequestError('No user with this user ID')
@@ -33,7 +34,7 @@ router.post('/api/users/sendOtp',catchAsync(async(req:Request,res:Response)=>{
         from : process.env.EMAIL,
         to:req.currentUser!.email,
         subject:'QuickHire Otp verification',
-        html:otpMail.replace('***',resetLink),
+        html:otpMail.replace('***',newOtp),
     }
     const transporter = nodemailer.createTransport({
         service:'Gmail',

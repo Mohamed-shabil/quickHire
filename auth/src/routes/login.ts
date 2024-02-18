@@ -4,6 +4,7 @@ import { validateRequest, BadRequestError} from '@quickhire/common'
 import bcrypt from 'bcryptjs'
 import { User } from '../model/user';
 import jwt from 'jsonwebtoken'
+import { createSendToken } from '../utils/createSendToken';
 
 const router = express.Router();
 
@@ -30,25 +31,13 @@ async(req:Request,res:Response)=>{
         const isValidPassword = await bcrypt.compare(password,existingUser.password!);
 
         const payload = {
-            _id:existingUser._id,
+            _id:existingUser._id.toString(),
             email:existingUser.email,
-            phone:existingUser.phone,
             name:existingUser.name,
+            ...(existingUser.phone &&{phone:existingUser.phone})
         }
 
-        const token = jwt.sign(payload,process.env.JWT_KEY!)
-        const cookieOption = {
-            expires: new Date(
-                Date.now() + 30 * 24 * 60 * 60 * 1000
-            ),
-            withCredintials : true
-        }
-        
-        res.cookie('jwt',token,cookieOption)
-        return res.status(200).json({
-            user:payload,
-            token
-        })
+        createSendToken(payload,res);
     } catch (error) {
         console.log(error);
     }

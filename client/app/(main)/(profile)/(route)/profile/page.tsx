@@ -1,76 +1,157 @@
-"use client";
-import Image from "next/image";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs"
-import { AboutFormModal } from "@/components/Modals/aboutFormModal";
 import { Button } from "@/components/ui/button";
-import { MoreVertical, } from "lucide-react";
-import { useSelector,useDispatch } from "react-redux";
-import { setClose,setOpen } from "@/store/slices/modalSlice";
-import { RootState } from "@/store/reducers";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Plus as FollowIcon, MoveUpRight as LinkIcon, PlusCircle } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import LinkCard from "@/components/LinkCard";
+import { cookies } from 'next/headers'
+import { ExperienceCard } from "@/components/ExperienceCard";
+import { Heading } from "@/components/Heading";
+import { Container } from "@/components/Container";
+import { redirect } from "next/navigation";
+import { EducationCard } from '@/components/EducationCard'
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+  } from "@/components/ui/dropdown-menu"
+import AddSections from "@/components/AddSections";
+import {User,Education,Project,Experience} from '@/constants/constants'
 import axios from "axios";
-import { useEffect } from "react";
-const Profile = () => {
-  const dispatch = useDispatch();
+
+
+
   
-  const type = useSelector((state:RootState)=>state.modal.type)
-  axios.defaults.withCredentials = true;
-  
-  useEffect(()=>{
-    axios.get('http://localhost:3002/api/profile/get').then(res=>{
-      console.log(res);
+
+const getProfile = async (token:string) =>{
+    console.log('here is the token',token)
+    axios.defaults.withCredentials = true;
+    const res = await axios.get('http://localhost:3003/api/profile/show',{
+        headers: {
+            Cookie: `jwt=${token}`
+        }
     });
+    return res.data.profile;
+}
 
-  },[])
+interface Link {
+    title:string;
+    content:string;
+    url:string;
+}
 
-  return (
-    <div className="w-full pt-4">
-      <AboutFormModal/>
-      <div className="lg:container md:container w-full px-2">
-        <Image src={'/coverImage.png'} width={1000} height={300} alt={"cover Image"} className="w-full rounded-t-md"/>
-        <div className="flex justify-center flex-col w-full items-center -mt-10 md:-mt-12 lg:-mt-16 mb-10">
-          <Image src={'/user.png'} alt={"user"} width={120} height={120} className="w-20 lg:w-32 md:w-24 rounded-full border-4 border-spacing-10 border-blue-500"/>
-          <h3 className="font-medium text-2xl text-slate-500">Mohamed Shabil</h3>
-          <p className="p-2 text-md text-slate-500">Backend Developer</p>
-          <div className="flex gap-1">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline">Add Profile Sections</Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem onClick={()=>dispatch(setOpen('AboutFormModal'))}>Add About Section</DropdownMenuItem>
-                <DropdownMenuItem onClick={()=>dispatch(setOpen('ExpirienceFormModal'))}>Add Experience Section</DropdownMenuItem>
-                <DropdownMenuItem onClick={()=>dispatch(setOpen('EducationFormModal'))}>Add Education Section</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <Button ><MoreVertical /></Button>
-          </div>
-        </div>
-        <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="profile">Profile</TabsTrigger>
-            <TabsTrigger value="posts">Posts</TabsTrigger>
-          </TabsList>
-          <TabsContent value="profile">
-            
-          </TabsContent>
-          <TabsContent value="posts">
-            <h2>Posts</h2>
-          </TabsContent>
-        </Tabs>
-      </div>
-    </div>
-  );
-};
+export default async function Profile() {
+    const token = cookies().get('jwt')?.value;
+    if(!token){
+        return redirect('/signup'); 
+    }
+    const profile:User = await getProfile(token);
 
-export default Profile;
+    const links= [
+        {
+            title: "Email",
+            content: profile.email,
+            url: "#",
+        },
+        ...(profile.location ? [{title:"Location",content:profile.location,url:'#'}]:[]),
+        ...(profile.portfolio ? [{title:"Portfolio",content:profile.portfolio,url:profile.portfolio}]:[]),
+        ...(profile.portfolio ? [{title:profile.customUrl?.urlName,content:profile.customUrl?.url,url:profile.customUrl?.url}]:[])
+    ]
+    
+    return (
+        <main className="mb-10">
+            <section>
+                <img
+                    className="max-h-56 w-screen object-cover"
+                    src="https://99designs-blog.imgix.net/blog/wp-content/uploads/2018/12/Gradient_builder_2.jpg?auto=format&q=60&w=1815&h=1361.25&fit=crop&crop=faces"
+                    alt=""
+                />
+            </section>
+            <Container className="justify-between -mt-8 gap-6">
+                <section className="flex gap-4 align-middle flex-col md:flex-row">
+                    <span className="relative">
+                        <Avatar className="w-36 h-36 border-4 shadow-xl border-white">
+                            <AvatarImage src={profile.fullName} />
+                            <AvatarFallback>CN</AvatarFallback>
+                        </Avatar>
+                        <Button variant={'default'} size={"icon"} className="absolute right-0 bottom-0 p-0">
+                            <PlusCircle />
+                        </Button>
+                    </span>
+                    <div className="my-auto">
+                        <p className="font-bold text-2xl">{profile.fullName}</p>
+                        <p className="text-slate-400">{profile.headline}</p>
+                    </div>
+                </section>
+                <section className="flex gap-4 my-auto">
+                    <AddSections/>
+                    <Button variant="default">
+                        <FollowIcon className="me-2" size="1.2em" />
+                        Follow
+                    </Button>
+                </section>
+            </Container>
+            <Separator className="container my-8" />
+
+            {profile.bio? 
+            <Container>
+                <Heading variant="profile-side">About Me</Heading>
+                <section className="flex-grow space-y-6">
+                    <section>
+                        <p className="mb-2 text-sm">{profile.bio}</p>
+                        <small className="text-primary font-bold text">
+                            Read more
+                        </small>
+                    </section>
+                
+                    <section className="flex md:bg-accent md:p-4 p-0 justify-between rounded text-primary flex-col gap-4 lg:flex-row">
+                        {links.map((link)=>(
+                            // @ts-ignore
+                            <LinkCard link={link}/>
+                        ))}
+                    </section>
+                </section>
+            </Container> : <></>
+            }
+            <Separator className="container my-8" />
+            {profile.experience?.length ? 
+                <Container>
+                    <Heading variant="profile-side">Experience</Heading>
+                    <section className="flex-grow grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        {profile.experience.map((experience:Experience,index:number) => (
+                            <ExperienceCard key={index} experience={experience} />
+                        ))}
+                    </section>
+                </Container> :
+                <></>         
+            }
+            {profile.projects?.length ? 
+                <Container>
+                    <Heading variant="profile-side">Projects</Heading>
+                    <section className="flex-grow grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        {profile.experience?.map((experience:Experience,index:number) => (
+                            <ExperienceCard key={index} experience={experience} />
+                        ))}
+                    </section>
+                </Container> :
+                <></>         
+            }
+            <Separator className="container my-8 " />
+            {profile.education?.length ? 
+                <Container>
+                    <Heading variant="profile-side">Education</Heading>
+                    <section className="flex-grow grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        {profile.education.map((education:Education,index:number) => (
+                            <EducationCard key={index} education={education} />
+                        ))}
+                    </section>
+                </Container> :
+                <></>         
+            }
+        </main>
+    );
+}
+
+

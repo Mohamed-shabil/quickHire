@@ -23,7 +23,7 @@ router.post('/api/users/forgotPassword',[
     }
     const token = await crypto.randomBytes(20).toString('hex');
     user.resetPasswordToken = token;
-    user.resetPasswordExpires = new Date(Date.now() + 360000)
+    user.resetPasswordExpires = new Date(Date.now() + 3600000)
     await user.save();
     
     const resetLink = process.env.RESET_LINK+token

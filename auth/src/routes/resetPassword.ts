@@ -3,6 +3,7 @@ import catchAsync from '../utils/catchAsync';
 import { BadRequestError } from '@quickhire/common';
 import { User } from '../model/user';
 import bcrypt from 'bcryptjs'
+
 const router = express.Router();
 
 router.post('/api/users/resetPassword/:token',catchAsync(async(req:Request,res:Response)=>{
@@ -15,7 +16,7 @@ router.post('/api/users/resetPassword/:token',catchAsync(async(req:Request,res:R
     }
     const user = await User.findOne({
         resetPasswordToken : token,
-        resetPasswordExpires : {$gt:Date.now()}
+        resetPasswordExpires : {$gte:Date.now()}
     })
 
     if(!user){

@@ -2,7 +2,8 @@
 import { useEffect, useState } from "react";
 import { AboutFormModal } from "../Modals/aboutFormModal";
 import { EducationFormModal } from "../Modals/educationFormModal";
-
+import { ExperienceFormModal } from '../Modals/experienceModal'
+import { LinkFormModal} from '@/components/Modals/LinksFormModal'
 const ModalProvider = () => {
     const [isMounted,setIsMouted] = useState(false);
     useEffect(()=>{
@@ -14,9 +15,11 @@ const ModalProvider = () => {
     }
 
     return ( 
-        <>
+        <>  
+            <LinkFormModal/>
             <AboutFormModal/>
             <EducationFormModal/>
+            <ExperienceFormModal/>
         </>
     );
 }

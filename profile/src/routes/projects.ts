@@ -5,7 +5,6 @@ import catchAsync from '../utils/catchAsync';
 import { Profile } from '../model/profile';
 const router = express.Router();
 
-router.use(requireAuth);
 
 interface ProjectInterface{
     projectName:string;
@@ -17,7 +16,7 @@ interface ProjectInterface{
     links?:string[];
 }
 
-router.post('/api/profile/experience',[
+router.post('/api/profile/experience',requireAuth,[
     body('projectName')
         .notEmpty()
         .withMessage("Project Name can't empty"),
@@ -37,7 +36,7 @@ router.post('/api/profile/experience',[
         .withMessage("skills can't be empty"),
     body('links')
         .optional(),
-    validateRequest,
+    validateRequest
 ],catchAsync(async (req:Request,res:Response)=>{
     const error = validationResult(req);
     const {

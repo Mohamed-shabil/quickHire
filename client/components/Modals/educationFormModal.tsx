@@ -14,38 +14,36 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import axios from "axios"
 import { toast } from "../ui/use-toast"
-import { Calendar, CalendarIcon, Check } from "lucide-react"
-import { Textarea } from "../ui/textarea"
 import { useSelector,useDispatch } from "react-redux"
 import { RootState } from "@/store/reducers";
 import {setClose} from '@/store/slices/modalSlice'
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
-import { format } from "date-fns"
-import { cn } from "@/lib/utils"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
+import { Check, X } from "lucide-react"
+import { useRouter } from "next/navigation"
+
 
 export function EducationFormModal() {
   const dispatch = useDispatch();
-
+  const router = useRouter();
   const months = [
-    { label:'Janaury',value:'1' },
-    { label:'February',value:'2' },
-    { label:'March',value:'3' },
-    { label:'April',value:'4' },
+    { label:'January',value:'1'},
+    { label:'February',value:'2'},
+    { label:'March',value:'3'},
+    { label:'April',value:'4'},
     { label:'May',value:'5'},
     { label:'June',value:'6' },
     { label:'July',value:'7' },
     { label:'August',value:'8' },
-    { label:'September',value:'9' },
-    { label:'Octobar',value:'10' },
-    { label:'Nevember',value:'11' },
-    { label:'December',value:'12' },
+    { label:'September',value:'9'},
+    { label:'Octobar',value:'10'},
+    { label:'Nevember',value:'11'},
+    { label:'December',value:'12'},
   ]
 
-  const currentYear = new Date().getFullYear();
+  const currentYear = new Date().getFullYear()+5;
   const years: string[] = []
   for(let i = currentYear; i >= currentYear-99; i--){
-    years.push(i+"");
+    years.push(i.toString());
   }
 
   const formSchema = z.object({
@@ -70,22 +68,22 @@ export function EducationFormModal() {
     grade:string().max(2,{
         message:"grade can't be more than 2 letters long"
     })
-  }).refine(data => {
-
+  })
+  .refine(data => {
     const startMonth = parseInt(data.startMonth);
     const startYear = parseInt(data.startYear);
     const endMonth = parseInt(data.endMonth);
     const endYear = parseInt(data.endYear);
-    console.log(startMonth)
     if (startYear > endYear) {
-      return false;
+      return false
     }
     if (startYear === endYear && startMonth > endMonth) {
-      return false;
+      return false
     }
     return true;
   },{
-    message:"Starting date must be less than or equal to ending date"
+    message:"Starting date must be less than or equal to ending date",
+    path:['endYear']
   });
 
   const form = useForm({  
@@ -103,18 +101,25 @@ export function EducationFormModal() {
   });
   
   const onSubmit = (values:z.infer<typeof formSchema>)=>{
-    console.log(values);
     axios.defaults.withCredentials = true;
-    axios.post('http://localhost:3002/profile/about',values).then(res=>{
+    axios.post('http://localhost:3003/api/profile/education',values).then(res=>{
       toast({
         title: "Profile Section Updated Successfully",
-        description: "Welcome to QuickHire",
         action: (
           <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded"><Check /></div>
         ),
       })
+      onClose();
+      router.refresh();
     }).catch(err=>{
       console.log(err);
+      toast({
+        title: "Something Went Wrong!😥",
+        description: err.response.data.errors[0].message||'',
+        action: (
+          <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded"><X /></div>
+        ),
+      })
     })
   }
   
@@ -192,8 +197,8 @@ export function EducationFormModal() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {months.map((month)=>(
-                            <SelectItem value={month.value}>{month.label}</SelectItem>
+                          {months.map((month,i)=>(
+                            <SelectItem key={i} value={month.value}>{month.label}</SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
@@ -203,13 +208,13 @@ export function EducationFormModal() {
                 />
               </div>
               <div className="col-span-6 sm:col-span-3">
-              <FormField
-                    name="degree"
+                <FormField
+                    name="startYear"
                     disabled={isLoading}
                     control={form.control}
                     render={({ field }) => (
                     <FormItem>
-                      <FormLabel>End Year</FormLabel>
+                      <FormLabel>Start Year</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger>
@@ -217,8 +222,8 @@ export function EducationFormModal() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {years.map((year)=>(
-                            <SelectItem value={year}>{year}</SelectItem>
+                          {years.map((year,i)=>(
+                            <SelectItem key={i} value={year}>{year}</SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
@@ -241,8 +246,8 @@ export function EducationFormModal() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {months.map((month)=>(
-                            <SelectItem value={month.value}>{month.label}</SelectItem>
+                          {months.map((month,i)=>(
+                            <SelectItem key={i} value={month.value}>{month.label}</SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
@@ -253,8 +258,8 @@ export function EducationFormModal() {
               </div>
               <div className="col-span-6 sm:col-span-3">
                 <FormField
-                  control={form.control}
                   name="endYear"
+                  control={form.control}
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>End Year</FormLabel>
@@ -265,8 +270,8 @@ export function EducationFormModal() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {years.map((year)=>(
-                            <SelectItem value={year}>{year}</SelectItem>
+                          {years.map((year,i)=>(
+                            <SelectItem key={i} value={year}>{year}</SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
@@ -290,15 +295,15 @@ export function EducationFormModal() {
                                 {...field} />
                             </FormControl>
                             <FormMessage />
-                        </FormItem>
+                      </FormItem>
                   )}
                 />
               </div>
+            <DialogFooter>
+              <Button type="submit">Save</Button>
+            </DialogFooter>
           </form>
         </Form>
-        <DialogFooter>
-          <Button type="submit">Save changes</Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   )

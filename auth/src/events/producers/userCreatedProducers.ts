@@ -5,7 +5,7 @@ import { NextFunction } from 'express';
 
 const producer = kafka.producer();
 interface UserCreatedData {
-    _id: mongoose.Types.ObjectId;
+    _id: string;
     name:string;
     email:string;
     phone?:string | null;

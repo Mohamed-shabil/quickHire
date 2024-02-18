@@ -38,7 +38,7 @@ const Forgotpassword = () => {
         console.log(values);
         axios.post('http://localhost:3001/api/users/forgotPassword',values).then(res=>{
             console.log(res);
-            dispatch(setOpen());
+            dispatch(setOpen('AlertModal'));
             setDisable(true);
         }).catch(err=>{
             console.log(err);
