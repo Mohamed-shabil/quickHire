@@ -3,7 +3,7 @@ const nextConfig = {
     images:{
         domains:[
             "images.unsplash.com",
-            "uploadthing.com",
+            "quickhire-21.s3.ap-south-1.amazonaws.com",
             "utfs.io"
         ]
     }

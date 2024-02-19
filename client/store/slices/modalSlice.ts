@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export type ModalType = "AboutFormModal" | "EducationFormModal" | "ExperienceFormModal" | "LinkFormModal"
+export type ModalType = "AboutFormModal" | "EducationFormModal" | "ExperienceFormModal" | "LinkFormModal" | "ProfileAvatar"
 
 interface ModalState {
     open: boolean;

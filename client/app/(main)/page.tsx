@@ -1,6 +1,5 @@
 import Image from "next/image";
 import PostCard from "@/components/PostCard";
-
 export default function Home() {
   return (
     <div className="container grid grid-cols-10">

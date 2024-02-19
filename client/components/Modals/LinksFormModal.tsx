@@ -26,6 +26,7 @@ import { useRouter } from "next/navigation"
 export function LinkFormModal() {
   const dispatch = useDispatch();
   const router = useRouter();
+  
   const formSchema = z.object({
     location: z.string().min(4, {
       message: "Location must be more than 4 characters long",

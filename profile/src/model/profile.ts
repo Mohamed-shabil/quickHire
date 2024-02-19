@@ -5,6 +5,10 @@ const profileSchema = new Schema({
         type:String,
         required:true
     },
+    avatar:{
+        type:String,
+        default:""
+    },
     fullName: String,
     headline: String,
     bio: String,

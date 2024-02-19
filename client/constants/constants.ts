@@ -39,6 +39,7 @@ export type Project = {
 };
   
 export type User = {
+    avatar:string;
     userId: string;
     fullName?: string;
     headline?: string;

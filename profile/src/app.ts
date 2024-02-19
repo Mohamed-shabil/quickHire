@@ -10,6 +10,7 @@ import {educationRouter} from './routes/education';
 import {experienceRouter} from './routes/experience';
 import {linksRouter} from './routes/links';
 import {userCreatedConsumer} from './events/consumer/userCreatedConsumer'
+import {avatarRouter} from './routes/avatar';
 
 dotenv.config();
 
@@ -51,6 +52,7 @@ app.use(profileRouter);
 app.use(educationRouter);
 app.use(experienceRouter);
 app.use(aboutRouter);
+app.use(avatarRouter);
 app.use(linksRouter);
 
 

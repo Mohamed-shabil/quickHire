@@ -9,7 +9,7 @@ const AddSections = () => {
         <DropdownMenu>
             <DropdownMenuTrigger >
                 <Button variant={'outline'}>
-                    Add Sections
+                    Setup Profile
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>

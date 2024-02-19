@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Plus as FollowIcon, MoveUpRight as LinkIcon, PlusCircle } from "lucide-react";
+import { Plus as FollowIcon, Ghost, MoveUpRight as LinkIcon, PlusCircle } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import LinkCard from "@/components/LinkCard";
 import { cookies } from 'next/headers'
@@ -20,6 +20,7 @@ import {
 import AddSections from "@/components/AddSections";
 import {User,Education,Project,Experience} from '@/constants/constants'
 import axios from "axios";
+import { ProfileUpload } from "@/components/profileUpload";
 
 
 
@@ -73,16 +74,14 @@ export default async function Profile() {
                 <section className="flex gap-4 align-middle flex-col md:flex-row">
                     <span className="relative">
                         <Avatar className="w-36 h-36 border-4 shadow-xl border-white">
-                            <AvatarImage src={profile.fullName} />
+                            <AvatarImage src={profile.avatar} />
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
-                        <Button variant={'default'} size={"icon"} className="absolute right-0 bottom-0 p-0">
-                            <PlusCircle />
-                        </Button>
+                        <ProfileUpload/>
                     </span>
                     <div className="my-auto">
-                        <p className="font-bold text-2xl">{profile.fullName}</p>
-                        <p className="text-slate-400">{profile.headline}</p>
+                        <p className="font-bold text-2xl">{profile.fullName || profile.username}</p>
+                        <p className="text-slate-400">{profile.headline || profile.email}</p>
                     </div>
                 </section>
                 <section className="flex gap-4 my-auto">
@@ -94,7 +93,7 @@ export default async function Profile() {
                 </section>
             </Container>
             <Separator className="container my-8" />
-
+            {!profile.bio && !profile.education && !profile.experience ? <></>: <div className="text-center flex flex-col items-center justify-center"><Ghost />Setup Your Account</div>}
             {profile.bio? 
             <Container>
                 <Heading variant="profile-side">About Me</Heading>
