@@ -25,10 +25,6 @@ const profileSchema = new Schema({
         type:String,
         enum:['personal','organisation','group']
     },
-    username:{
-        type: String,
-        required:true,
-    },
     phone:{
         type:String
     },

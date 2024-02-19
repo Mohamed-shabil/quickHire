@@ -1,11 +1,12 @@
 import Image from "next/image";
 import PostCard from "@/components/PostCard";
+
+
 export default function Home() {
+  const posts = await getAllposts();
   return (
-    <div className="container grid grid-cols-10">
-        <div className="col-start-3 col-span-6">
-          <PostCard/>
-        </div>
+    <div className="container mx-auto">
+        <PostCard/>
     </div>
   );
 }
