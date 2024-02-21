@@ -40,11 +40,16 @@ app.use((req,res,next)=>{
     next();
 })
 
+<<<<<<< HEAD
 app.use(getAllPosts)
 app.use(createPostRoute);
 app.use(editPostRouter);
 app.use(myPostsRoute);
 app.use(getOnePost);
+=======
+app.use(createPostRoute);
+app.use(editPostRouter);
+>>>>>>> fd6c3a30b5168342a2b5143c4b3a22665afcdd05
 
 app.use(errorHandler);
 

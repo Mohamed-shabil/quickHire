@@ -9,7 +9,6 @@ import {profileRouter} from './routes/profile';
 import {educationRouter} from './routes/education';
 import {experienceRouter} from './routes/experience';
 import {linksRouter} from './routes/links';
-
 import {avatarRouter} from './routes/avatar';
 
 dotenv.config();
