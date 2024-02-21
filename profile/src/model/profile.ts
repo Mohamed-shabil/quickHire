@@ -5,6 +5,10 @@ const profileSchema = new Schema({
         type:String,
         required:true
     },
+    avatar:{
+        type:String,
+        default:""
+    },
     fullName: String,
     headline: String,
     bio: String,
@@ -20,10 +24,6 @@ const profileSchema = new Schema({
     profileType:{
         type:String,
         enum:['personal','organisation','group']
-    },
-    username:{
-        type: String,
-        required:true,
     },
     phone:{
         type:String

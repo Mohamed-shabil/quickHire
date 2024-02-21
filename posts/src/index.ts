@@ -12,16 +12,16 @@ const start = async() =>{
         console.log(process.env.MONGO_URI)
         await mongoose.connect(process.env.MONGO_URI)
 
-        console.log("[AUTH DB] Database Connected Successfully!")
+        console.log("[POSTS DB] Database Connected Successfully!")
 
     }catch(err){
 
         console.error(err);
 
     }
-    app.listen(3001,()=>{ 
+    app.listen(3004,()=>{ 
 
-        console.log('[AUTH SERVICE] Listening on port 3001!');
+        console.log('[POST SERVICE] Listening on port 3004!');
     })
 }
 

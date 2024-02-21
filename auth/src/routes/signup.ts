@@ -9,7 +9,9 @@ import { body, validationResult } from 'express-validator'
 import catchAsync from '../utils/catchAsync'
 import bcrypt from 'bcryptjs';
 import OtpVerification from '../model/otp';
-import { userCreatedProducer } from '../events/producers/userCreatedProducers'
+import { KafkaProducer } from '../events/KafkaBaseProducer';
+import { kafkaClient } from '../events/kafkaClient';
+
 import { createSendToken } from '../utils/createSendToken';
 
 const router = express.Router();
@@ -104,8 +106,7 @@ router.post('/api/users/signup',[
         ...(user.phone &&{phone:user.phone})
     }
 
-    userCreatedProducer(payload);
-    
+    new KafkaProducer(kafkaClient).produce('user-created',payload);
     createSendToken(payload,res);
 }));
 

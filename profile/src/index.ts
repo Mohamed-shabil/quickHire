@@ -1,5 +1,8 @@
 import mongoose from 'mongoose';
 import {app} from './app'
+import { kafkaClient } from './events/kafkaClient';
+import { kafkaConsumer } from './events/KafkaBaseConsumer';
+import { createProfile } from './events/consumer/consumeCallback';
 
 const start = async() =>{
     if(!process.env.JWT_KEY){
@@ -13,6 +16,8 @@ const start = async() =>{
         await mongoose.connect(process.env.MONGO_URI)
 
         console.log("[Profile DB] Database Connected Successfully!")
+    
+        new kafkaConsumer(kafkaClient,'profile-group').consume('user-created',createProfile)
 
     }catch(err){
 

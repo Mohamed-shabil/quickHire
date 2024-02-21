@@ -9,7 +9,8 @@ import {profileRouter} from './routes/profile';
 import {educationRouter} from './routes/education';
 import {experienceRouter} from './routes/experience';
 import {linksRouter} from './routes/links';
-import {userCreatedConsumer} from './events/consumer/userCreatedConsumer'
+
+import {avatarRouter} from './routes/avatar';
 
 dotenv.config();
 
@@ -17,7 +18,7 @@ import {NotFoundError, errorHandler, currentUser} from '@quickhire/common'
 
 export const app = express();
 
-userCreatedConsumer();
+
 app.use(cors({
     origin:'http://localhost:3000',
     methods:['POST','GET','DELETE','PATCH'],
@@ -51,6 +52,7 @@ app.use(profileRouter);
 app.use(educationRouter);
 app.use(experienceRouter);
 app.use(aboutRouter);
+app.use(avatarRouter);
 app.use(linksRouter);
 
 

@@ -15,7 +15,7 @@ export const signToken = (payload:PayloadInterface)=>{
 export const createSendToken = (payload:PayloadInterface,res:Response)=>{
     const token = signToken(payload);
     const cookieOption = {
-        expires:new Date( Date.now() + 30 * 24 * 60 * 60 * 1000)
+        expires:new Date( Date.now() + 30 * 60 * 60 * 1000)
     }
 
     res.cookie('jwt',token,cookieOption);

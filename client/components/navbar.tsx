@@ -65,6 +65,12 @@ const Navbar = () => {
                                     <span>Profile</span>
                                 </Link>
                             </DropdownMenuItem>
+                            <DropdownMenuItem>
+                                <Link href={'/posts'} className="flex ">
+                                    <UserRound className="mr-2 h-4 w-4"/>
+                                    <span>Posts</span>
+                                </Link>
+                            </DropdownMenuItem>
                             <DropdownMenuItem onClick={logout} className="text-rose-500">
                                 <LogOut className="mr-2 h-4 w-4" />
                                 <span>Logout</span>

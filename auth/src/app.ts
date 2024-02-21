@@ -15,7 +15,6 @@ import { resentOtpRouter } from './routes/resendOtp';
 import { verifyOtpRouter } from './routes/verifyOtp';
 import { googleAuthRouter } from './routes/verifyAuth';
 import { resetPasswordRouter } from './routes/resetPassword';
-import {userCreatedProducer} from './events/producers/userCreatedProducers'
 
 export const app = express();
 

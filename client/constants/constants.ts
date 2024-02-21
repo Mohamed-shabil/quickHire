@@ -39,6 +39,7 @@ export type Project = {
 };
   
 export type User = {
+    avatar:string;
     userId: string;
     fullName?: string;
     headline?: string;
@@ -59,4 +60,35 @@ export type User = {
     projects?: Project[];
     followers?: string[]; 
     following?: string[];
+}
+
+// posts type
+export interface Media {
+  url: string;
+}
+
+interface Like {
+  userId: string;
+  createdAt?: Date;
+}
+
+interface Comment {
+  userId: string;
+  comment: string;
+  createdAt?: Date;
+}
+
+interface Report {
+  userId?: string;
+  createdAt?: Date;
+}
+
+export type PostType = {
+  _id:string;
+  creatorId: string;
+  caption?: string;
+  media?: Media[];
+  likes?: Like[];
+  comments?: Comment[];
+  report?: Report[];
 }

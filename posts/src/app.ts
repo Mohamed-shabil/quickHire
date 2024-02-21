@@ -1,9 +1,14 @@
 import express, { json, urlencoded } from 'express';
 import morgan from 'morgan';
-import {currentUser } from '@quickhire/common';
+import {currentUser, errorHandler } from '@quickhire/common';
 import dotenv from 'dotenv';
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
+import {createPostRoute} from './routes/createPost';
+import { editPostRouter } from './routes/EditPost';
+import { getAllPosts } from './routes/getAllposts';
+import { myPostsRoute } from './routes/getAllMyPosts';
+import { getOnePost } from './routes/getPost';
 dotenv.config();
 
 const app = express();
@@ -34,5 +39,14 @@ app.use((req,res,next)=>{
     console.log(req.currentUser);
     next();
 })
+
+app.use(getAllPosts)
+app.use(createPostRoute);
+app.use(editPostRouter);
+app.use(myPostsRoute);
+app.use(getOnePost);
+
+app.use(errorHandler);
+
 
 export {app}

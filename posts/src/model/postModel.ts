@@ -1,16 +1,16 @@
-import mongoose, { Mongoose } from 'mongoose';
+import mongoose, { InferSchemaType, Mongoose } from 'mongoose';
 
 const PostSchema = new mongoose.Schema({
-    creator:{
+    creatorId:{
         type:mongoose.Schema.Types.ObjectId,
         required:true  
     },
     caption:{
         type:String
     },
-    media:{
-        type:URL,
-    },
+    media:[{
+      url:String
+    }],
     likes: [
         {
           userId: {
@@ -49,3 +49,10 @@ const PostSchema = new mongoose.Schema({
         }
     }]
 },{timestamps:true})
+
+
+type Posts = InferSchemaType<typeof PostSchema>
+
+const PostModel = mongoose.model('Post',PostSchema)
+
+export { PostModel as Posts };
