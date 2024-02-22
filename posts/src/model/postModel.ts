@@ -12,6 +12,10 @@ const PostSchema = new mongoose.Schema({
     media:[{
       url:String
     }],
+    likesCount:{
+      type: Number,
+      default:0
+    },
     likes: [
         {
           userId: {
