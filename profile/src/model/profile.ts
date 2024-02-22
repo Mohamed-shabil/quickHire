@@ -77,8 +77,8 @@ const profileSchema = new Schema({
     }]
 })
 
-type Profile = InferSchemaType<typeof profileSchema>
+type ProfileType = InferSchemaType<typeof profileSchema>
 
-const ProfileModel = mongoose.model('Profile',profileSchema)
+const ProfileModel = mongoose.model<ProfileType>('Profile',profileSchema)
 
-export { ProfileModel as Profile };
+export { ProfileModel as Profile,ProfileType };

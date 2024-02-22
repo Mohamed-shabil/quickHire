@@ -24,7 +24,7 @@ const Navbar = () => {
     const router = useRouter();
     useEffect(()=>{
         axios.defaults.withCredentials = true;
-        axios.get('http://localhost:3001/api/users/currentUser').then((res)=>{
+        axios.get('http://localhost:3003/api/profile/currentUser').then((res)=>{
             console.log()
             dispatch(setUserData(res.data.currentUser));
         }).catch((err)=>{
@@ -32,7 +32,6 @@ const Navbar = () => {
         });
     },[]);
     const user = useSelector((state:RootState)=>state.user.userData);
-    console.log(user)
     
     const logout = async()=>{
         await axios.get('http://localhost:3001/api/users/signout');
@@ -51,8 +50,12 @@ const Navbar = () => {
                         (
                         <DropdownMenu>
                           <DropdownMenuTrigger>
-                            <Avatar>
-                                <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                            <Avatar className="ring-2 ring-offset-2 ring-blue-500">
+                                <AvatarImage 
+                                    src={user.avatar ? user.avatar : 'https://github.com/shadcn.png'}
+                                    alt="@shadcn" 
+                                    className="object-cover"
+                                />
                                 <AvatarFallback>CN</AvatarFallback>
                             </Avatar>
                           </DropdownMenuTrigger>

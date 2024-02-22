@@ -23,7 +23,10 @@ router.patch('/api/profile/avatar',requireAuth,ImageConverter,uploadProfie,catch
     await profile.save()
     const payload = {
         _id:profile.userId,
-        avatar:profile.avatar
+        avatar:profile.avatar,
+        followers:profile.followers,
+        followings:profile.following,
+        headline:profile.headline
     }
     const response = new KafkaProducer(kafkaClient).produce('avatar-updated',payload);
     console.log(response)

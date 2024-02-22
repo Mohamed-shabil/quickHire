@@ -9,7 +9,7 @@ import { PostType } from "@/constants/constants";
 
 const getAllposts = async (token:string) =>{
   axios.defaults.withCredentials = true;
-  const res = await axios.get('http://localhost:3004/api/posts/myPosts',{
+  const res = await axios.get('http://localhost:3004/api/posts/show',{
       headers: {
           Cookie: `jwt=${token}`
       }

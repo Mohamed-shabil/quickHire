@@ -10,10 +10,12 @@ import {educationRouter} from './routes/education';
 import {experienceRouter} from './routes/experience';
 import {linksRouter} from './routes/links';
 import {avatarRouter} from './routes/avatar';
+import { currentUserRouter } from './routes/currentUser'
+import {NotFoundError, errorHandler, currentUser} from '@quickhire/common'
+
 
 dotenv.config();
 
-import {NotFoundError, errorHandler, currentUser} from '@quickhire/common'
 
 export const app = express();
 
@@ -47,6 +49,7 @@ app.use((req,res,next)=>{
 })
 
 app.use(currentUser);
+app.use(currentUserRouter)
 app.use(profileRouter);
 app.use(educationRouter);
 app.use(experienceRouter);

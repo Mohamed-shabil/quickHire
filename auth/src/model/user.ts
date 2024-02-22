@@ -33,6 +33,6 @@ const userSchema = new Schema({
 
 type UserType = InferSchemaType<typeof userSchema>
 
-const User = mongoose.model('User',userSchema)
+const User = mongoose.model<UserType>('User',userSchema)
 
 export { User,UserType };

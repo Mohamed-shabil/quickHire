@@ -5,9 +5,8 @@ import { Posts } from '../model/postModel';
 const router = express.Router();
 
 router.get('/api/posts/show',catchAsync(async(req:Request,res:Response)=>{
-    const posts = await Posts.find();
+    const posts = await Posts.find().populate('creatorId');
     console.log('ALL POSTS',posts)
-
     return res.status(200).json({
         status:'Success',
         post:posts

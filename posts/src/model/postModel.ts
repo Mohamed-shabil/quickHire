@@ -3,7 +3,8 @@ import mongoose, { InferSchemaType, Mongoose } from 'mongoose';
 const PostSchema = new mongoose.Schema({
     creatorId:{
         type:mongoose.Schema.Types.ObjectId,
-        required:true  
+        ref:'User',
+        required:true
     },
     caption:{
         type:String

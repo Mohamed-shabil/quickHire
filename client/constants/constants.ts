@@ -83,9 +83,17 @@ interface Report {
   createdAt?: Date;
 }
 
+
 export type PostType = {
   _id:string;
-  creatorId: string;
+  creatorId: string | {
+    _id:string,
+    avatar:string,
+    name:string;
+    headLine:string;
+    followers:string[],
+    followings:string[]
+  };
   caption?: string;
   media?: Media[];
   likes?: Like[];

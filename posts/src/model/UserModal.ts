@@ -1,7 +1,7 @@
 import mongoose, { InferSchemaType, Mongoose } from 'mongoose';
 
 const UserSchema = new mongoose.Schema({
-    userId:{
+    name:{
         type:String,
         required:true
     },
