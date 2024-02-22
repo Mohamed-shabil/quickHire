@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emoji-mart/data": "^1.1.2",
+    "@emoji-mart/react": "^1.1.1",
     "@hookform/resolvers": "^3.3.4",
     "@material-tailwind/react": "^2.1.8",
     "@radix-ui/react-alert-dialog": "^1.0.5",
