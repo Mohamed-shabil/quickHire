@@ -1,4 +1,3 @@
-import { kafkaClient } from "./kafkaClient";
 import { Kafka, Consumer, EachMessagePayload, KafkaMessage} from 'kafkajs';
 
 export class kafkaConsumer{
@@ -11,6 +10,7 @@ export class kafkaConsumer{
         await this.consumer.subscribe({topic,fromBeginning:false});
         await this.consumer.run({
             eachMessage: async({message}:EachMessagePayload)=>{
+                console.log('Consumer Inside Message---',message);
                 callback(message)
             }
         })

@@ -1,4 +1,7 @@
 import mongoose from 'mongoose';
+import { kafkaClient } from '../../profile/src/events/kafkaClient';
+import {kafkaConsumer} from './events/KafkaBaseConsumer'
+import { createUser } from './events/consumer/consumeCallback';
 import {app} from './app'
 
 const start = async() =>{
@@ -11,9 +14,10 @@ const start = async() =>{
         }
         console.log(process.env.MONGO_URI)
         await mongoose.connect(process.env.MONGO_URI)
-
         console.log("[POSTS DB] Database Connected Successfully!")
-
+        
+        new kafkaConsumer(kafkaClient,'post-group').consume('avatar-updated',createUser);
+        
     }catch(err){
 
         console.error(err);

@@ -73,7 +73,7 @@ export default async function Profile() {
                 <section className="flex gap-4 align-middle flex-col md:flex-row">
                     <span className="relative">
                         <Avatar className="w-36 h-36 border-4 shadow-xl border-white">
-                            <AvatarImage src={profile.avatar} />
+                            <AvatarImage src={profile.avatar} className="object-cover"/>
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
                         <ProfileUpload/>

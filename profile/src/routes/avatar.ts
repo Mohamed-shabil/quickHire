@@ -3,6 +3,9 @@ import {BadRequestError, NotAutherizedError, requireAuth} from '@quickhire/commo
 import catchAsync from '../utils/catchAsync'
 import {Profile} from '../model/profile';
 import { ImageConverter,uploadProfie } from '../middleware/profileUpload';
+import {KafkaProducer} from '../events/KafkaBaseProducer'; 
+import { kafkaClient } from '../events/kafkaClient';
+
 const router = express.Router();
 
 router.patch('/api/profile/avatar',requireAuth,ImageConverter,uploadProfie,catchAsync(async(req:Request,res:Response)=>{
@@ -18,7 +21,14 @@ router.patch('/api/profile/avatar',requireAuth,ImageConverter,uploadProfie,catch
     }
     profile.avatar = fileLocation;
     await profile.save()
-    return res.status(200).json({
+    const payload = {
+        _id:profile.userId,
+        avatar:profile.avatar
+    }
+    const response = new KafkaProducer(kafkaClient).produce('avatar-updated',payload);
+    console.log(response)
+
+    return res.status(200).json({   
         status:'Success',
         profile
     })
