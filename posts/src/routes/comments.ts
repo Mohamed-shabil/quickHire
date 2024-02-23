@@ -3,8 +3,7 @@ import { body,validationResult} from 'express-validator';
 import catchAsync from '../utils/catchAsync';
 import { requireAuth, validateRequest,BadRequestError,NotFoundError } from '@quickhire/common'
 import {Posts} from '../model/postModel'
-import { Likes } from '../model/likesModel';
-
+import { Comments } from '../model/commentModel';
 const router = express.Router();
 
 router.patch('/api/posts/likePost',requireAuth,[
@@ -12,35 +11,28 @@ router.patch('/api/posts/likePost',requireAuth,[
         .isMongoId()
         .notEmpty()
         .withMessage("Post ID required"),
+    body('comment')
+        .notEmpty()
+        .withMessage("Comment can't be Empty"),
         validateRequest
 ],catchAsync(async(req:Request,res:Response)=>{
     const errors = validationResult(req);
-    
-    const {postId} = req.body;
-
+    const {postId,comment} = req.body;
     const post = await Posts.findById(postId);
-
     if(!post){
         throw new NotFoundError('Post with this ID not Found')
     }
-
-    const isUserLiked = await Likes.findOne({user:req.currentUser?._id,post:postId});
-
-    if(isUserLiked){
-        await Likes.deleteOne({user:req.currentUser?._id,post:postId});
-        return res.status(200).json({
-            status:'success',
-        });
-    }
-
-    const like = await Likes.create({
-        user : req.currentUser?._id,
-        post:postId,
-    });
+    
+    await Comments.create({
+        posts:postId,
+        user:req.currentUser?._id,
+        comment,
+    })
+    const commentCount = await Comments.countDocuments({post:postId});  
 
     return res.status(200).json({
         status:"success",
-        like,
+        comment:commentCount
     })
 }))
 
