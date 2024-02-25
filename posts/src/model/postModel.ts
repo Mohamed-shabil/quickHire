@@ -12,38 +12,6 @@ const PostSchema = new mongoose.Schema({
     media:[{
       url:String
     }],
-    likesCount:{
-      type: Number,
-      default:0
-    },
-    likes: [
-        {
-          userId: {
-            type: String,
-            required: true
-          },
-          createdAt: {
-            type: Date,
-            default: Date.now
-          }
-        }
-    ],
-    comments: [
-        {
-          userId: {
-            type: String,
-            required: true
-          },
-          comment: {
-            type: String,
-            required: true
-          },
-          createdAt: {
-            type: Date,
-            default: Date.now
-          }
-        }
-    ],
     report:[{
         userId:{
           type:mongoose.Schema.Types.ObjectId

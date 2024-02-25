@@ -9,6 +9,10 @@ import { editPostRouter } from './routes/EditPost';
 import { getAllPosts } from './routes/getAllposts';
 import { myPostsRoute } from './routes/getAllMyPosts';
 import { getOnePost } from './routes/getPost';
+import { likePostRouter } from './routes/likePost';
+import { getAllComments } from './routes/getComments';
+import { commentRouter } from './routes/comments';
+
 dotenv.config();
 
 const app = express();
@@ -45,7 +49,9 @@ app.use(createPostRoute);
 app.use(editPostRouter);
 app.use(myPostsRoute);
 app.use(getOnePost);
-
+app.use(likePostRouter)
+app.use(getAllComments);
+app.use(commentRouter);
 app.use(errorHandler);
 
 

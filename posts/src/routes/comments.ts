@@ -6,7 +6,7 @@ import {Posts} from '../model/postModel'
 import { Comments } from '../model/commentModel';
 const router = express.Router();
 
-router.patch('/api/posts/likePost',requireAuth,[
+router.patch('/api/posts/comments',requireAuth,[
     body('postId')
         .isMongoId()
         .notEmpty()
@@ -17,14 +17,16 @@ router.patch('/api/posts/likePost',requireAuth,[
         validateRequest
 ],catchAsync(async(req:Request,res:Response)=>{
     const errors = validationResult(req);
+    console.log('working here')
     const {postId,comment} = req.body;
+    console.log('postId -----',postId)
     const post = await Posts.findById(postId);
     if(!post){
         throw new NotFoundError('Post with this ID not Found')
     }
     
     await Comments.create({
-        posts:postId,
+        post:postId,
         user:req.currentUser?._id,
         comment,
     })
@@ -36,4 +38,4 @@ router.patch('/api/posts/likePost',requireAuth,[
     })
 }))
 
-export {router as likePostRouter}
+export {router as commentRouter}

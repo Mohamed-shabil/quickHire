@@ -69,6 +69,7 @@ export interface Media {
 
 interface Like {
   userId: string;
+  postId:string;
   createdAt?: Date;
 }
 
@@ -86,7 +87,7 @@ interface Report {
 
 export type PostType = {
   _id:string;
-  creatorId: string | {
+  creator: string | {
     _id:string,
     avatar:string,
     name:string;
@@ -97,6 +98,7 @@ export type PostType = {
   caption?: string;
   media?: Media[];
   likes?: Like[];
+  liked:boolean;
   comments?: Comment[];
   report?: Report[];
 }

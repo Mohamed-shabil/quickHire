@@ -7,7 +7,7 @@ import { Likes } from '../model/likesModel';
 
 const router = express.Router();
 
-router.patch('/api/posts/likePost',requireAuth,[
+router.post('/api/posts/likePost',requireAuth,[
     body('postId')
         .isMongoId()
         .notEmpty()
@@ -30,6 +30,7 @@ router.patch('/api/posts/likePost',requireAuth,[
         await Likes.deleteOne({user:req.currentUser?._id,post:postId});
         return res.status(200).json({
             status:'success',
+            like:null
         });
     }
 
@@ -40,7 +41,7 @@ router.patch('/api/posts/likePost',requireAuth,[
 
     return res.status(200).json({
         status:"success",
-        like,
+        like
     })
 }))
 

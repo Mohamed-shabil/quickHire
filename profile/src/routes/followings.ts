@@ -11,7 +11,7 @@ import { Profile } from '../model/profile';
 
 const router = express.Router();
 
-router.post('/api/profile/followers/follow',[
+router.post('/api/profile/followers/follow',requireAuth,[
     body('followerId')
         .notEmpty()
         .isMongoId()
@@ -34,7 +34,7 @@ router.post('/api/profile/followers/follow',[
     });
 }))
 
-router.post('/api/profile/followers/unfollow',[
+router.post('/api/profile/followers/unfollow',requireAuth,[
     body('followerId')
         .notEmpty()
         .isMongoId()
@@ -61,7 +61,7 @@ router.post('/api/profile/followers/unfollow',[
     });
 }));
 
-router.get('/api/profile/getFollowers',catchAsync(async(req:Request,res:Response)=>{
+router.get('/api/profile/followersgetFollowers',requireAuth,catchAsync(async(req:Request,res:Response)=>{
     const user = await Profile.findOne({userId:req.currentUser?._id});
     if(!user){
         throw new NotAutherizedError();
