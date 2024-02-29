@@ -207,6 +207,7 @@ export function EducationFormModal() {
                   )}
                 />
               </div>
+              
               <div className="col-span-6 sm:col-span-3">
                 <FormField
                     name="startYear"

@@ -47,7 +47,7 @@ const VerifyOtp = () => {
                   <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded"><Check /></div>
                 ),
               })
-            router.push('/');
+            router.push('/selectRole');
         }).catch(err=>{
             console.log(err)
             toast({

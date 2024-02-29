@@ -6,6 +6,7 @@ import { ExperienceFormModal } from '@/components/Modals/experienceModal'
 import { LinkFormModal} from '@/components/Modals/LinksFormModal'
 import { AvatarModal } from '@/components/Modals/avatarModal'
 import { CreatePostModal } from "../Modals/createPostModal";
+import { CreateJobModal } from "../Modals/createJobModal";
 const ModalProvider = () => {
     const [isMounted,setIsMouted] = useState(false);
     useEffect(()=>{
@@ -18,6 +19,7 @@ const ModalProvider = () => {
 
     return ( 
         <>  
+            <CreateJobModal/>
             <CreatePostModal/>
             <AvatarModal/>
             <LinkFormModal/>

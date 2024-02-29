@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Plus as FollowIcon, Ghost, MoveUpRight as LinkIcon, PlusCircle } from "lucide-react";
+import { Plus as FollowIcon, Ghost, Key, MoveUpRight as LinkIcon, MoreVertical, PlusCircle } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import LinkCard from "@/components/LinkCard";
 import { cookies } from 'next/headers'
@@ -21,9 +21,6 @@ import AddSections from "@/components/AddSections";
 import {User,Education,Project,Experience} from '@/constants/constants'
 import axios from "axios";
 import { ProfileUpload } from "@/components/profileUpload";
-
-
-
 
 const getProfile = async (token:string) =>{
     console.log('here is the token',token)
@@ -85,14 +82,20 @@ export default async function Profile() {
                 </section>
                 <section className="flex gap-4 my-auto">
                     <AddSections/>
-                    <Button variant="default">
-                        <FollowIcon className="me-2" size="1.2em" />
-                        Follow
+                    <Button variant="default" size={"icon"}>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger><MoreVertical /></DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem>Create a post</DropdownMenuItem>
+                            <DropdownMenuItem>Post a job</DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+
                     </Button>
                 </section>
             </Container>
             <Separator className="container my-8" />
-            {!profile.bio && !profile.education && !profile.experience ? <></>: <div className="text-center flex flex-col items-center justify-center"><Ghost />Setup Your Account</div>}
             {profile.bio? 
             <Container>
                 <Heading variant="profile-side">About Me</Heading>
@@ -105,14 +108,15 @@ export default async function Profile() {
                     </section>
                 
                     <section className="flex md:bg-accent md:p-4 p-0 justify-between rounded text-primary flex-col gap-4 lg:flex-row">
-                        {links.map((link)=>(
+                        {links.map((link,i)=>(
                             // @ts-ignore
-                            <LinkCard link={link}/>
+                            <LinkCard key={i} link={link}/>
                         ))}
                     </section>
                 </section>
             </Container> : <></>
             }
+
             <Separator className="container my-8" />
             {profile.experience?.length ? 
                 <Container>

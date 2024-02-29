@@ -30,7 +30,6 @@ import { EmojiPicker } from "../emojiPicker"
 export function CreatePostModal() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const captionField = useRef();
   const [preview,setPreview] = useState('');
   const [caption,setCaption] = useState('')
   const [loading,setLoading] = useState(false);
@@ -156,7 +155,7 @@ export function CreatePostModal() {
                   />
                 
                   <Button variant={'outline'} size={'icon'} className="border p" type="button">
-                    <EmojiPicker onChange={(emoji:string)=> setCaption(caption+emoji)}/>
+                    <EmojiPicker onChange={(emoji: string) => setCaption(caption + emoji)} className={''}/>
                   </Button>
                 </span>
                 <Button 

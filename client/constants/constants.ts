@@ -102,3 +102,5 @@ export type PostType = {
   comments?: Comment[];
   report?: Report[];
 }
+
+export type UserType = 'seeker' | 'admin' | 'recruiter'

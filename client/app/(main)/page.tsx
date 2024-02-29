@@ -14,7 +14,7 @@ const getAllposts = async (token:string) =>{
           Cookie: `jwt=${token}`
       }
   });
-  console.log('POSTS IN SERVER FUNCTION',res.data)
+
   return res.data.post;
 }
 
@@ -23,8 +23,8 @@ export default async function Home() {
   if(!token){
     return redirect('/signup'); 
   }
+
   const posts = await getAllposts(token);
-  console.log('POSTS IN SERVER',posts);
   return (
     <div className="container w-full flex flex-col justify-center">
         <CreatePostButton/>

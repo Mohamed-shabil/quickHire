@@ -20,9 +20,11 @@ import { toast, useToast } from "@/components/ui/use-toast";
 import { Check, Eye, EyeOff, Loader2, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+
 export default function Signup() {
     const [show,setShow] = useState(false);
-    const [user, setUser] = useAuthState(auth)
+    const [user, setUser] = useAuthState(auth);
+    
     // const [error,SetError] = useState([{}]);
     const { toast } = useToast()
     const dispatch = useDispatch();

@@ -14,17 +14,36 @@ import {useDispatch,useSelector} from "react-redux";
 import { RootState } from "@/store/reducers";
 import axios from "axios";
 import { Separator } from "./ui/separator";
-import { Input } from "./ui/input";
-import { EmojiPicker } from "./emojiPicker";
 import { CommentBox } from "./commentBox";
+import {} from '@/constants/constants'
+import { useRouter } from "next/navigation";
 
 const PostCard = ({post}:{post:PostType}) => {
     const dispatch = useDispatch();
+    const router = useRouter();
+
     const currentUser = useSelector((state:RootState)=>state.user.userData);
-    const [truncate, setTruncate] = useState(post.liked);
+    // console.log('currentUser from Post Card',currentUser)
+    const [truncate, setTruncate] = useState<boolean>(false);
     const [like, setLike] = useState(post.liked);
     const [likeCount, setLikeCount] = useState(post.likes?.length ? post.likes?.length : 0);
     const [comment, setComment] = useState(false);
+    const [isFollowing, setIsFollowing] = useState<boolean>();
+
+    let creator:string;
+    if(post.creator instanceof Object){
+        creator = post.creator._id
+    }else{
+        creator = post.creator;
+    }
+
+    useEffect(()=>{
+        // let check = currentUser?.followings.findIndex((item)=> item === creator)
+        // @ts-ignore
+        setIsFollowing(true);
+    },[]);
+
+
     const likePost = async (postId:string)=>{
         setLike(!like)
         if(like){
@@ -39,6 +58,23 @@ const PostCard = ({post}:{post:PostType}) => {
             console.log(err)
         })
     }
+
+    const handleFollow = async ()=>{
+
+        if(isFollowing){
+            setIsFollowing(!isFollowing)
+            axios.patch('http://localhost:3003/api/profile/followers/unfollow',{followerId:creator}).then(res=>{
+                console.log(res);
+            })
+        }else{
+            setIsFollowing(!isFollowing)
+            axios.patch('http://localhost:3003/api/profile/followers/follow',{followerId:creator}).then(res=>{
+                console.log(res);
+            })
+        }
+        router.refresh();
+    }
+
     return ( 
         <div className="w-full flex flex-col items-center justify-center my-3">
             <span className="w-full max-w-lg block rounded-lg p-3 shadow-sm border">
@@ -53,14 +89,14 @@ const PostCard = ({post}:{post:PostType}) => {
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
                         <div>
-                            <h1 className="font-medium">{post.creator instanceof Object ? 
+                            <h1 className="font-medium capitalize">{post.creator instanceof Object ? 
                                 post.creator.name:''}
                             </h1>
-                            <p className="text-xs">{post.creator instanceof Object ? 
+                            <p className="text-xs capitalize">{post.creator instanceof Object ? 
                                 post.creator.headLine:''}</p>
                         </div>
                     </div>
-                    <Button variant={'fade'} size={'mini'} className="">Follow</Button>
+                    <Button variant={'fade'} size={'mini'} onClick={handleFollow}>{isFollowing ? 'Following' : 'Follow'}</Button>
                 </div>
                 <Separator className="my-1"/>
                 {

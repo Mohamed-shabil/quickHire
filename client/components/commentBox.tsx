@@ -5,8 +5,8 @@ import { Input } from "./ui/input";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Form,FormControl, FormField, FormItem, FormMessage } from "./ui/form";
-import { z } from "zod";
-import { useRouter } from "next/router";
+import { number, z } from "zod";
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "./ui/button";
 import { Loader2, SendHorizontal } from "lucide-react";
@@ -37,11 +37,11 @@ export function CommentBox ({postId}:{postId:string}){
     const router = useRouter();
     const [loading,setLoading] = useState(false)
     const user = useSelector((state:RootState)=> state.user.userData);
-    const [comments,setComments] = useState<comment[]>();
+    const [comments,setComments] = useState<comment[] | undefined>();
     const [commentsData,setCommentsData] = useState<commentData>()
 
-    useEffect(()=>{
-        setLoading(true)
+
+    const refetch = async()=>{
         axios.get(`http://localhost:3004/api/posts/comments/${postId}`).then((res)=>{
             console.log(res);
             setComments(res.data.comment);
@@ -51,8 +51,13 @@ export function CommentBox ({postId}:{postId:string}){
         }).finally(()=>{
             setLoading(false)
         })
+    }
+
+    useEffect(()=>{
+        refetch();
     },[])
 
+    
     const formSchema = z.object({
       comment:z.string()
     })
@@ -64,19 +69,20 @@ export function CommentBox ({postId}:{postId:string}){
         },
         mode:"onTouched"
     });
+
+    console.log({comments})
+
     const onSubmit = (values:z.infer<typeof formSchema>)=>{
         axios.patch('http://localhost:3004/api/posts/comments',{comment:values.comment,postId}).then((res)=>{
             console.log('comment is reaching ...',res);
             form.reset();
-            router.reload();
+            refetch();
         }).catch((err)=>{
             console.log(err);
         })
     }
-    const loadMore = ()=>{
-        axios.get(`http://localhost:3004/api/posts/comments/${postId}`);
-    }
-    console.log(comments)
+
+    console.log(comments);
     return (
         <div className={cn('mt-4')}>
             <div className="flex flex-row gap-2">
@@ -119,9 +125,9 @@ export function CommentBox ({postId}:{postId:string}){
                     )) :
                     <></>
                 }
-                <Button className="mx-auto" variant={"link"} onClick={loadMore}>
+                {/* <Button className="mx-auto" variant={"link"} >
                     LoadMore
-                </Button>
+                </Button> */}
             </div>
         </div>
     )

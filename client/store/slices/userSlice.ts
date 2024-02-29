@@ -1,4 +1,6 @@
+import { UserType } from "@/constants/constants";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+
 
 
 interface UserDataInterface{
@@ -7,6 +9,11 @@ interface UserDataInterface{
     phone:string;
     email:string;
     avatar?:string;
+    followers:string[] | [],
+    followings:string[] | [],
+    role:UserType,
+    verified:boolean,
+    isBlocked:boolean,
 }
 
 interface UserState {

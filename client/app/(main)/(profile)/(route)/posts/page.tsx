@@ -10,7 +10,6 @@ const getMyPosts = async (token:string) =>{
             Cookie: `jwt=${token}`
         }
     });
-    console.log('POSTS IN SERVER FUNCTION',res.data)
     return res.data.post;
 }
 
