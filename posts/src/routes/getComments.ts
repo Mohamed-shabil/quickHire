@@ -14,16 +14,25 @@ router.get('/api/posts/comments/:postId',requireAuth,catchAsync(async(req:Reques
     if(!post){
         throw new NotFoundError('Post with this ID not Found')
     }
-    const page = req.body?.page*1 || 1;
-    const limit = 4;
-    const skip = (page - 1) * limit;
     
-    const comment = await Comments.find({post:postId}).sort({createdAt:-1}).skip(skip).limit(limit).populate('user')
+    console.log('page ===',req.query.page)
+    // let page:number;
+    // if(req.query.page){
+    //     page = parseInt(req.query.page as string);
+    // }else{
+    //     page = 1; 
+    // }
+    // const limit = 4 * page
+    // const skip = page * limit;
+    
+    // const comment = await Comments.find({post:postId}).sort({createdAt:-1}).skip(skip).limit(limit).populate('user')
+    const comment = await Comments.find({post:postId}).sort({createdAt:-1}).populate('user')
+    console.log('res comment',comment)
     return res.status(200).json({
         status:"success",
         comment:comment,
         commentCount:comment.length,
-        page
+        // page
     })
 }))
 

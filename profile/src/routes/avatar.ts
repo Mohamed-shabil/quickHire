@@ -3,8 +3,9 @@ import {BadRequestError, NotAutherizedError, requireAuth} from '@quickhire/commo
 import catchAsync from '../utils/catchAsync'
 import {Profile} from '../model/profile';
 import { ImageConverter,uploadProfie } from '../middleware/profileUpload';
-import {KafkaProducer} from '../events/KafkaBaseProducer'; 
+import {KafkaProducer} from '@quickhire/common'; 
 import { kafkaClient } from '../events/kafkaClient';
+import { Follow } from '../model/follow';
 
 const router = express.Router();
 
@@ -15,22 +16,27 @@ router.patch('/api/profile/avatar',requireAuth,ImageConverter,uploadProfie,catch
     const fileWithLocation = req.file as Express.MulterS3.File
     const fileLocation = fileWithLocation.location; 
     console.log(fileWithLocation);
+
     const profile = await Profile.findOne({userId:req.currentUser?._id});
+
     if(!profile){
         throw new NotAutherizedError();
     }
+    
+    const followers = Follow.find({follow:req.currentUser?._id});
+    const followings = Follow.find({followedBy:req.currentUser?._id});
+
     profile.avatar = fileLocation;
-    await profile.save()
+    await profile.save();
+
     const payload = {
         _id:profile.userId,
         avatar:profile.avatar,
-        followers:profile.followers,
-        followings:profile.following,
-        headline:profile.headline
+        headline:profile.headline,
     }
     const response = new KafkaProducer(kafkaClient).produce('avatar-updated',payload);
-    console.log(response)
-
+    
+    console.log(response, payload);
     return res.status(200).json({   
         status:'Success',
         profile

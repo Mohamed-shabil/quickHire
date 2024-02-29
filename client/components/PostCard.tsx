@@ -28,20 +28,7 @@ const PostCard = ({post}:{post:PostType}) => {
     const [like, setLike] = useState(post.liked);
     const [likeCount, setLikeCount] = useState(post.likes?.length ? post.likes?.length : 0);
     const [comment, setComment] = useState(false);
-    const [isFollowing, setIsFollowing] = useState<boolean>();
-
-    let creator:string;
-    if(post.creator instanceof Object){
-        creator = post.creator._id
-    }else{
-        creator = post.creator;
-    }
-
-    useEffect(()=>{
-        // let check = currentUser?.followings.findIndex((item)=> item === creator)
-        // @ts-ignore
-        setIsFollowing(true);
-    },[]);
+    const [isFollowing, setIsFollowing] = useState<boolean>(post.followingCreator);
 
 
     const likePost = async (postId:string)=>{
@@ -60,15 +47,14 @@ const PostCard = ({post}:{post:PostType}) => {
     }
 
     const handleFollow = async ()=>{
-
         if(isFollowing){
             setIsFollowing(!isFollowing)
-            axios.patch('http://localhost:3003/api/profile/followers/unfollow',{followerId:creator}).then(res=>{
+            axios.delete(`http://localhost:3003/api/profile/followers/unfollow/${post.creator._id}`).then(res=>{
                 console.log(res);
             })
         }else{
             setIsFollowing(!isFollowing)
-            axios.patch('http://localhost:3003/api/profile/followers/follow',{followerId:creator}).then(res=>{
+            axios.post('http://localhost:3003/api/profile/followers/follow',{userId:post.creator._id}).then(res=>{
                 console.log(res);
             })
         }
@@ -81,22 +67,23 @@ const PostCard = ({post}:{post:PostType}) => {
                 <div className="flex h-full itmes-center">
                     <div className="flex flex-1 gap-2 items-center">
                         <Avatar className="mb-2">
-                            <AvatarImage src={
-                                post.creator instanceof Object ? 
-                                post.creator.avatar:
-                                ''
-                            } alt="@shadcn" className="object-cover" />
+                            <AvatarImage src={post.creator.avatar} alt="@shadcn" className="object-cover" />
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
                         <div>
-                            <h1 className="font-medium capitalize">{post.creator instanceof Object ? 
-                                post.creator.name:''}
+                            <h1 className="font-medium capitalize">
+                                {post.creator.name}
                             </h1>
-                            <p className="text-xs capitalize">{post.creator instanceof Object ? 
-                                post.creator.headLine:''}</p>
+                            <p className="text-xs capitalize">
+                                {post.creator.headLine}
+                            </p>
                         </div>
                     </div>
-                    <Button variant={'fade'} size={'mini'} onClick={handleFollow}>{isFollowing ? 'Following' : 'Follow'}</Button>
+                    {
+                        post.creator._id != currentUser?._id ? 
+                        (<Button variant={'fade'} size={'mini'} className="mt-2" onClick={handleFollow}>{isFollowing ? 'Following' : 'Follow'}</Button>) :
+                        <></>
+                    }
                 </div>
                 <Separator className="my-1"/>
                 {

@@ -46,6 +46,8 @@ export default async function Profile() {
     }
     const profile:User = await getProfile(token);
 
+    console.log({profile});
+
     const links= [
         {
             title: "Email",

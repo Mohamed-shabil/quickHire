@@ -15,12 +15,13 @@ import { resentOtpRouter } from './routes/resendOtp';
 import { verifyOtpRouter } from './routes/verifyOtp';
 import { googleAuthRouter } from './routes/verifyAuth';
 import { resetPasswordRouter } from './routes/resetPassword';
+import { roleRouter } from './routes/setupRole'
 
 export const app = express();
 
 app.use(cors({
     origin:'http://localhost:3000',
-    methods:['POST','GET','DELETE'],
+    methods:['POST','GET','DELETE','PATCH'],
     credentials: true,
 }))
 
@@ -57,6 +58,7 @@ app.use(forgotPasswordRouter)
 app.use(resentOtpRouter);
 app.use(resetPasswordRouter);
 app.use(googleAuthRouter);
+app.use(roleRouter);
 
 app.all('*',() => {
     console.log('route not found 404');

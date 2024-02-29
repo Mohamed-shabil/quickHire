@@ -9,8 +9,8 @@ import { body, validationResult } from 'express-validator'
 import catchAsync from '../utils/catchAsync'
 import bcrypt from 'bcryptjs';
 import OtpVerification from '../model/otp';
-import { KafkaProducer } from '../events/KafkaBaseProducer';
-import { kafkaClient } from '../events/kafkaClient';
+import { KafkaProducer } from '@quickhire/common';
+import { kafkaClient } from '../kafka/kafkaClient';
 
 import { createSendToken } from '../utils/createSendToken';
 
@@ -103,10 +103,12 @@ router.post('/api/users/signup',[
         _id:user._id.toString(),
         email:user.email,
         name:user.name,
-        ...(user.phone &&{phone:user.phone})
+        ...(user.phone &&{phone:user.phone}),
+        verified:user.verified,
+        isBlocked:user.isBlocked,
+        role:user.role,
     }
 
-    new KafkaProducer(kafkaClient).produce('user-created',payload);
     createSendToken(payload,res);
 }));
 

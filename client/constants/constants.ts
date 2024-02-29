@@ -51,7 +51,7 @@ export type User = {
       url: string;
     };
     location?: string;
-    profileType?: 'personal' | 'organisation' | 'group';
+    profileType?: 'seeker' | 'recruiter' | 'admin';
     username: string;
     phone?: string;
     coverImage?: string;
@@ -87,7 +87,7 @@ interface Report {
 
 export type PostType = {
   _id:string;
-  creator: string | {
+  creator: {
     _id:string,
     avatar:string,
     name:string;
@@ -97,10 +97,12 @@ export type PostType = {
   };
   caption?: string;
   media?: Media[];
-  likes?: Like[];
   liked:boolean;
+  followingCreator:boolean;
   comments?: Comment[];
+  likes:[],
   report?: Report[];
+  createdAt:Date
 }
 
 export type UserType = 'seeker' | 'admin' | 'recruiter'

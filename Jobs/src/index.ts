@@ -1,8 +1,6 @@
 import mongoose from 'mongoose';
 import {app} from './app'
-import { kafkaClient } from './events/kafkaClient';
-import { kafkaConsumer } from '@quickhire/common';
-import { createProfile } from './events/consumer/consumeCallback';
+import { Kafka } from 'kafkajs';
 
 const start = async() =>{
     if(!process.env.JWT_KEY){
@@ -14,18 +12,12 @@ const start = async() =>{
         }
         console.log(process.env.MONGO_URI)
         await mongoose.connect(process.env.MONGO_URI)
-
-        console.log("[Profile DB] Database Connected Successfully!")
-    
-        new kafkaConsumer(kafkaClient,'profile-group').consume('user-created',createProfile)
-
+        console.log("[JOBS DB] Database Connected Successfully!")
     }catch(err){
-
         console.error(err);
-
     }
-    app.listen(3003,()=>{
-        console.log('[PROFILE SERVICE] Listening on port 3003!');
+    app.listen(3005,()=>{ 
+        console.log('[JOBS SERVICE] Listening on port 3005!');
     })
 }
 

@@ -12,6 +12,7 @@ import {linksRouter} from './routes/links';
 import {avatarRouter} from './routes/avatar';
 import { currentUserRouter } from './routes/currentUser'
 import {NotFoundError, errorHandler, currentUser} from '@quickhire/common'
+import { followRoute } from './routes/follow'
 
 
 dotenv.config();
@@ -56,6 +57,7 @@ app.use(experienceRouter);
 app.use(aboutRouter);
 app.use(avatarRouter);
 app.use(linksRouter);
+app.use(followRoute)
 
 
 app.all('*',() => {

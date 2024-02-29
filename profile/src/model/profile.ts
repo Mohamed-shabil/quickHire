@@ -23,7 +23,7 @@ const profileSchema = new Schema({
     location:String,
     profileType:{
         type:String,
-        enum:['personal','organisation','group']
+        enum:['seeker','recruiter','admin'],
     },
     phone:{
         type:String
@@ -67,14 +67,14 @@ const profileSchema = new Schema({
         image:String,
         links:[String]
     }],
-    followers:[{
-        type: mongoose.Schema.Types.ObjectId,
-        ref:'profile'
-    }],
-    following:[{
-        type: mongoose.Schema.Types.ObjectId,
-        ref:'profile'
-    }]
+    // followers:[{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref:'profile'
+    // }],
+    // following:[{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref:'profile'
+    // }]
 })
 
 type ProfileType = InferSchemaType<typeof profileSchema>

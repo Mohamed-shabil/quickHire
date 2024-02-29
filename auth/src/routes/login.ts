@@ -30,13 +30,19 @@ async(req:Request,res:Response)=>{
 
         const isValidPassword = await bcrypt.compare(password,existingUser.password!);
 
+        if(!isValidPassword){
+            throw new BadRequestError('Your email or Password is wrong')
+        }
+
         const payload = {
             _id:existingUser._id.toString(),
             email:existingUser.email,
             name:existingUser.name,
-            ...(existingUser.phone &&{phone:existingUser.phone})
+            ...(existingUser.phone &&{phone:existingUser.phone}),
+            verified:existingUser.verified,
+            isBlocked:existingUser.isBlocked,
+            role:existingUser.role
         }
-
         createSendToken(payload,res);
     } catch (error) {
         console.log(error);

@@ -13,11 +13,11 @@ import {  any, z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import axios from "axios"
-import { toast } from "../ui/use-toast"
 import { useSelector,useDispatch } from "react-redux"
 import { RootState } from "@/store/reducers";
 import {setClose} from '@/store/slices/modalSlice'
-import { ArrowLeft, ArrowRight, Check, Link, X } from "lucide-react"
+import { ArrowLeft, ArrowRight, Plus,} from "lucide-react"
+import { animate, motion } from 'framer-motion'
 import { useRouter } from "next/navigation"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { cn } from "@/lib/utils"
@@ -157,7 +157,7 @@ const isModalOpen = open && type === 'createJob';
 
 return (
     <Dialog open={isModalOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[600px] min-h-max">
         <DialogHeader>
           <DialogTitle>Post a Job</DialogTitle>
           <DialogDescription>
@@ -165,10 +165,11 @@ return (
           </DialogDescription>
         </DialogHeader>
         <Form {...form} >
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form onSubmit={form.handleSubmit(onSubmit)} >
             <div className={cn('grid grid-cols-6 gap-2',{
               hidden: formStep !=0
-            })}>
+            })}
+            >
               <div className="col-span-6">
                   <FormField
                     name="title"
@@ -215,7 +216,6 @@ return (
                   name="employmentType"
                   render={({ field }) => (
                     <FormItem>
-                      {/* <FormLabel>Employment Type</FormLabel> */}
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger>
@@ -240,7 +240,6 @@ return (
                   name="workplace"
                   render={({ field }) => (
                     <FormItem>
-                      {/* <FormLabel>Work Place Type</FormLabel> */}
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger>
@@ -273,8 +272,10 @@ return (
                           <FormControl>
                             <div className="relative">
                               <Input placeholder="Nodejs, react" value={inputValue} onChange={(e)=>setInputValue(e.target.value)}/>
-                              <Button className="absolute top-2 right-1" variant={'fade'} size={'mini'} 
-                                onClick={handleAddSkill}>add</Button>
+                              <Button className="absolute top-2 right-1 " variant={'fade'} size={'mini'} 
+                                onClick={handleAddSkill}>
+                                  <Plus />
+                              </Button>
                             </div>
                           </FormControl>
                           <FormMessage />
@@ -300,7 +301,7 @@ return (
                 </Button>
               </div>
             </div>
-            <div className={cn('grid grid-cols-6 gap-2',{
+            <div className={cn(' grid grid-cols-6 gap-2 p-1 ',{
               hidden: formStep !=1
             })}>
               <div className="col-span-6 mt-1">
@@ -360,13 +361,13 @@ return (
                 Next <ArrowRight className="w-4 h-4"/>
               </Button>
             </div>
-            <div className={cn('grid grid-cols-6 gap-2',{
+            <div className={cn('absolute right-0 left-0 top-0 overflow-x-hidden grid grid-cols-6 gap-2 p-1',{
               hidden: formStep !=2
             })}>
               <div className="col-span-6">
                 <FormField
                     name=""
-                    render={({ }) => (
+                    render={({}) => (
                       <FormItem>
                           <FormLabel>Company Logo</FormLabel>
                           <FormControl>

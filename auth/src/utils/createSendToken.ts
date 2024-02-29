@@ -5,6 +5,9 @@ export interface PayloadInterface{
     email:string;
     _id:string;
     phone?:string;
+    verified:boolean;
+    isBlocked:boolean,
+    role:string
 }
 export const signToken = (payload:PayloadInterface)=>{
     return jwt.sign(payload,process.env.JWT_KEY!,{

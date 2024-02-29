@@ -8,7 +8,8 @@ export const createProfile = async(message:KafkaMessage)=>{
         userId:user._id,
         email:user.email,
         username:user.name,
-        phone:user.phone
+        phone:user.phone,
+        profileType:user.role
     })
     console.log("new user :=========",newUser);
 }

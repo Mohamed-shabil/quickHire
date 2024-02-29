@@ -36,6 +36,9 @@ router.post('/api/users/gAuth',[
             _id:userExist._id.toString(),
             name:userExist.name,
             email:userExist.email,
+            verified:userExist.verified,
+            isBlocked:userExist.isBlocked,
+            role:userExist.role
         }
 
         if(userExist?.phone){
@@ -56,7 +59,10 @@ router.post('/api/users/gAuth',[
         _id:newUser._id.toString(),
         email:newUser.email,
         name:newUser.name,
-        ...(newUser.phone && {phone:newUser.phone})
+        ...(newUser.phone && {phone:newUser.phone}),
+        verified:newUser.verified,
+        isBlocked:newUser.isBlocked,
+        role:newUser.role
     };
     createSendToken(payload,res);
 }));

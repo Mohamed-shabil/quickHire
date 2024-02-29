@@ -2,6 +2,7 @@ import  express,{Response,Request} from 'express'
 import { BadRequestError, NotAutherizedError, currentUser, requireAuth } from '@quickhire/common';
 import {Profile} from '../model/profile'
 import catchAsync from '../utils/catchAsync'
+import { Follow } from '../model/follow';
 const router = express.Router();
 
 router.get('/api/profile/currentUser',requireAuth,catchAsync(async(req:Request,res:Response)=>{
@@ -14,11 +15,17 @@ router.get('/api/profile/currentUser',requireAuth,catchAsync(async(req:Request,r
         throw new BadRequestError('User with this ID does not exist');
     }
 
+    const followers = await Follow.find({follow:req.currentUser._id});
+    const followings = await Follow.find({followedBy:req.currentUser._id});
+
     const currentUser = {
         ...req.currentUser,
         avatar:user.avatar,
-        headline:user.headline
+        headline:user.headline,
+        followers,
+        followings
     }
+    
     return res.status(200).json({
         status:"success",
         currentUser
