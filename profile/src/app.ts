@@ -5,7 +5,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 
 import {aboutRouter} from './routes/about';
-import {profileRouter} from './routes/profile';
+
 import {educationRouter} from './routes/education';
 import {experienceRouter} from './routes/experience';
 import {linksRouter} from './routes/links';
@@ -13,6 +13,8 @@ import {avatarRouter} from './routes/avatar';
 import { currentUserRouter } from './routes/currentUser'
 import {NotFoundError, errorHandler, currentUser} from '@quickhire/common'
 import { followRoute } from './routes/follow'
+import { myProfileRouter } from './routes/Myprofile'
+import { getProfileRouter } from './routes/getProfile'
 
 
 dotenv.config();
@@ -51,7 +53,8 @@ app.use((req,res,next)=>{
 
 app.use(currentUser);
 app.use(currentUserRouter)
-app.use(profileRouter);
+app.use(myProfileRouter);
+app.use(getProfileRouter);
 app.use(educationRouter);
 app.use(experienceRouter);
 app.use(aboutRouter);

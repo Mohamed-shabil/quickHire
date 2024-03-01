@@ -5,10 +5,10 @@ import {NotAutherizedError, requireAuth} from '@quickhire/common'
 
 const router = express.Router();
 
-router.get('/api/profile/show',catchAsync(async(req,res)=>{
-    const currentUser = req.currentUser;
-    console.log(currentUser)
-    const profile = await Profile.findOne({userId:currentUser?._id})
+router.get('/api/profile/:id',requireAuth,catchAsync(async(req,res)=>{
+    const userId = req.params.id;
+    console.log(userId)
+    const profile = await Profile.findOne({userId:userId})
     console.log(profile)
     if(!profile){
         throw new NotAutherizedError();
@@ -20,4 +20,4 @@ router.get('/api/profile/show',catchAsync(async(req,res)=>{
     })
 }))
 
-export {router as profileRouter};
+export {router as getProfileRouter};

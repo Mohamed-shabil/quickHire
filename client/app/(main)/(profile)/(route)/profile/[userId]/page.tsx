@@ -1,37 +1,15 @@
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Plus as FollowIcon, Ghost, Key, MoveUpRight as LinkIcon, MoreVertical, PlusCircle } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import LinkCard from "@/components/LinkCard";
-import { cookies } from 'next/headers'
 import { ExperienceCard } from "@/components/ExperienceCard";
 import { Heading } from "@/components/Heading";
 import { Container } from "@/components/Container";
 import { redirect } from "next/navigation";
 import { EducationCard } from '@/components/EducationCard'
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-  } from "@/components/ui/dropdown-menu"
-import AddSections from "@/components/AddSections";
+
 import {User,Education,Project,Experience} from '@/constants/constants'
 import axios from "axios";
-import { ProfileUpload } from "@/components/profileUpload";
-
-const getProfile = async (token:string) =>{
-    console.log('here is the token',token)
-    axios.defaults.withCredentials = true;
-    const res = await axios.get('http://localhost:3003/api/profile/show',{
-        headers: {
-            Cookie: `jwt=${token}`
-        }
-    });
-    return res.data.profile;
-}
+import { cookies } from "next/headers";
 
 interface Link {
     title:string;
@@ -39,14 +17,35 @@ interface Link {
     url:string;
 }
 
-export default async function Profile() {
+
+
+interface Link {
+    title:string;
+    content:string;
+    url:string;
+}
+
+
+const getProfile = async (token:string,userId:string) =>{
+    console.log('here is the token',token)
+    axios.defaults.withCredentials = true;
+    const res = await axios.get(`http://localhost:3003/api/profile/${userId}`,{
+        headers: {
+            Cookie: `jwt=${token}`
+        }
+    });
+    return res.data.profile;
+}
+
+export default async function Profile({params}:{params:{userId:string}}) {
+
     const token = cookies().get('jwt')?.value;
+    console.log(token)
     if(!token){
         return redirect('/signup'); 
     }
-    const profile:User = await getProfile(token);
+    const profile = await getProfile(token,params.userId);
 
-    console.log({profile});
 
     const links= [
         {
@@ -75,27 +74,13 @@ export default async function Profile() {
                             <AvatarImage src={profile.avatar} className="object-cover"/>
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
-                        <ProfileUpload/>
                     </span>
                     <div className="my-auto">
                         <p className="font-bold text-2xl">{profile.fullName || profile.username}</p>
                         <p className="text-slate-400">{profile.headline || profile.email}</p>
                     </div>
                 </section>
-                <section className="flex gap-4 my-auto">
-                    <AddSections/>
-                    <Button variant="default" size={"icon"}>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger><MoreVertical /></DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem>Create a post</DropdownMenuItem>
-                            <DropdownMenuItem>Post a job</DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
 
-                    </Button>
-                </section>
             </Container>
             <Separator className="container my-8" />
             {profile.bio? 
@@ -157,5 +142,4 @@ export default async function Profile() {
         </main>
     );
 }
-
 

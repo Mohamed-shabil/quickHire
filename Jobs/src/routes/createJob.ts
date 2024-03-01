@@ -1,57 +1,38 @@
 import { Jobs } from "../model/JobsModel"
 import express,{Request,Response} from 'express';
 import catchAsync from '../utils/catchAsync'
-import  multer2,{Multer} from 'multer'
 import { isRecruiter, requireAuth} from "@quickhire/common";
+import { uploadCompanyImage } from '../middleware/upload'
+import { body } from "express-validator";
+
 
 const router = express.Router();
-
-
-// [
-//     body('title')
-//         .notEmpty()
-//         .withMessage("Title Can't be empty"),
-//     body('company')
-//         .notEmpty()
-//         .withMessage("Company Name can't be empty"),
-//     body('workPlace')
-//         .notEmpty()
-//         .withMessage("Work place type can't be empty"),
-//     body('employmentType')
-//         .notEmpty()
-//         .withMessage("Employment Type can't be empty"),
-//     body('jobDescription')
-//         .notEmpty()
-//         .withMessage("Job Description can't be empty"),
-//     body('requirments')
-//         .notEmpty()
-//         .withMessage("Job Description can't be empty"),
-//     body('skills')
-//         .isArray()
-//         .notEmpty()
-//         .withMessage("Skills can't be empty"),
-//     body('minSalary')
-//         .notEmpty()
-//         .withMessage("Minimum Salary can't be empty"),
-//     body('maxSalary')
-//         .notEmpty()
-//         .withMessage("MaxSalary Salary can't be empty"),
-//     validateRequest
-// ]
-
-const storage= multer2.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/'); 
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname); 
-  }
-});
-
-const upload = multer2({ storage: storage });
-
-
-router.post('/api/jobs/createjobs',requireAuth,isRecruiter,upload.single('companyImage'),catchAsync( async (req:Request,res:Response)=>{
+router.post('/api/jobs/createjobs',requireAuth,isRecruiter,uploadCompanyImage,[
+  body('title')
+    .notEmpty()
+    .withMessage("Title can't be empty"),
+  body('company')
+    .notEmpty()
+    .withMessage("Company Name can't be Empty"),
+  body('workPlace')
+    .notEmpty()
+    .withMessage("Work Place can't be empty"),
+  body('employmentType')
+    .notEmpty()
+    .withMessage("Employment Type Can't be empty"),
+  body('jobDescription')
+    .notEmpty()
+    .withMessage("job description can't be empty"),
+  body('skills')
+    .notEmpty()
+    .withMessage("skills can't empty"),
+  body('minSalary')
+    .notEmpty()
+    .withMessage("Minimum Salary Can't be empty"),
+  body('maxSalary')
+    .notEmpty()
+    .withMessage("Maximum Salary Can't be empty")
+],catchAsync( async (req:Request,res:Response)=>{
     console.log('Im reaching ....',req.body)
     const {
         title, 
@@ -78,8 +59,13 @@ router.post('/api/jobs/createjobs',requireAuth,isRecruiter,upload.single('compan
         maxSalary
     })
     
-    await newJob.save();
+    const file = req.file as Express.MulterS3.File | undefined
 
+    if(file?.location){
+      newJob.companyImage = file.location;
+    }
+
+    await newJob.save();
     res.status(201).json({
         status:'success',
         job:newJob
@@ -88,7 +74,3 @@ router.post('/api/jobs/createjobs',requireAuth,isRecruiter,upload.single('compan
 }))
 
 export {router as createJobRoute}
-
-function multer(arg0: { storage: any; }) {
-    throw new Error("Function not implemented.");
-}

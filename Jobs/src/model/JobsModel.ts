@@ -13,7 +13,9 @@ const JobsSchema = new Schema({
         type:String,
         required:true
     },
-    
+    companyImage:{
+        type:String,
+    },
     workPlace:{
         type:String,
         enum:['Hybrid','Onsite','Remote']

@@ -361,7 +361,7 @@ return (
                 Next <ArrowRight className="w-4 h-4"/>
               </Button>
             </div>
-            <div className={cn('absolute right-0 left-0 top-0 overflow-x-hidden grid grid-cols-6 gap-2 p-1',{
+            <div className={cn('grid grid-cols-6 gap-2',{
               hidden: formStep !=2
             })}>
               <div className="col-span-6">
