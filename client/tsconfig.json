@@ -21,6 +21,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/(main)/(profile)/(route)/MyProfile/page.tsxcdfvsdf"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/(main)/(profile)/(route)/[username]/page.tsxcdfvsdf"],
   "exclude": ["node_modules"]
 }

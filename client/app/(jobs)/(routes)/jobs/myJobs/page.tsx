@@ -18,10 +18,11 @@ import { Plus } from "lucide-react";
 export default function CreateJob() {
     const router = useRouter();
     const dispatch = useDispatch();
-    const user = useSelector((state:RootState)=>state.user.userData);
-    console.log({user});
+    const user = useSelector((state:RootState)=>(state.user.userData));
+    console.log('outSide the clouse',{user});
 
-    if(user?.role!= 'recruiter'){
+    if(user && user?.role != 'recruiter'){
+        console.log('inside the if clouse',{user});
         redirect('/');
     }
 

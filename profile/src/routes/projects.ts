@@ -16,7 +16,7 @@ interface ProjectInterface{
     links?:string[];
 }
 
-router.post('/api/profile/experience',requireAuth,[
+router.patch('/api/profile/project/',requireAuth,[
     body('projectName')
         .notEmpty()
         .withMessage("Project Name can't empty"),

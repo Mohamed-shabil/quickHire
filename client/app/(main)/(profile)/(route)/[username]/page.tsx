@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Plus as FollowIcon, Ghost, Key, MoveUpRight as LinkIcon, MoreVertical, PlusCircle } from "lucide-react";
+import { Plus as FollowIcon, Ghost, Key, MoveUpRight as LinkIcon, MoreVertical, Pencil, PlusCircle } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import LinkCard from "@/components/LinkCard";
 import { cookies } from 'next/headers'
@@ -21,11 +21,13 @@ import AddSections from "@/components/AddSections";
 import {User,Education,Project,Experience} from '@/constants/constants'
 import axios from "axios";
 import { ProfileUpload } from "@/components/profileUpload";
+import { ProfileOptions } from "@/components/ProfileOption";
+import { ProjectCard } from "@/components/ProjectCart";
 
-const getProfile = async (token:string) =>{
+const getProfile = async (token:string,username:string) =>{
     console.log('here is the token',token)
     axios.defaults.withCredentials = true;
-    const res = await axios.get('http://localhost:3003/api/profile/show',{
+    const res = await axios.get(`http://localhost:3003/api/profile/show/${username}`,{
         headers: {
             Cookie: `jwt=${token}`
         }
@@ -39,12 +41,13 @@ interface Link {
     url:string;
 }
 
-export default async function MyProfile() {
+export default async function MyProfile({params}:{params:{username:string}}) {
     const token = cookies().get('jwt')?.value;
+    const username = params.username;
     if(!token){
         return redirect('/signup'); 
     }
-    const profile:User = await getProfile(token);
+    const profile:User = await getProfile(token,username);
 
     console.log({profile});
 
@@ -83,23 +86,12 @@ export default async function MyProfile() {
                     </div>
                 </section>
                 <section className="flex gap-4 my-auto">
-                    <AddSections/>
-                    <Button variant="default" size={"icon"}>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger><MoreVertical /></DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem>Create a post</DropdownMenuItem>
-                            <DropdownMenuItem>Post a job</DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-
-                    </Button>
+                    <ProfileOptions/>
                 </section>
             </Container>
             <Separator className="container my-8" />
             {profile.bio? 
-            <Container>
+            <Container className="relative">
                 <Heading variant="profile-side">About Me</Heading>
                 <section className="flex-grow space-y-6">
                     <section>
@@ -116,6 +108,9 @@ export default async function MyProfile() {
                         ))}
                     </section>
                 </section>
+                <Button variant={'fade'} size={'mini'} className="absolute right-10 -top-7 p-2">
+                    <Pencil className="w-4 h-4"/>
+                </Button>
             </Container> : <></>
             }
 
@@ -123,20 +118,24 @@ export default async function MyProfile() {
             {profile.experience?.length ? 
                 <Container>
                     <Heading variant="profile-side">Experience</Heading>
-                    <section className="flex-grow grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <section className="relative flex-grow grid grid-cols-1 lg:grid-cols-2 gap-4">
                         {profile.experience.map((experience:Experience,index:number) => (
                             <ExperienceCard key={index} experience={experience} />
                         ))}
+                        <Button variant={'fade'} size={'mini'} className="absolute right-1 -top-7 p-2">
+                            <Pencil className="w-4 h-4"/>
+                        </Button>
                     </section>
                 </Container> :
                 <></>         
             }
+            <Separator className="container my-8 " />
             {profile.projects?.length ? 
                 <Container>
                     <Heading variant="profile-side">Projects</Heading>
                     <section className="flex-grow grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        {profile.experience?.map((experience:Experience,index:number) => (
-                            <ExperienceCard key={index} experience={experience} />
+                        {profile.projects?.map((project:Project,index:number) => (
+                            <ProjectCard key={index} project={project}/>
                         ))}
                     </section>
                 </Container> :
@@ -151,6 +150,9 @@ export default async function MyProfile() {
                             <EducationCard key={index} education={education} />
                         ))}
                     </section>
+                    <Button variant={'fade'} size={'mini'} className="absolute right-5 top-0">
+                        <Pencil className="w-5 h-5"/>
+                    </Button>
                 </Container> :
                 <></>         
             }

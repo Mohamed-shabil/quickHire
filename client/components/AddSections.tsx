@@ -14,9 +14,10 @@ const AddSections = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent>
                 <DropdownMenuItem onClick={()=>dispatch(setOpen('AboutFormModal'))}>Setup About</DropdownMenuItem>
-                <DropdownMenuItem onClick={()=>dispatch(setOpen('ExperienceFormModal'))}>Add Experience</DropdownMenuItem>
-                <DropdownMenuItem onClick={()=>dispatch(setOpen('EducationFormModal'))}>Add Education</DropdownMenuItem>
                 <DropdownMenuItem onClick={()=>dispatch(setOpen('LinkFormModal'))}>Add Links</DropdownMenuItem>
+                <DropdownMenuItem onClick={()=>dispatch(setOpen('ExperienceFormModal'))}>Add Experience</DropdownMenuItem>
+                <DropdownMenuItem onClick={()=>dispatch(setOpen('ProjectFormModal'))}>Add Projects</DropdownMenuItem>
+                <DropdownMenuItem onClick={()=>dispatch(setOpen('EducationFormModal'))}>Add Education</DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
     );

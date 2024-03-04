@@ -15,6 +15,7 @@ import {NotFoundError, errorHandler, currentUser} from '@quickhire/common'
 import { followRoute } from './routes/follow'
 import { myProfileRouter } from './routes/Myprofile'
 import { getProfileRouter } from './routes/getProfile'
+import { projectRoute } from './routes/projects'
 
 
 dotenv.config();
@@ -61,11 +62,12 @@ app.use(aboutRouter);
 app.use(avatarRouter);
 app.use(linksRouter);
 app.use(followRoute)
+app.use(projectRoute);
 
 
 app.all('*',() => {
     console.log('route not found 404');
-    throw new NotFoundError('route not found');
+    throw new NotFoundError('Route not found');
 })
 
 app.use(errorHandler);

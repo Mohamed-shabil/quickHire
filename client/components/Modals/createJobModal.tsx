@@ -16,7 +16,7 @@ import axios from "axios"
 import { useSelector,useDispatch } from "react-redux"
 import { RootState } from "@/store/reducers";
 import {setClose} from '@/store/slices/modalSlice'
-import { ArrowLeft, ArrowRight, Plus,} from "lucide-react"
+import { ArrowLeft, ArrowRight, Check, Loader2, Plus, X,} from "lucide-react"
 import { animate, motion } from 'framer-motion'
 import { useRouter } from "next/navigation"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
@@ -26,6 +26,8 @@ import { Textarea } from "../ui/textarea"
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import Image from "next/image"
+import { toast } from "../ui/use-toast"
+import { ToastAction } from "../ui/toast"
 
 
 
@@ -97,6 +99,7 @@ const form = useForm({
 
 
 const onSubmit = (values: z.infer<typeof formSchema>) => {
+  setLoading(true)
   const selectedImage = document.getElementById('companyImage') as HTMLInputElement;
   const companyImage = selectedImage.files?.[0];
   
@@ -127,13 +130,32 @@ const onSubmit = (values: z.infer<typeof formSchema>) => {
     withCredentials: true,
   })
   .then((res) => {
+    toast({
+      title: "Congratulations! 🥳",
+      description: "Job Posted Successfully!",
+      action: (
+        <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded"><Check /></div>
+      ),
+    })
     console.log(res.data);
     form.reset();
+
+    onClose();
     router.refresh();
   })
-  .catch((error) => {
-    console.error('Error:', error);
-  });
+  .catch((err) => {
+    console.error('Error:', err);
+    toast({
+      title: "Something went Wrong",
+      description: err.response.data.errors[0].message || "",
+      action: (
+        <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded"><X /></div>
+      ),
+    })
+  })
+  .finally(()=>{
+    setLoading(false)
+  })
 };
 
   
@@ -430,8 +452,8 @@ return (
               <Button variant={'fade'} onClick={()=>{setFormStep(1)}}>
                 <ArrowLeft className="w-4 h-4"/> Go Back
               </Button>
-              <Button variant={'default'}>
-                Submit
+              <Button variant={'default'} disabled={loading}>
+                {loading ? <Loader2 className="animate-spin"/> : "Submit"}
               </Button>
             </div>
           </form>

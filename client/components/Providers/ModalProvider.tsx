@@ -7,6 +7,7 @@ import { LinkFormModal} from '@/components/Modals/LinksFormModal'
 import { AvatarModal } from '@/components/Modals/avatarModal'
 import { CreatePostModal } from "../Modals/createPostModal";
 import { CreateJobModal } from "../Modals/createJobModal";
+import { ProjectFormModal } from "../Modals/projectModal";
 const ModalProvider = () => {
     const [isMounted,setIsMouted] = useState(false);
     useEffect(()=>{
@@ -19,6 +20,7 @@ const ModalProvider = () => {
 
     return ( 
         <>  
+            <ProjectFormModal/>
             <CreateJobModal/>
             <CreatePostModal/>
             <AvatarModal/>
