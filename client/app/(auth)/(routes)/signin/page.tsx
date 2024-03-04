@@ -52,7 +52,9 @@ export default function Signin() {
                   <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded"><Check /></div>
                 ),
               })
-            router.push('/')
+            setTimeout(()=>{
+                router.push('/');
+            },1000)
         }).catch(err=>{
             console.log(err);
             
