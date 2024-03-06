@@ -1,6 +1,8 @@
-import { server } from './app';
-import http from 'http';
-import socketio,{Socket} from 'socket.io';
+import { kafkaConsumer } from '@quickhire/common';
+import {socketService, httpServer} from './app'
+import { kafkaClient } from './event/kafkaClient';
+import { createUser } from './event/consumer/userCreated';
+import { UpdatedUser } from './event/consumer/updateUser';
 
 const start = async() =>{
     // if(!process.env.JWT_KEY){
@@ -14,6 +16,9 @@ const start = async() =>{
         // await mongoose.connect(process.env.MONGO_URI)
         // console.log("[AUTH DB] Database Connected Successfully!")
         
+        new kafkaConsumer(kafkaClient,'post-group-1').consume('user-created',createUser);
+        new kafkaConsumer(kafkaClient,'post-group-2').consume('avatar-updated',UpdatedUser);
+        
         
     }catch(err){
 
@@ -21,9 +26,11 @@ const start = async() =>{
 
     }
 
-    server.listen(3006,()=>{
+    httpServer.listen(3006,()=>{
         console.log('[AUTH SERVICE] Listening on port 3006!');
     })
+
+    socketService.initListeners();
 }
 
 start(); 

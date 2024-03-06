@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@quickhire/common": "^1.0.14",
+    "@quickhire/common": "^1.0.30",
     "@types/bcryptjs": "^2.4.6",
     "@types/cookie-parser": "^1.4.6",
     "@types/cookie-session": "^2.0.48",
@@ -32,6 +32,7 @@
     "express-session": "^1.18.0",
     "express-validator": "^7.0.1",
     "google-auth-library": "^9.6.3",
+    "ioredis": "^5.3.2",
     "jsonwebtoken": "^9.0.2",
     "kafkajs": "^2.2.4",
     "mongoose": "^8.1.1",
