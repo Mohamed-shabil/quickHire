@@ -31,12 +31,14 @@ router.patch('/api/profile/avatar',requireAuth,ImageConverter,uploadProfie,catch
 
     const payload = {
         _id:profile.userId,
+        fullname:profile.fullName,
+        username:profile.username,
         avatar:profile.avatar,
         headline:profile.headline,
     }
     const response = new KafkaProducer(kafkaClient).produce('avatar-updated',payload);
-    
-    console.log(response, payload);
+    console.log({response}, {payload});
+
     return res.status(200).json({   
         status:'Success',
         profile

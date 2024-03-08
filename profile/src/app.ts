@@ -16,6 +16,7 @@ import { followRoute } from './routes/follow'
 import { myProfileRouter } from './routes/Myprofile'
 import { getProfileRouter } from './routes/getProfile'
 import { projectRoute } from './routes/projects'
+import { searchProfile } from './routes/searchProfile'
 
 
 dotenv.config();
@@ -46,14 +47,16 @@ app.use(cookieParser());
 
 app.use(morgan('dev'));
 
-app.use((req,res,next)=>{
-    console.log("JWT TOKEN IS HERE:-",req.cookies?.jwt);
-    console.log(req.currentUser);
-    next();
-})
+// app.use((req,res,next)=>{
+//     console.log("JWT TOKEN IS HERE:-",req.cookies?.jwt);
+//     console.log(req.currentUser);
+//     next();
+// })
 
 app.use(currentUser);
+
 app.use(currentUserRouter)
+app.use(searchProfile);     
 app.use(myProfileRouter);
 app.use(getProfileRouter);
 app.use(educationRouter);

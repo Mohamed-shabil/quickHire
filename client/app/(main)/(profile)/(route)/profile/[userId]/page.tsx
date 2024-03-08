@@ -10,6 +10,9 @@ import { EducationCard } from '@/components/EducationCard'
 import {User,Education,Project,Experience} from '@/constants/constants'
 import axios from "axios";
 import { cookies } from "next/headers";
+import { Button } from "@/components/ui/button";
+import { MessageSquareMore } from "lucide-react";
+import { ProfileOptions } from "@/components/ProfileOption";
 
 interface Link {
     title:string;
@@ -40,12 +43,16 @@ const getProfile = async (token:string,userId:string) =>{
 export default async function Profile({params}:{params:{userId:string}}) {
 
     const token = cookies().get('jwt')?.value;
-    console.log(token)
+    const {userId} = params;
     if(!token){
         return redirect('/signup'); 
     }
     const profile = await getProfile(token,params.userId);
 
+    const gotoChat = ()=>{
+        redirect(`/chats/${userId}`);
+    }
+ 
 
     const links= [
         {
@@ -80,7 +87,9 @@ export default async function Profile({params}:{params:{userId:string}}) {
                         <p className="text-slate-400">{profile.headline || profile.email}</p>
                     </div>
                 </section>
-
+                <section className="flex gap-4 my-auto">
+                    <ProfileOptions profile={profile}/>
+                </section>
             </Container>
             <Separator className="container my-8" />
             {profile.bio? 

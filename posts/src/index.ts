@@ -22,6 +22,8 @@ const start = async() =>{
         new kafkaConsumer(kafkaClient,'post-group-2').consume('avatar-updated',UpdatedUser);
         new kafkaConsumer(kafkaClient,'post-group-3').consume('user-followed',userFollow)
         new kafkaConsumer(kafkaClient,'post-group-4').consume('user-unFollowed',userFollow)
+        new kafkaConsumer(kafkaClient,'post-group-5').consume('headline-updated',UpdatedUser);
+
         
     }catch(err){
 

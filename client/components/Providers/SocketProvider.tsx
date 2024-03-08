@@ -1,4 +1,5 @@
 "use client"
+import { Chats } from '@/constants/constants';
 import React from 'react';
 import {
     createContext,
@@ -13,14 +14,17 @@ interface SocketProviderProps{
     children?:React.ReactNode;
 }
 
+
 interface ISocketContext {
-    sendMessage: (msg: string) => any;
-    messages: string[];
+    sendMessage: (msg:Chats) => any;
+    messages: Chats | undefined;
+    connectSocket:(userId:string) => any;
 }
 const SocketContext = React.createContext<ISocketContext | null>(null);
 
 export const useSocket = ()=> {
     const state = useContext(SocketContext);
+
     if(!state){
         throw new Error('State is undefined');
     }
@@ -29,35 +33,42 @@ export const useSocket = ()=> {
 
 export const SocketProvider:React.FC<SocketProviderProps> = ({children})=>{
     const [ socket, setSocket ] = useState<Socket>();
-    const [ messages, setMessages ] = useState<string[]>([]);
+    const [ messages, setMessages ] = useState<Chats>();
 
-    const sendMessage:ISocketContext['sendMessage'] = useCallback(
-        (msg)=>{
-            console.log('Send Message',msg);
-            if(socket){
-                socket.emit('')
-            }
-        },[socket]
-    );
 
-    const onMessageRec = useCallback((msg:string)=>{
-        console.log('From Server Msg Rec',msg);
-        const {message} = JSON.parse(msg) as {message:string};
-        setMessages((prev)=>[...prev,message]);
+    const onMessageRec = useCallback((msg:Chats)=>{
+        console.log('On Message REc',msg)
+        console.log('Recieved msg',msg.content)
+        setMessages(msg);
     },[]);
+
 
     useEffect(()=>{
         const _socket = io('http://localhost:3006');
         _socket.on("message",onMessageRec);
         setSocket(_socket);
+        
         return ()=>{
             _socket.disconnect();
             setSocket(undefined);
         }
     },[]);
 
+
+    const sendMessage:ISocketContext['sendMessage'] =  (msg)=>{
+        if(socket){
+            socket.emit('event:message',msg);
+        }
+    }
+
+    const connectSocket:ISocketContext['connectSocket'] = (userId)=>{
+        if(socket){
+            socket.emit('event:userConnected',{userId});
+        }
+    }
+    
     return (
-        <SocketContext.Provider value={{sendMessage, messages}}>
+        <SocketContext.Provider value={{sendMessage,messages,connectSocket}}>
             {children}
         </SocketContext.Provider>
     )

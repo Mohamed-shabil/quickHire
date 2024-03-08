@@ -12,6 +12,7 @@ router.patch('/api/profile/selectRole',[
         .withMessage("Role can't be empty"),
     validateRequest
 ],catchAsync(async(req:Request,res:Response)=>{
+    
     const errors = validationResult(req);
     const {role} = req.body;
     const user = await Profile.findOne({userId:req.currentUser?._id});

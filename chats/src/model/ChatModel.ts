@@ -1,3 +1,4 @@
+import { timeStamp } from 'console';
 import mongoose, { InferSchemaType } from 'mongoose';
 
 const ChatSchema = new mongoose.Schema({
@@ -16,6 +17,11 @@ const ChatSchema = new mongoose.Schema({
         ref:"User",
         required:true
     },
+    contentType:{
+        type:String,
+        enum:['video','image','text'],
+        default:'text'
+    },
     content:{
         type:String,
         required:true
@@ -23,6 +29,10 @@ const ChatSchema = new mongoose.Schema({
     read:{
         type:Boolean,
         default:false,
+    },
+    time:{
+        type:Date,
+        default:Date.now()
     }
 })
 

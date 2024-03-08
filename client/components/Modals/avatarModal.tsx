@@ -36,7 +36,6 @@ export function AvatarModal() {
     const data = new FormData();
     const selectedImage = document.getElementById('upload') as HTMLInputElement;
     const image = selectedImage.files?.[0];
-    console.log(image)
     if (image) {
         data.append('profile', image);
     }

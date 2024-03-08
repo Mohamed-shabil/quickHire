@@ -50,7 +50,6 @@ const [inputValue, setInputValue] = useState<string>('');
 const [skills, setSkills] = useState<string[]>([]);
 const [preview,setPreview] = useState('');
 const [loading,setLoading] = useState(false);
-console.log("skills",skills)
 
 const formSchema = z.object({
     title: z.string().min(5,{

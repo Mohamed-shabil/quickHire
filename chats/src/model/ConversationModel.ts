@@ -11,6 +11,6 @@ const ConversationSchema = new mongoose.Schema({
 })
 type ConversationType = InferSchemaType<typeof ConversationSchema>
 
-const UserModal = mongoose.model<ConversationType>('User',ConversationSchema);
+const Conversation = mongoose.model<ConversationType>('Conversation',ConversationSchema);
 
-export { UserModal as User };
+export { Conversation };

@@ -29,12 +29,12 @@ export default function RootLayout({
                 enableSystem
                 disableTransitionOnChange
                 >
-              <SocketProvider>
-                <Providers>
-                  {children}
+              <Providers>
+                <SocketProvider>
                   <Toaster />
-                </Providers>
-              </SocketProvider>
+                  {children}
+                </SocketProvider>
+              </Providers>
           </ThemeProvider>
       </body>
     </html>

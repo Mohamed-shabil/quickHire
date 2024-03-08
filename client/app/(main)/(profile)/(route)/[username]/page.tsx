@@ -49,7 +49,6 @@ export default async function MyProfile({params}:{params:{username:string}}) {
     }
     const profile:User = await getProfile(token,username);
 
-    console.log({profile});
 
     const links= [
         {

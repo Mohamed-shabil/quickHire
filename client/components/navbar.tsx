@@ -18,10 +18,13 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useSocket } from "./Providers/SocketProvider";
   
 const Navbar = () => {
     const dispatch = useDispatch();
     const router = useRouter();
+    const {connectSocket} = useSocket();
+
     useEffect(()=>{
         axios.defaults.withCredentials = true;
         axios.get('http://localhost:3003/api/profile/currentUser').then((res)=>{
@@ -30,9 +33,13 @@ const Navbar = () => {
         }).catch((err)=>{
             console.log('NAVBAR ERROR ',err);
         });
-    },[]);
+    },[])
+
     const user = useSelector((state:RootState)=>state.user.userData);
-    
+    if(user?._id){
+        console.log('User id from navbar',user._id)
+        connectSocket(user._id);
+    }
     const logout = async()=>{
         await axios.get('http://localhost:3001/api/users/signout');
         router.push('/signin');
@@ -93,9 +100,9 @@ const Navbar = () => {
                 </div>
                 <div id="navbar-alignment" className="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow sm:grow-0 sm:basis-auto sm:block sm:order-2">
                 <div className="flex flex-col gap-5 mt-5 sm:flex-row sm:items-center sm:mt-0 sm:ps-5">
-                    <Link className="font-medium text-blue-500 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" href="#" aria-current="page">Landing</Link>
+                    <Link className="font-medium text-blue-500 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" href="#" aria-current="page">Home</Link>
                     <Link className="font-medium text-gray-600 hover:text-gray-400 dark:text-gray-400 dark:hover:text-gray-500 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" href="/jobs">Jobs</Link>
-                    <Link className="font-medium text-gray-600 hover:text-gray-400 dark:text-gray-400 dark:hover:text-gray-500 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" href="#">Work</Link>
+                    <Link className="font-medium text-gray-600 hover:text-gray-400 dark:text-gray-400 dark:hover:text-gray-500 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" href="chats">Messages</Link>
                     <Link className="font-medium text-gray-600 hover:text-gray-400 dark:text-gray-400 dark:hover:text-gray-500 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" href="#">Blog</Link>
                 </div>
                 </div>

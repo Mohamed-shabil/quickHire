@@ -106,3 +106,12 @@ export type PostType = {
 }
 
 export type UserType = 'seeker' | 'admin' | 'recruiter'
+
+
+export type Chats = {
+  content:string,
+  reciever :string,
+  sender:string,
+  read:boolean
+  time: Date
+} 

@@ -10,6 +10,8 @@ export const UpdatedUser = async(message:KafkaMessage)=>{
         throw new BadRequestError('User with ID does not exist');
     }
     user.avatar = userData.avatar
+    user.headLine = userData.headline
+    user.fullName = userData.fullname
     await user.save()
     console.log("new user :=========",user);
 }

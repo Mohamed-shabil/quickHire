@@ -1,8 +1,9 @@
 import express,{Request,Response} from 'express';
-import {NotAutherizedError, requireAuth, validateRequest} from '@quickhire/common'
+import {KafkaProducer, NotAutherizedError, requireAuth, validateRequest} from '@quickhire/common'
 import catchAsync from '../utils/catchAsync';
 import { body, validationResult } from 'express-validator'
 import { Profile } from '../model/profile'
+import { kafkaClient } from '../events/kafkaClient';
 export const router = express.Router();
 
 
@@ -31,7 +32,14 @@ router.post('/api/profile/about',requireAuth,[
     userProfile.bio = bio;
     
     await userProfile.save();
-    
+    const payload = {
+        _id:userProfile.userId,
+        fullname:userProfile.fullName,
+        username:userProfile.username,
+        avatar:userProfile.avatar,
+        headline:userProfile.headline,
+    }
+    new KafkaProducer(kafkaClient).produce('headline-updated',payload);
     return res.status(200).json({
         status:'success',
         profile:userProfile
