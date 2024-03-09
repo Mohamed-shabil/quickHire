@@ -107,11 +107,22 @@ export type PostType = {
 
 export type UserType = 'seeker' | 'admin' | 'recruiter'
 
+export type ContentType = 'text'|'video'|'image'
 
 export type Chats = {
   content:string,
+  contentType:ContentType
   reciever :string,
   sender:string,
   read:boolean
   time: Date
 } 
+
+export interface ChatUser {
+  _id:string
+  avatar: string;
+  fullName:string;
+  headline:string;
+  name:string
+  message:Chats
+}

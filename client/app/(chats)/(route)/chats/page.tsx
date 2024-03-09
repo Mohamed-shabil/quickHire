@@ -1,7 +1,7 @@
 "use client"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { Clock4, Search, SendHorizontal, Video } from "lucide-react";
+import { Check, CheckCheck, Clock4, Search, SendHorizontal, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSocket } from "@/components/Providers/SocketProvider";
@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/reducers";
 import { redirect } from "next/navigation";
 import moment from 'moment';
+import ChatSection from "@/components/ChatSection";
 
 interface IChatUser {
     _id:string
@@ -31,6 +32,7 @@ function Chats() {
     const [ chatUsers, setChatUsers] = useState<IChatUser[]>();
     const [ user, setUser] = useState<IChatUser>();
     const [ chats, setChats] = useState<Chats[]>([]);
+    const [ chatSend, setChatSend] = useState(false);
 
     const currentUser = useSelector((state:RootState)=>state.user.userData); 
 
@@ -54,11 +56,7 @@ function Chats() {
                 console.log(err);
             })
     },[])
-    useEffect(()=>{
-        if(messages){
-            setChats(prev=>[...prev,messages]);
-        }
-    },[messages]);
+
 
     const onSearch = async(value:string)=>{
         axios.defaults.withCredentials = true
@@ -76,31 +74,6 @@ function Chats() {
         const {value} = event.target;
         await onSearch(value)
     }
-    const handleMessage = async (content:string,recipientId:string,)=>{
-        if(!user?._id){
-            redirect('/');
-        }
-
-        const newChat:Chats = {
-            content,
-            reciever:recipientId,
-            sender:user._id,
-            read:false,
-            time:new Date(),
-        }
-        setChats([...chats,newChat]);
-        const data = {
-            recipientId,
-            content
-        }
-        try {
-            const response = await axios.post('http://localhost:3006/api/chats/saveChat',data);
-            console.log('Saved Chat',response);
-            sendMessage(newChat);
-        } catch (err) {
-            console.log(err)
-        }
-    } 
 
     return (
         <main>
@@ -132,10 +105,10 @@ function Chats() {
                                             <div className="flex flex-col w-full">
                                                 <span className="flex justify-between w-full">
                                                     <h3 className="font-medium text-base ">{chatUser.fullName}</h3> 
-                                                    <p className="text-slate-500 text-xs font-medium">{moment(chatUser.message.time).startOf('hour').fromNow()}</p>
+                                                    <p className="text-slate-500 text-xs font-medium">{moment(chatUser.message.time).format('LT')}</p>
                                                 </span>
                                                 <p className="line-clamp-1 font-normal text-xs">
-                                                    {chatUser.message.content}
+                                                    {chats.length ? chats[chats.length-1].content : chatUser.message.content }
                                                 </p>
                                             </div>
                                         </div>
@@ -148,55 +121,7 @@ function Chats() {
                     <div className="border-l box-border p-3 col-span-2 w-full h-full relative ">
                         {user ? 
                             (
-                                <>
-                                    <div className="border-b w-full space-x-3 h-14 flex items-center">
-                                        <div className={cn("w-full flex",user ? 'justify-between' : 'justify-center')}>
-                                            <span className="flex align-middle gap-1">
-                                                <Avatar>
-                                                    <AvatarImage src={user.avatar} className=" object-cover"/>
-                                                    <AvatarFallback>CN</AvatarFallback>
-                                                </Avatar>
-                                                <span>
-                                                    <h2 className="font-medium ">{user?.fullName}</h2>
-                                                    <p className="text-slate-500 text-xs">Online</p>
-                                                </span>
-                                            </span>
-                                            <span>
-                                                <Button variant={'fade'} size={'icon'}>
-                                                    <Video />
-                                                </Button>
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <ScrollArea className="h-full max-h-[70vh] max-w-full flex items-center">
-                                        <div className="flex flex-col relative">
-                                            {chats.map(chat=>(
-                                                <span className={cn("flex px-2 py-1 rounded-lg w-fit mb-1 text-sm max-w-[80%] gap-2 text-wrap",
-                                                    chat.sender == user?._id ? 'self-end bg-primary  text-primary-foreground':'bg-muted')}>
-                                                    {chat.content}
-                                                    <span className="self-end text-xs flex items-center justify-end gap-1">
-                                                        {moment(chat.time).startOf('hour').fromNow()}
-                                                    </span>
-                                                </span>
-                                            ))}
-
-                                        </div>
-                                    </ScrollArea>
-                                    <div className="absolute bottom-2 left-0 p-2 w-full">
-                                        <div className="flex item-center justify-between gap-2">
-                                            <Input 
-                                                type="text" 
-                                                placeholder="Enter your message..."
-                                                onChange={(e)=>{setContent(e.target.value)}}
-                                            />
-                                            <Button variant={'fade'} 
-                                                size={'icon'} 
-                                                onClick={()=>{handleMessage(content,user._id)}}>
-                                                <SendHorizontal />
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </>
+                                <ChatSection user={user}/>
                             ):(
                                 <div className="flex flex-col items-center justify-center h-full">
                                     <Image src={'/empty.png'} alt="" width={150} height={150} className="opacity-60"/>

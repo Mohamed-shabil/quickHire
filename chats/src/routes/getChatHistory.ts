@@ -26,7 +26,22 @@ router.get('/api/chats/history/:userId',requireAuth,catchAsync(async(req:Request
         })
     }
 
-    const chats = await Chats.find({conversation:isConvoExist._id});
+    const chats = await Chats.aggregate([
+        {
+          $match: { conversation: isConvoExist._id }
+        },
+        {
+          $sort: { time: 1 }
+        },
+        {
+          $addFields: {
+            read: {
+              $cond: { if: { $eq: ["$read", false] }, then: true, else: "$read" }
+            }
+          }
+        }
+    ]);
+
     console.log(chats);
 
     res.status(200).json({
