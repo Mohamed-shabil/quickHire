@@ -1,14 +1,11 @@
 "use client"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { Check, CheckCheck, Clock4, Search, SendHorizontal, Video } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import {Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useSocket } from "@/components/Providers/SocketProvider";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { User } from "@/constants/constants";
-import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { Chats } from "@/constants/constants";
 import { useSelector } from "react-redux";
@@ -27,7 +24,7 @@ interface IChatUser {
 }
 
 function Chats() {
-    const { sendMessage,messages } = useSocket();
+    const { sendMessage,messages,socket,InitCall } = useSocket();
     const [ content, setContent] = useState('');
     const [ chatUsers, setChatUsers] = useState<IChatUser[]>();
     const [ user, setUser] = useState<IChatUser>();
@@ -57,6 +54,7 @@ function Chats() {
             })
     },[])
 
+    
 
     const onSearch = async(value:string)=>{
         axios.defaults.withCredentials = true

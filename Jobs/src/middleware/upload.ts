@@ -40,7 +40,6 @@ export const ImageConvert = function (req: Request, res: Response, next: NextFun
     if (!file) {
         return next();
     }
-
     sharp(file.buffer as Buffer)
         .resize({ width: 300, height: 300 }) 
         .toBuffer()

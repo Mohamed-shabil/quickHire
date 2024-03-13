@@ -3,10 +3,21 @@ import { catchAsync, requireAuth, validateRequest, NotAutherizedError} from '@qu
 import { body } from 'express-validator'
 import { Conversation } from '../model/ConversationModel'
 import { Chats } from '../model/ChatModel';
-
+import { compressAndUploadMiddleware } from '../middleware/compressAndUpload';
+import multer from 'multer';
 const router = express.Router();
+const contentTypes = ['video','image','text']
+const upload = multer()
 
-router.post('/api/chats/saveChat',requireAuth,[
+router.post('/api/chats/saveChat',upload.single('content'),compressAndUploadMiddleware,requireAuth,[
+    body('contentType')
+        .custom(value=>{
+            if(!contentTypes.includes(value)){
+                throw new Error('Invalid content type');
+            }
+            return true
+        })
+        .withMessage('Invalid content type'),
     body('content')
         .notEmpty()
         .withMessage("content can't be empty"),
@@ -15,7 +26,8 @@ router.post('/api/chats/saveChat',requireAuth,[
         .withMessage("Reciever ID can't be empty"),
     validateRequest
 ],catchAsync(async(req:Request,res:Response)=>{
-    const { content, recipientId } = req.body;
+    
+    const { content, recipientId, contentType } = req.body;
     
     if(!req.currentUser){
         throw new NotAutherizedError();
@@ -34,14 +46,12 @@ router.post('/api/chats/saveChat',requireAuth,[
         });
         await conversation.save();
     }
-
-    console.log('COnversation....',conversation)
     
     const newChat = new Chats({
         reciever:recipientId,
         sender:req.currentUser._id,
         content: content,
-        contentType : 'text',
+        contentType,
         conversation: conversation._id
     })
     

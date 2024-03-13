@@ -3,7 +3,7 @@ import http from 'http'
 import socketio, { Socket } from 'socket.io';
 import SocketService from './socket/socket';
 import { saveChatRouter } from './routes/saveChat';
-import { currentUser } from '@quickhire/common';
+import { currentUser,errorHandler } from '@quickhire/common';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { chatHistoryRoute } from './routes/getChatHistory';
@@ -38,6 +38,8 @@ app.use(saveChatRouter);
 app.use(chatHistoryRoute);
 app.use(getAllChatsRoute);
 
+
+app.use(errorHandler);
 const socketService = new SocketService();
 
 const httpServer = http.createServer(app);

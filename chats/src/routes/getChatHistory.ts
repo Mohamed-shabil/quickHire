@@ -42,7 +42,7 @@ router.get('/api/chats/history/:userId',requireAuth,catchAsync(async(req:Request
         }
     ]);
 
-    console.log(chats);
+    // console.log(chats);
 
     res.status(200).json({
         status:'success',

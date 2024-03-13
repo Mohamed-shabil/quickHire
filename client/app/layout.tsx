@@ -30,8 +30,8 @@ export default function RootLayout({
                 disableTransitionOnChange
                 >
               <Providers>
+                <Toaster />
                 <SocketProvider>
-                  <Toaster />
                   {children}
                 </SocketProvider>
               </Providers>

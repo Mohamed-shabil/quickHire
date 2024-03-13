@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+'use client'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Button } from './ui/button'
 import { CheckCheck, FileVideo, Image, Paperclip, SendHorizontal, Video } from 'lucide-react'
 import { Input } from './ui/input'
@@ -9,16 +10,29 @@ import { useSocket } from './Providers/SocketProvider'
 import { ChatUser, Chats, ContentType } from '@/constants/constants'
 import axios from 'axios'
 import { cn } from '@/lib/utils'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from './ui/dropdown-menu'
 import { Label } from './ui/label'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/store/reducers'
+
 
 const ChatSection = ({user}:{user:ChatUser}) => {
-    const {messages,sendMessage} = useSocket()
+    const router = useRouter();
+    const {messages,sendMessage,socket,InitCall,InvitePicker} = useSocket();
+
     const [ chats, setChats] = useState<Chats[]>([]);
     const [ content, setContent] = useState('');
     const [ loading, setLoading ] = useState(false);
+    const [ open, setOpen ] = useState(false);
+    const [ image, setImage ] = useState();
+    const [ video, setVideo ] = useState();
+    const [ preview, setPreview ] = useState('');
 
+    const currentUser = useSelector((state:RootState)=>state.user.userData);
+    if(!currentUser?._id){
+        return <h1>No Current User</h1>
+    }
     useEffect(()=>{
         axios.get(`http://localhost:3006/api/chats/history/${user?._id}`)
             .then((res)=>{
@@ -36,12 +50,20 @@ const ChatSection = ({user}:{user:ChatUser}) => {
         }
     },[messages]);
 
+
+    const handleVideoCall = ({pickerId,userId,room}:{pickerId:string,userId:string,room:string})=>{
+        console.log('PickerId',pickerId,userId,room)
+        InitCall({userId,room});
+        InvitePicker({pickerId,room});
+        router.push(`/chats/videoCall/${room}`)
+    }
+
     const handleMessage = async (content:string,recipientId:string,contentType:ContentType)=>{
         setLoading(true)
         const newChat = {
             content,
             reciever:recipientId,
-            sender:user._id,
+            sender:currentUser._id,
             read:false,
             contentType,
             time:new Date(),
@@ -52,6 +74,7 @@ const ChatSection = ({user}:{user:ChatUser}) => {
             data.append('recipientId',recipientId);
             data.append('content',content);
             data.append('contentType',contentType);
+            
             const response = await axios.post('http://localhost:3006/api/chats/saveChat',data);
             console.log('Saved Chat',response);
             sendMessage(newChat);
@@ -62,8 +85,11 @@ const ChatSection = ({user}:{user:ChatUser}) => {
         }
     }
 
+
     return (
         <>
+
+
             <div className="border-b w-full space-x-3 h-14 flex items-center">
                 <div className={cn("w-full flex",user ? 'justify-between' : 'justify-center')}>
                     <span className="flex align-middle gap-1">
@@ -73,11 +99,14 @@ const ChatSection = ({user}:{user:ChatUser}) => {
                         </Avatar>
                         <span>
                             <h2 className="font-medium ">{user?.fullName}</h2>
-                            <p className="text-slate-500 text-xs">Online</p>
                         </span>
                     </span>
                     <span>
-                        <Button variant={'fade'} size={'icon'}>
+                        <Button 
+                            variant={'fade'} 
+                            size={'icon'}
+                            onClick={()=>{handleVideoCall({pickerId:user._id,userId:currentUser._id,room:currentUser._id+user._id})}}
+                            >
                             <Video />
                         </Button>
                     </span>
@@ -87,7 +116,7 @@ const ChatSection = ({user}:{user:ChatUser}) => {
                 <div className="flex flex-col relative">
                     {chats.map(chat=>(
                         <span className={cn("flex px-2 py-1 rounded-lg w-fit mb-1 text-sm max-w-[80%] gap-2 text-wrap",
-                            chat.sender == user?._id ? 'self-end bg-primary  text-primary-foreground':'bg-muted')}>
+                            chat.sender == currentUser._id ? 'self-end bg-primary  text-primary-foreground':'bg-muted')}>
                             {chat.content}
                             <span className="self-end text-xs flex items-center justify-end gap-1">
                                 {moment(chat.time).format('LT')}
@@ -100,7 +129,7 @@ const ChatSection = ({user}:{user:ChatUser}) => {
             <div className="absolute bottom-2 left-0 p-2 w-full">
                 <div className="flex item-center justify-between gap-2 relative">
                     <div className='absolute inset-y-2 left-2'>
-                        <DropdownMenu >
+                        {/* <DropdownMenu >
                             <DropdownMenuTrigger><Paperclip strokeWidth={1.5} className='w-5' /></DropdownMenuTrigger>
                             <DropdownMenuContent className='p-2'>
                                 <Label htmlFor='media-image'>
@@ -128,7 +157,7 @@ const ChatSection = ({user}:{user:ChatUser}) => {
                                     </DropdownMenuItem>
                                 </Label>
                             </DropdownMenuContent>
-                        </DropdownMenu>
+                        </DropdownMenu> */}
                     </div>
                     <Input 
                         type="text" 

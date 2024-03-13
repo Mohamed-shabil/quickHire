@@ -88,7 +88,7 @@ router.get('/api/chats/getAll',requireAuth,catchAsync(async(req:Request,res:Resp
     
     
     
-    console.log(chats);
+    // console.log(chats);
 
     return res.status(200).json({
         status:'success',
