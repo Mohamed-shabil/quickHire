@@ -13,7 +13,7 @@ const VideoCall = () => {
   const searchParams = useSearchParams()
   const userId = searchParams.get('userId') || ''
   const initiator = searchParams.get('initiator') ||'';
-  const {callAccepted,callEnded,myVideo,userVideo,stream,call,callUser,answerCall,leaveCall,getMedia} = usePeer();
+  const {callAccepted,callEnded,myVideo,userVideo,stream,call,callUser,answerCall,leaveCall,getMedia,stopMedia} = usePeer();
 
   console.log('call ended',callEnded);
 
@@ -63,10 +63,12 @@ const VideoCall = () => {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel onClick={()=>{
+              redirect('/');
+            }}>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={()=>{
-              answerCall();
               setAnswer(false);
+              answerCall();
             }}>Answer</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

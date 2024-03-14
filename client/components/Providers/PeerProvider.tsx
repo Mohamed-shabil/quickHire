@@ -32,6 +32,7 @@ interface IPeerContext{
     myVideo:RefObject<HTMLVideoElement>;
     userVideo:RefObject<HTMLVideoElement>;
     getMedia:()=>void;
+    stopMedia:()=>void;
 }
 
 
@@ -76,6 +77,18 @@ export const PeerProvider:React.FC<PeerProviderProps> = ({children})=>{
             myVideo.current.srcObject = currentStream;
           });
     }
+
+    const stopMedia = () => {
+      if (stream) {
+        stream.getTracks().forEach(track => {
+          track.stop();
+        });
+        // @ts-ignore
+        myVideo.current.srcObject = null;
+        
+        // setStream(null);
+      }
+    };
 
     const answerCall:IPeerContext['answerCall'] = () =>{
         setCallAccepted(true);
@@ -140,8 +153,10 @@ export const PeerProvider:React.FC<PeerProviderProps> = ({children})=>{
         if (connectionRef.current) {
           connectionRef.current.destroy();
         }
-    
+        stopMedia();
+        router.refresh();
         router.push('/chats');
+        
       };
 
 
@@ -156,6 +171,7 @@ export const PeerProvider:React.FC<PeerProviderProps> = ({children})=>{
     return(
         <PeerContext.Provider value={{
             getMedia,
+            stopMedia,
             leaveCall,
             callUser,
             answerCall,

@@ -126,3 +126,21 @@ export interface ChatUser {
   name:string
   message:Chats
 }
+
+type workPlace = 'Hybrid' | 'Onsite' | 'Remote'
+type employmentType = 'Part-time' | 'Full-time' | 'Freelancer' 
+
+export interface Jobs{
+  _id:string;
+  recruiter: string;
+  title:string;
+  company:string;
+  companyImage:string;
+  workPlace: workPlace;
+  employmentType: employmentType;
+  jobDescription:string;
+  requirements: string,
+  skills:string[],
+  minSalary:number,
+  maxSalary:number
+}

@@ -105,7 +105,7 @@ const onSubmit = (values: z.infer<typeof formSchema>) => {
   const data = new FormData();
 
   // console.log(values.title)
-  data.append('title','Im Sahgil');
+  data.append('title',values.title);
   data.append('company', values.company);
   data.append('workplace', values.workplace);
   data.append('employmentType', values.employmentType);

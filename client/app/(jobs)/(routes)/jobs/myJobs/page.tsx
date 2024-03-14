@@ -14,22 +14,39 @@ import {
     TooltipTrigger,
   } from "@/components/ui/tooltip"
 import { Plus } from "lucide-react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { Jobs } from "@/constants/constants";
+import { toast } from "@/components/ui/use-toast";
+import { JobCard } from "@/components/jobCard";
 
 export default function CreateJob() {
     const router = useRouter();
     const dispatch = useDispatch();
     const user = useSelector((state:RootState)=>(state.user.userData));
-    console.log('outSide the clouse',{user});
-
+    const [jobs,setJobs] = useState<Jobs[]>([]);
+    
     if(user && user?.role != 'recruiter'){
         console.log('inside the if clouse',{user});
         redirect('/');
     }
-
+    useEffect(()=>{
+        axios.get(`http://localhost:3005/api/jobs/${user?._id}/getAll`)
+            .then((res)=>{
+                setJobs(res.data.jobs);
+                console.log(res.data)
+            })
+            .catch((err)=>{
+                toast({
+                    title:'Something Went Wrong',
+                    description:err.response.message[0] || 'Please Try again',
+                })
+            });
+    },[user]);
     return (
         <main className="container">
             <section className="flex justify-between items-center">
-                <h1> My Jobs</h1>
+                <h1> My Jobs Posts</h1>
                 <TooltipProvider>
                     <Tooltip>
                         <TooltipTrigger asChild>
@@ -43,6 +60,14 @@ export default function CreateJob() {
                         </TooltipContent>
                     </Tooltip>
                 </TooltipProvider>
+            </section>
+            <section className=" w-full min-h-[100vh - 200px]">
+                <div className="flex flex-wrap">
+
+                </div>
+                {jobs.map((job)=>(
+                    <JobCard job={job}/>
+                ))}
             </section>
         </main>
     )
