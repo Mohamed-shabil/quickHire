@@ -15,11 +15,12 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Label } from './ui/label'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/reducers'
+import Link from 'next/link'
 
 
 const ChatSection = ({user}:{user:ChatUser}) => {
     const router = useRouter();
-    const {messages,sendMessage,socket,InitCall,InvitePicker} = useSocket();
+    const {messages,sendMessage,socket,callUser} = useSocket();
 
     const [ chats, setChats] = useState<Chats[]>([]);
     const [ content, setContent] = useState('');
@@ -32,7 +33,7 @@ const ChatSection = ({user}:{user:ChatUser}) => {
     const currentUser = useSelector((state:RootState)=>state.user.userData);
     if(!currentUser?._id){
         return <h1>No Current User</h1>
-    }
+    }   
     useEffect(()=>{
         axios.get(`http://localhost:3006/api/chats/history/${user?._id}`)
             .then((res)=>{
@@ -51,11 +52,9 @@ const ChatSection = ({user}:{user:ChatUser}) => {
     },[messages]);
 
 
-    const handleVideoCall = ({pickerId,userId,room}:{pickerId:string,userId:string,room:string})=>{
-        console.log('PickerId',pickerId,userId,room)
-        InitCall({userId,room});
-        InvitePicker({pickerId,room});
-        router.push(`/chats/videoCall/${room}`)
+    const handleVideoCall = ({pickerId}:{pickerId:string})=>{
+        console.log('PickerId',pickerId,)
+        callUser(pickerId);
     }
 
     const handleMessage = async (content:string,recipientId:string,contentType:ContentType)=>{
@@ -102,13 +101,14 @@ const ChatSection = ({user}:{user:ChatUser}) => {
                         </span>
                     </span>
                     <span>
-                        <Button 
-                            variant={'fade'} 
-                            size={'icon'}
-                            onClick={()=>{handleVideoCall({pickerId:user._id,userId:currentUser._id,room:currentUser._id+user._id})}}
-                            >
-                            <Video />
-                        </Button>
+                        <Link href={`/chats/videoCall?userId=${user._id}&initiator=true`}>
+                            <Button 
+                                variant={'fade'} 
+                                size={'icon'}
+                                >
+                                <Video />
+                            </Button>
+                        </Link>
                     </span>
                 </div>
             </div>

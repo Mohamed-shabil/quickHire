@@ -24,7 +24,7 @@ interface IChatUser {
 }
 
 function Chats() {
-    const { sendMessage,messages,socket,InitCall } = useSocket();
+    const { sendMessage,messages,socket } = useSocket();
     const [ content, setContent] = useState('');
     const [ chatUsers, setChatUsers] = useState<IChatUser[]>();
     const [ user, setUser] = useState<IChatUser>();
@@ -58,10 +58,10 @@ function Chats() {
 
     const onSearch = async(value:string)=>{
         axios.defaults.withCredentials = true
-        axios.get(`http://localhost:3003/api/profile/searchProfile?name=${value}`)
+        axios.get(`http://localhost:3006/api/chats/searchProfile?name=${value}`)
             .then((res)=>{
-                console.log(res.data.chats);
-                setChatUsers(res.data.chats)
+                console.log(res.data.users);
+                setChatUsers(res.data.users)
             }).catch((err)=>{
                 console.log(err);
             })
@@ -90,26 +90,36 @@ function Chats() {
                                 {
                                     chatUsers?.length ? 
                                     chatUsers.map((chatUser)=>(
-                                        <div 
-                                            className=" hover:bg-slate-50 dark:hover:bg-slate-900
-                                             p-3 space-x-2 flex my-2 items-center w-full 
-                                             border h-20 rounded-md"
-                                             onClick={()=>{setUser(chatUser)}}
-                                             >
-                                            <Avatar className="h-12 w-12">
-                                                <AvatarImage src={chatUser.avatar} className=" object-cover" />
-                                                <AvatarFallback>CN</AvatarFallback>
-                                            </Avatar>
-                                            <div className="flex flex-col w-full">
-                                                <span className="flex justify-between w-full">
-                                                    <h3 className="font-medium text-base ">{chatUser.fullName}</h3> 
-                                                    <p className="text-slate-500 text-xs font-medium">{moment(chatUser.message.time).format('LT')}</p>
-                                                </span>
-                                                <p className="line-clamp-1 font-normal text-xs">
-                                                    {chats.length ? chats[chats.length-1].content : chatUser.message.content }
-                                                </p>
+                                        <>
+                                        {
+                                            chatUser._id != currentUser?._id && (
+
+                                            <div className=" hover:bg-slate-50 dark:hover:bg-slate-900
+                                                p-3 space-x-2 flex my-2 items-center w-full 
+                                                border h-20 rounded-md"
+                                                onClick={()=>{setUser(chatUser)}}
+                                                >
+                                                <Avatar className="h-12 w-12">
+                                                    <AvatarImage src={chatUser.avatar} className=" object-cover" />
+                                                    <AvatarFallback>CN</AvatarFallback>
+                                                </Avatar>
+                                                <div className="flex flex-col w-full">
+                                                    <span className="flex justify-between w-full">
+                                                        <h3 className="font-medium text-base ">{chatUser.fullName}</h3> 
+                                                        {
+                                                            chatUser.message?.time ?
+                                                            <p className="text-slate-500 text-xs font-medium">{moment(chatUser.message.time).format('LT')}</p>:
+                                                            <></>
+                                                        }
+                                                    </span>
+                                                    {/* <p className="line-clamp-1 font-normal text-xs">
+                                                        {chats.length ? chats[chats.length-1].content : chatUser.message.content }
+                                                    </p> */}
+                                                </div>
                                             </div>
-                                        </div>
+                                            )
+                                        }
+                                        </>
                                     )):<></>
                                 }
                                 <ScrollBar orientation="horizontal"/>

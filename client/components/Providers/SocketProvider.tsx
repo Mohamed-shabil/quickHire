@@ -1,6 +1,6 @@
 "use client"
 import { Chats } from '@/constants/constants';
-import React from 'react';
+import React, { RefObject, useRef } from 'react';
 import {
     createContext,
     useContext,
@@ -14,19 +14,39 @@ import { Check } from 'lucide-react';
 import Link from 'next/link'
 import { Button } from '../ui/button';
 import { Stream } from 'stream';
+import Peer, { Instance } from 'simple-peer';
+import { redirect } from 'next/navigation';
+
+
+
 interface SocketProviderProps{
     children?:React.ReactNode;
 }
 
+interface Call {
+    isReceivingCall: boolean;
+    from: string;
+    signal: any;
+}
 
 interface ISocketContext {
     sendMessage: (msg:Chats) => any;
     messages: Chats | undefined;
     connectSocket:(userId:string) => any;
     socket:Socket | undefined;
-    InitCall:({userId,room}:{userId:string,room:string})=> any;
-    InvitePicker:({pickerId,room}:{pickerId:string,room:string})=>void;
-    remoteSocketId:string;
+
+
+    call: Call | undefined;
+    callAccepted: Boolean;
+    myVideo: RefObject<HTMLVideoElement>;
+    userVideo: RefObject<HTMLVideoElement>;
+    stream: MediaStream | undefined;
+    callEnded: Boolean;
+    me: string;
+    callUser: (id: string) => void;
+    leaveCall: () => void;
+    answerCall: () => void;
+    createCall:()=>void
 }
 const SocketContext = React.createContext<ISocketContext | null>(null);
 
@@ -42,8 +62,13 @@ export const useSocket = ()=> {
 export const SocketProvider:React.FC<SocketProviderProps> = ({children})=>{
     const [ socket, setSocket ] = useState<Socket>();
     const [ messages, setMessages ] = useState<Chats>();
-    const [ remoteSocketId,setRemoteSocketId] = useState('');
-    const [ myStream, setMyStream] = useState<MediaStream>()
+    
+    const [callAccepted, setCallAccepted] = useState(Boolean);
+    const [callEnded, setCallEnded] = useState(Boolean);
+    const [stream, setStream] = useState<MediaStream>();
+    const [name, setName] = useState('');
+    const [call, setCall] = useState<Call>();
+    const [me, setMe] = useState('');
 
     const onMessageRec = useCallback((msg:Chats)=>{
         console.log('On Message REc',msg)
@@ -51,64 +76,121 @@ export const SocketProvider:React.FC<SocketProviderProps> = ({children})=>{
         setMessages(msg);
     },[]);
 
-    const handleUserJoined = useCallback(({userId,socketId}:{userId:string,socketId:string})=>{
-        console.log('New User Joined',socketId);
-        setRemoteSocketId(socketId);
-    },[])
+    
+
+
+    const myVideo = useRef<HTMLVideoElement>(null);
+    const userVideo = useRef<HTMLVideoElement>(null);
+    const connectionRef = useRef<Instance>();
+
+
+    const createCall:ISocketContext['createCall'] = ()=>{
+        navigator.mediaDevices.getDisplayMedia({video:true, audio:true})
+            .then((currentStream)=>{
+                setStream(currentStream);
+                if(myVideo.current){
+                    // @ts-ignore
+                    myVideo.current.srcObject = currentStream
+                }
+            });
+
+        socket?.on('me',(id)=>setMe(id))
+        socket?.on('callUser', ({ from, signal }) => {
+            setCall({isReceivingCall: true, from, signal,});
+            toast({
+                title: "Somebody is calling you",
+                description: "Welcome to QuickHire",
+                action: (
+                  <Button 
+                    onClick={()=>answerCall()}>
+                    Answer Call
+                  </Button>
+                ),
+              })
+        });
+    }
+
+    const answerCall = () =>{
+        setCallAccepted(true);
+        const peer = new Peer({initiator:false, trickle:false,stream});
+
+        peer.on('signal',(data)=>{
+            if(call){
+                socket?.emit('answerCall',{signal:data,to:call.from});
+            }
+        })
+
+        peer.on('stream', (currentStream) => {
+            if (userVideo.current) {
+              userVideo.current.srcObject = currentStream;
+            }
+        });
+
+        if(call){
+            peer.signal(call.signal);
+        }
+        
+        connectionRef.current = peer;
+
+        redirect('/chats/videoCall');
+        
+    }
+
+   
+    const callUser:ISocketContext['callUser'] = (id: string) => {
+        const peer = new Peer({ initiator: true, trickle: false, stream });
+    
+        peer.on('signal', (data) => {
+          socket?.emit('callUser', { userToCall: id, signalData: data, from: me, name });
+        });
+    
+        peer.on('stream', (currentStream) => {
+          if (userVideo.current) {
+            userVideo.current.srcObject = currentStream;
+          }
+        });
+    
+        socket?.on('callAccepted', (signal) => {
+          setCallAccepted(true);
+          peer.signal(signal);
+        });
+    
+        connectionRef.current = peer;
+      };
+
+      const leaveCall:ISocketContext['leaveCall'] = () => {
+        setCallEnded(true);
+    
+        if (connectionRef.current) {
+          connectionRef.current.destroy();
+        }
+    
+        window.location.reload();
+      };
+
+
+
+
+
 
     
 
     useEffect(()=>{
         const _socket = io('http://localhost:3006');
         _socket.on("message",onMessageRec);
-        _socket.on("room:join",handleJoinCall);
-        _socket.on('user:joined',handleUserJoined);
+        
         setSocket(_socket);
         return ()=>{
-            _socket.off("room:join",handleJoinCall)
             _socket.off("message",onMessageRec);
 
-            _socket.on('user:joined',handleUserJoined)
-            
             _socket.disconnect();
             setSocket(undefined);
         }
     },[]);
 
 
-    const InitCall:ISocketContext['InitCall']=({userId,room}:{userId:string,room:string}) => {
-        if(socket){
-            socket.emit("room:join",{userId,room});
-        }
-    };
-
-    const InvitePicker:ISocketContext['InvitePicker'] = ({pickerId,room}:{pickerId:string,room:string}) =>{
-        console.log('InvitePicker')
-        if(socket){
-            socket.emit("invite:room",{pickerId,room});
-        }
-    }
-
-    const acceptInvite = useCallback((data:{userId:string,room:string})=>{
-        if(socket){
-            socket.emit("room:join",data);
-        }
-    },[socket]);
 
 
-    const handleJoinCall = useCallback((data:{userId:string,room:string})=>{
-        const {userId,room} = data;
-        toast({
-            title: "Somebody is calling ",
-            action: (
-                <Link href={`/chats/videoCall/${room}`}>
-                    <Button>
-                        <Check />
-                    </Button>
-                </Link>
-            ),
-          })
-    },[])
 
 
     const sendMessage:ISocketContext['sendMessage'] =  (msg)=>{
@@ -125,7 +207,24 @@ export const SocketProvider:React.FC<SocketProviderProps> = ({children})=>{
     
    
     return (
-        <SocketContext.Provider value={{sendMessage,messages,connectSocket,socket,InitCall,InvitePicker,remoteSocketId}}>
+        <SocketContext.Provider value={{
+            sendMessage,
+            messages,
+            connectSocket,
+            socket,
+            createCall,
+            call,
+            callAccepted,
+            myVideo,
+            userVideo,
+            stream,
+            callEnded,
+            me,
+            callUser,
+            leaveCall,
+            answerCall,
+
+        }}>
             {children}
         </SocketContext.Provider>
     )

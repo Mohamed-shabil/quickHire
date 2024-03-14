@@ -7,8 +7,6 @@ const inter = Inter({ subsets: ["latin"] });
 const mainLayout = async ({children}:{children:React.ReactNode;}) => {
     return ( 
         <div className="h-full">
-            <ModalProvider/>
-            <Navbar/>
             {children}
         </div>
      )

@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster"
 import {Providers} from '@/store/provider'
 import { SocketProvider } from "@/components/Providers/SocketProvider";
+import { PeerProvider } from "@/components/Providers/PeerProvider";
 import store from "@/store/store";
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,9 +32,11 @@ export default function RootLayout({
                 >
               <Providers>
                 <Toaster />
-                <SocketProvider>
-                  {children}
-                </SocketProvider>
+                  <SocketProvider>
+                    <PeerProvider>
+                      {children}
+                    </PeerProvider>
+                  </SocketProvider>
               </Providers>
           </ThemeProvider>
       </body>

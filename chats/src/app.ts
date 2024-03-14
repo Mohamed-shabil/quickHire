@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { chatHistoryRoute } from './routes/getChatHistory';
 import { getAllChatsRoute } from './routes/getAllChats';
+import { searchProfile } from './routes/searchProfile';
 
 
 const app = express();
@@ -37,7 +38,7 @@ app.use(currentUser);
 app.use(saveChatRouter);
 app.use(chatHistoryRoute);
 app.use(getAllChatsRoute);
-
+app.use(searchProfile);
 
 app.use(errorHandler);
 const socketService = new SocketService();
