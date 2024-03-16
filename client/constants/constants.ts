@@ -1,6 +1,7 @@
 export const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 
 export type Experience = {
+    _id:string
     companyName: string;
     startDate: {
       startMonth: string;
@@ -14,6 +15,7 @@ export type Experience = {
 };
   
 export type Education = {
+    _id:string;
     school: string;
     startDate: {
       startMonth: string;
@@ -28,6 +30,7 @@ export type Education = {
 };
   
 export type Project = {
+    _id:string;
     projectName: string;
     description: string;
     skills: string[];
@@ -144,3 +147,6 @@ export interface Jobs{
   minSalary:number,
   maxSalary:number
 }
+
+
+export type Page = 'jobs' | 'applicants' | 'candidates' | 'shortListed'

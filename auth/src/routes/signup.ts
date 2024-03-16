@@ -46,21 +46,30 @@ router.post('/api/users/signup',[
 ], catchAsync(async (req:Request,res:Response,next:NextFunction)=>{
     const error = validationResult(req);
     const {name, phone, email, password, ConfirmPassword, otpMethod} = req.body;
+    const usernameExist = await User.findOne({name});
+    if(usernameExist){
+        throw new BadRequestError('Username is already Reserved');
+    }
+
     const existingUser = await User.findOne({email});
-    
+
     if(existingUser){
         throw new BadRequestError('Email already used');
     }
+
     if(password !== ConfirmPassword){
         throw new BadRequestError('Passwords are not same');
     }
+
     const hashedPassword = await bcrypt.hash(password,10);
+    
     const user = new User({
         name,
         email,
         phone,
         password:hashedPassword
     });
+
     await user.save();
 
     const otp = randomString.generate({

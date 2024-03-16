@@ -1,6 +1,6 @@
 import express,{Request,Response} from 'express';
 import { body, validationResult } from 'express-validator'
-import { BadRequestError, NotAutherizedError, requireAuth, validateRequest } from '@quickhire/common';
+import { BadRequestError, NotAutherizedError, currentUser, requireAuth, validateRequest } from '@quickhire/common';
 import catchAsync from '../utils/catchAsync';
 import { Profile } from '../model/profile';
 const router = express.Router();
@@ -64,4 +64,26 @@ router.post('/api/profile/experience',requireAuth,[
     })
 }))
 
+
+router.patch('/api/profile/experience/delete',requireAuth,[
+    body('experienceId')
+        .notEmpty()
+        .withMessage("Experience ID Can't be Empty"),
+    validateRequest,
+],catchAsync(async (req:Request,res:Response)=>{
+
+    const { experienceId } = req.body;
+
+    const profile = await Profile.findOneAndUpdate({userId:req.currentUser?._id},{$pull:{experience:{_id:experienceId}}});
+    
+    return res.status(200).json({
+        status:"success",
+        experience : profile?.experience
+    })
+}))
+
+
+
 export {router as experienceRouter}
+
+

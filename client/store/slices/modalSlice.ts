@@ -1,17 +1,19 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {Education, Experience} from '@/constants/constants'
 
 export type ModalType = "AboutFormModal" | "EducationFormModal" | "ExperienceFormModal" | 
-    "LinkFormModal" | "ProjectFormModal" |"ProfileAvatar" | "CreatePost" | "editPost"| "createJob"
+    "LinkFormModal" | "ProjectFormModal" | "ProfileAvatar" | "CreatePost" | "editPost"| "createJob"
 
 interface ModalState {
     open: boolean;
     type:ModalType | null
+    data: Education | Experience | null
 }
-
 
 const initialState: ModalState = {
     open: false,
     type: null,
+    data: null,
 }
 
 const modalSlice = createSlice({
@@ -20,14 +22,18 @@ const modalSlice = createSlice({
     reducers: {
         setOpen: (state,action) => {
             state.open = true;
-            state.type = action.payload
+            state.type = action.payload.type;
+            if(state.type === 'EducationFormModal'){
+                state.data = action.payload.data as Education
+            }else if(state.type === 'ExperienceFormModal'){
+                state.data = action.payload.data as Experience
+            }
         },
         setClose: (state) => {
             state.open = false;
         }
     },
 });
-
 
 
 export const { setClose, setOpen } = modalSlice.actions;

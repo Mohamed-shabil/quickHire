@@ -23,6 +23,7 @@ import axios from "axios";
 import { ProfileUpload } from "@/components/profileUpload";
 import { ProfileOptions } from "@/components/ProfileOption";
 import { ProjectCard } from "@/components/ProjectCart";
+import Link from "next/link";
 
 const getProfile = async (token:string,username:string) =>{
     console.log('here is the token',token)
@@ -107,9 +108,11 @@ export default async function MyProfile({params}:{params:{username:string}}) {
                         ))}
                     </section>
                 </section>
-                <Button variant={'fade'} size={'mini'} className="absolute right-10 -top-7 p-2">
-                    <Pencil className="w-4 h-4"/>
-                </Button>
+                <Link href={`/${username}/editProfile`}>
+                    <Button variant={'fade'} size={'mini'} className="absolute right-10 -top-7 p-2">
+                        <Pencil className="w-4 h-4"/>
+                    </Button>
+                </Link>
             </Container> : <></>
             }
 
@@ -121,9 +124,11 @@ export default async function MyProfile({params}:{params:{username:string}}) {
                         {profile.experience.map((experience:Experience,index:number) => (
                             <ExperienceCard key={index} experience={experience} />
                         ))}
-                        <Button variant={'fade'} size={'mini'} className="absolute right-1 -top-7 p-2">
-                            <Pencil className="w-4 h-4"/>
-                        </Button>
+                        <Link href={'/editProfile'}>
+                            <Button variant={'fade'} size={'mini'} className="absolute right-1 -top-7 p-2">
+                                <Pencil className="w-4 h-4"/>
+                            </Button>
+                        </Link>
                     </section>
                 </Container> :
                 <></>         

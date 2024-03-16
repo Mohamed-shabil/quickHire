@@ -20,10 +20,21 @@ import {setClose} from '@/store/slices/modalSlice'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { Check, X } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { Experience } from "@/constants/constants"
+import { useEffect, useState } from "react"
 
 
 export function ExperienceFormModal() {
+
   const dispatch = useDispatch();
+
+  const user = useSelector((state:RootState)=>state.user.userData)
+  const open = useSelector((state:RootState)=>state.modal.open)
+  const type = useSelector((state:RootState)=>state.modal.type)
+  const experience = useSelector((state:RootState)=>state.modal.data) as Experience
+  const isModalOpen = open && type === 'ExperienceFormModal';
+
+
   const router = useRouter();
   const months = [
     { label:'January',value:'1'},
@@ -86,15 +97,16 @@ export function ExperienceFormModal() {
   const form = useForm({  
     resolver:zodResolver(formSchema),
     defaultValues:{
-      companyName:"",
-      startMonth:"",
-      endMonth:"",
-      startYear:"",
-      endYear:"",
-      position:"",
+      companyName:'',
+      position:'',
+      startYear:'',
+      startMonth:'',
+      endYear:'',
+      endMonth:'',
     },
     mode:"onTouched"
   });
+
   
   const onSubmit = (values:z.infer<typeof formSchema>)=>{
     console.log(values)
@@ -120,16 +132,16 @@ export function ExperienceFormModal() {
       })
     })
   }
+
+
   
   const onClose =()=>{
     dispatch(setClose())
   }
   const isLoading = form.formState.isSubmitting;
-  const user = useSelector((state:RootState)=>state.user.userData)
-  const open = useSelector((state:RootState)=>state.modal.open)
-  const type = useSelector((state:RootState)=>state.modal.type)
 
-  const isModalOpen = open && type === 'ExperienceFormModal';
+  console.log(form.watch);
+
   return (
     <Dialog open={isModalOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px]">
@@ -151,6 +163,7 @@ export function ExperienceFormModal() {
                             <FormLabel> Company Name </FormLabel>
                             <FormControl>
                               <Input
+                                defaultValue={experience.companyName || ''}
                                 type="text"
                                 className="mt-1 w-full rounded-md"
                                 {...field} />
@@ -171,6 +184,7 @@ export function ExperienceFormModal() {
                             <FormControl>
                               <Input
                                 type="text"
+                                defaultValue={experience.companyName || ''}
                                 className="mt-1 w-full rounded-md"
                                 {...field} />
                             </FormControl>
@@ -187,7 +201,7 @@ export function ExperienceFormModal() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Start Month</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select onValueChange={field.onChange} defaultValue={experience.companyName || ''}>
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select Start Month display" />
@@ -212,7 +226,7 @@ export function ExperienceFormModal() {
                     render={({ field }) => (
                     <FormItem>
                       <FormLabel>Start Year</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select onValueChange={field.onChange} defaultValue={experience.companyName || ''}>
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select End Year" />
@@ -236,7 +250,7 @@ export function ExperienceFormModal() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>End Month</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select onValueChange={field.onChange} defaultValue={experience.companyName || ''}>
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select End Month" />
@@ -260,7 +274,7 @@ export function ExperienceFormModal() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>End Year</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select onValueChange={field.onChange} defaultValue={experience.companyName || ''}>
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select End Year" />

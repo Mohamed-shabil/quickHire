@@ -8,7 +8,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { RootState } from "@/store/reducers";
 import { Button } from "./ui/button";
-import { AlignRight, LogOut, UserRound } from "lucide-react";
+import { AlignRight, Image, LayoutDashboard, LogOut, UserRound } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
     DropdownMenu,
@@ -37,7 +37,6 @@ const Navbar = () => {
 
     const user = useSelector((state:RootState)=>state.user.userData);
     if(user?._id){
-        console.log('User id from navbar',user._id)
         connectSocket(user._id);
     }
     const logout = async()=>{
@@ -70,16 +69,30 @@ const Navbar = () => {
                             <DropdownMenuLabel>My Account</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem>
-                                <Link href={'/profile'} className="flex ">
+                                <Link href={`/${user._id}`} className="flex ">
                                     <UserRound className="mr-2 h-4 w-4"/>
                                     <span>Profile</span>
                                 </Link>
                             </DropdownMenuItem>
                             <DropdownMenuItem>
                                 <Link href={'/posts'} className="flex ">
-                                    <UserRound className="mr-2 h-4 w-4"/>
+                                    <Image className="mr-2 h-4 w-4"/>
                                     <span>Posts</span>
                                 </Link>
+                            </DropdownMenuItem>
+                            {
+                                user.role === 'recruiter' && (
+                                    <DropdownMenuItem>
+                                        <Link href={'/posts'} className="flex ">
+                                            <LayoutDashboard  className="mr-2 h-4 w-4"/>
+                                            <span>Dashboard</span>
+                                        </Link>
+                                    </DropdownMenuItem>
+                                )
+                            }
+                            <DropdownMenuItem>
+                                <ModeToggle/>
+                                <span>Theme</span>
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={logout} className="text-rose-500">
                                 <LogOut className="mr-2 h-4 w-4" />
@@ -95,14 +108,13 @@ const Navbar = () => {
                                 Signup
                             </Button>
                         </Link>)}
-                        <ModeToggle/>
                     </span>
                 </div>
                 <div id="navbar-alignment" className="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow sm:grow-0 sm:basis-auto sm:block sm:order-2">
                 <div className="flex flex-col gap-5 mt-5 sm:flex-row sm:items-center sm:mt-0 sm:ps-5">
-                    <Link className="font-medium text-blue-500 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" href="#" aria-current="page">Home</Link>
-                    <Link className="font-medium text-gray-600 hover:text-gray-400 dark:text-gray-400 dark:hover:text-gray-500 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" href="/jobs">Jobs</Link>
-                    <Link className="font-medium text-gray-600 hover:text-gray-400 dark:text-gray-400 dark:hover:text-gray-500 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" href="chats">Messages</Link>
+                    <Link className="font-medium text-blue-500 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" aria-current="page" href="http://localhost:3000/">Home</Link>
+                    <Link className="font-medium text-gray-600 hover:text-gray-400 dark:text-gray-400 dark:hover:text-gray-500 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" href="http://localhost:3000/jobs">Jobs</Link>
+                    <Link className="font-medium text-gray-600 hover:text-gray-400 dark:text-gray-400 dark:hover:text-gray-500 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" href="http://localhost:3000/chats">Messages</Link>
                     <Link className="font-medium text-gray-600 hover:text-gray-400 dark:text-gray-400 dark:hover:text-gray-500 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" href="#">Blog</Link>
                 </div>
                 </div>
