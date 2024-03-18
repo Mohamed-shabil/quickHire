@@ -53,7 +53,7 @@ router.post('/api/jobs/createjobs',requireAuth,isRecruiter,uploadCompanyImage,[
       throw new NotAutherizedError()
     }
     const file = req.file as Express.MulterS3.File | undefined
-    console.log('WORK PLACE -------',workplace);
+
     const newJob = await Jobs.create({
       recruiter: currentUser._id,
       recruiterName:currentUser.name,
@@ -70,8 +70,6 @@ router.post('/api/jobs/createjobs',requireAuth,isRecruiter,uploadCompanyImage,[
     });
     
     await newJob.save();
-
-    console.log(newJob)
 
     res.status(201).json({
       status:'success',
