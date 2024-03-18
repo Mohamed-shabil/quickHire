@@ -5,8 +5,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import { EducationCard } from '@/components/EducationCard'
-import { ExperienceCard } from '@/components/ExperienceCard'
+import { EducationCard } from '@/components/Profile/EducationCard'
+import { ExperienceCard } from '@/components/Profile/ExperienceCard'
 import axios from 'axios'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'

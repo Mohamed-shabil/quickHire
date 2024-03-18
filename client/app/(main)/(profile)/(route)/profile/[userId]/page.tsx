@@ -1,18 +1,18 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import LinkCard from "@/components/LinkCard";
-import { ExperienceCard } from "@/components/ExperienceCard";
+import LinkCard from "@/components/Profile/LinkCard";
+import { ExperienceCard } from "@/components/Profile/ExperienceCard";
 import { Heading } from "@/components/Heading";
 import { Container } from "@/components/Container";
 import { redirect } from "next/navigation";
-import { EducationCard } from '@/components/EducationCard'
+import { EducationCard } from '@/components/Profile/EducationCard'
 
 import {User,Education,Project,Experience} from '@/constants/constants'
 import axios from "axios";
 import { cookies } from "next/headers";
 import { Button } from "@/components/ui/button";
 import { MessageSquareMore } from "lucide-react";
-import { ProfileOptions } from "@/components/ProfileOption";
+import { ProfileOptions } from "@/components/Profile/ProfileOption";
 
 interface Link {
     title:string;

@@ -140,7 +140,6 @@ export function ExperienceFormModal() {
   }
   const isLoading = form.formState.isSubmitting;
 
-  console.log(form.watch);
 
   return (
     <Dialog open={isModalOpen} onOpenChange={onClose}>

@@ -2,13 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Plus as FollowIcon, Ghost, Key, MoveUpRight as LinkIcon, MoreVertical, Pencil, PlusCircle } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import LinkCard from "@/components/LinkCard";
+import LinkCard from "@/components/Profile/LinkCard";
 import { cookies } from 'next/headers'
-import { ExperienceCard } from "@/components/ExperienceCard";
+import { ExperienceCard } from "@/components/Profile/ExperienceCard";
 import { Heading } from "@/components/Heading";
 import { Container } from "@/components/Container";
 import { redirect } from "next/navigation";
-import { EducationCard } from '@/components/EducationCard'
+import { EducationCard } from '@/components/Profile/EducationCard'
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -17,12 +17,12 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu"
-import AddSections from "@/components/AddSections";
+import AddSections from "@/components/Profile/AddSections";
 import {User,Education,Project,Experience} from '@/constants/constants'
 import axios from "axios";
-import { ProfileUpload } from "@/components/profileUpload";
-import { ProfileOptions } from "@/components/ProfileOption";
-import { ProjectCard } from "@/components/ProjectCart";
+import { ProfileUpload } from "@/components/Profile/profileUpload";
+import { ProfileOptions } from "@/components/Profile/ProfileOption";
+import { ProjectCard } from "@/components/Profile/ProjectCart";
 import Link from "next/link";
 
 const getProfile = async (token:string,username:string) =>{

@@ -12,7 +12,7 @@ export default function CreatePostButton() {
     const dispatch = useDispatch();
   return (
     <div className='w-full flex items-center justify-center'>
-      <div className="flex w-full max-w-lg space-x-2 p-2 border rounded-md" onClick={()=>dispatch(setOpen('CreatePost'))}>
+      <div className="flex w-full max-w-lg space-x-2 p-2 border rounded-md" onClick={()=>dispatch(setOpen({type:'CreatePost'}))}>
         <Input type="email" placeholder="What do you want to talk about ?" />
         <Button type="submit" variant={'default'} className='bg-blue-600'><Image /></Button>
       </div>

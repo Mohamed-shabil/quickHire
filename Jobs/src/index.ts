@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 import {app} from './app'
 import { Kafka } from 'kafkajs';
+import './config/config'
+
 
 const start = async() =>{
     if(!process.env.JWT_KEY){
@@ -10,9 +12,6 @@ const start = async() =>{
         if(!process.env.MONGO_URI){
             throw new Error('Mongo Uri is not defined')
         }
-        console.log(process.env.MONGO_URI)
-        await mongoose.connect(process.env.MONGO_URI)
-        console.log("[JOBS DB] Database Connected Successfully!")
     }catch(err){
         console.error(err);
     }

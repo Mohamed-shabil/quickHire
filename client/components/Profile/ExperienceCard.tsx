@@ -1,14 +1,14 @@
 'use client'
 import { Building2, Check, Pencil, Trash2, X } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Button } from "./ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
-import { Separator } from "./ui/separator";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Button } from "../ui/button";
+import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
+import { Separator } from "../ui/separator";
 import { Experience, months } from "@/constants/constants";
 import { useDispatch } from "react-redux";
 import { setOpen } from "@/store/slices/modalSlice";
 import axios from "axios";
-import { toast } from "./ui/use-toast";
+import { toast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
 
 

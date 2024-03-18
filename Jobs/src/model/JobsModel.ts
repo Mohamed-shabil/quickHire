@@ -1,48 +1,63 @@
-import mongoose, { Schema, InferSchemaType } from 'mongoose';
+import { Sequelize, DataTypes, ModelDefined } from 'sequelize';
+import { sequelize } from '../config/config';
+import { IJobsType, IDJobsType} from '../types/types';
 
-const JobsSchema = new Schema({
-    recruiter:{
-        type:String,
-        required:true
+
+export const Jobs:ModelDefined< IDJobsType,IJobsType> = sequelize.define('Jobs',{
+    _id:{
+        type:DataTypes.UUID,
+        defaultValue:DataTypes.UUIDV4,
+        primaryKey:true
     },
-    title: {
-        type:String,
-        required: true,
+    recruiterName:{
+        type:DataTypes.STRING,
+        allowNull:false
+    },
+    recruiter:{
+        type:DataTypes.STRING,
+        allowNull:false
+    },
+    title:{
+        type:DataTypes.STRING,
+        allowNull:false,
     },
     company:{
-        type:String,
-        required:true
+        type:DataTypes.STRING,
+        allowNull:false
     },
     companyImage:{
-        type:String,
+        type:DataTypes.STRING
     },
     workPlace:{
-        type:String,
-        enum:['Hybrid','Onsite','Remote']
+        type:DataTypes.ENUM('Hybrid','Onsite','Remote'),
+        allowNull:false,
     },
     employmentType:{
-        type:String,
-        enum:['Part-time','Full-time','Internship','Freelance']
+        type:DataTypes.ENUM('Part-time','Full-time','Internship','Freelance'),
+        allowNull:false
     },
     jobDescription:{
-        type:String,
+        type:DataTypes.TEXT,
+        allowNull:false
     },
     requirements:{
-        type:String
+        type:DataTypes.TEXT,
+        allowNull:false
     },
     skills:{
-        type:[String]
+        type:DataTypes.ARRAY(DataTypes.STRING),
+        allowNull:false
     },
     minSalary:{
-        type:Number
+        type:DataTypes.INTEGER
     },
     maxSalary:{
-        type:Number
-    }
+        type:DataTypes.INTEGER
+    },
+},{
+    timestamps:true,
+    paranoid:true
 })
 
-type JobsType = InferSchemaType<typeof JobsSchema>
 
-const Jobs = mongoose.model<JobsType>('Job',JobsSchema)
-
-export { Jobs,JobsType };
+sequelize.sync({alter:true})

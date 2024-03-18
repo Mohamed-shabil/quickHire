@@ -18,7 +18,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Jobs } from "@/constants/constants";
 import { toast } from "@/components/ui/use-toast";
-import { JobCard } from "@/components/jobCard";
+import { JobCard } from "@/components/Recruiter/JobCard";
 
 export default function CreateJob() {
     const router = useRouter();

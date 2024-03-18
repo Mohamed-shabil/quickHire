@@ -1,9 +1,9 @@
 'use client'
 import { Building2 } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Button } from "./ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
-import { Separator } from "./ui/separator";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Button } from "../ui/button";
+import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
+import { Separator } from "../ui/separator";
 import { months,Jobs } from "@/constants/constants";
 import Image from "next/image";
 import Link from "next/link";

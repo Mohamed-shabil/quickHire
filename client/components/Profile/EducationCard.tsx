@@ -1,8 +1,8 @@
 import { Building2, School } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Button } from "./ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
-import { Separator } from "./ui/separator";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Button } from "../ui/button";
+import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
+import { Separator } from "../ui/separator";
 import { months } from "@/constants/constants";
 
 export function EducationCard({

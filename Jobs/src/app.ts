@@ -6,8 +6,8 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 dotenv.config();
 import {NotFoundError, errorHandler, currentUser} from '@quickhire/common'
-import { createJobRoute } from './routes/createJob'
-import { getMyAlljobs } from './routes/getJobs'
+import { createJobRoute } from './routes/create-job'
+import { getMyAlljobs } from './routes/get-jobs'
 
 
 

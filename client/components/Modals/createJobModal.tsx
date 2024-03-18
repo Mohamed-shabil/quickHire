@@ -166,8 +166,6 @@ const user = useSelector((state:RootState)=>state.user.userData)
 const open = useSelector((state:RootState)=>state.modal.open)
 const type = useSelector((state:RootState)=>state.modal.type)
 
-
-
 const handleAddSkill = () => {
   if (inputValue.trim() !== '') {
     setSkills([...skills, inputValue.trim()]);

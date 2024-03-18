@@ -1,15 +1,14 @@
-'use client'
 import React, { useState } from 'react'
 import Sidebar from '@/components/Recruiter/Sidebar'
 import { Page } from '@/constants/constants';
+import JobsPage from '@/components/Recruiter/JobsPage'
+
 const Recruiter = () => {
 
-  const [page , setPage] = useState<Page>('jobs');
   return (
     <main className='min-h-screen flex items-start justify-between container'>
-      <Sidebar setPage={setPage}/>
       <div className='w-full h-full container'>
-        <p>{page}</p>
+        Hello Recruiter
       </div>
     </main>
   )

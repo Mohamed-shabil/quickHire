@@ -1,10 +1,10 @@
 import { Project } from "@/constants/constants"
-import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
-import { Separator } from "./ui/separator";
+import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
+import { Separator } from "../ui/separator";
 import { FolderKanban, School,Link as Url } from "lucide-react";
 import Link from 'next/link'
-import { Button } from "./ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
+import { Button } from "../ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 
 
 export function ProjectCard ({project}:{project:Project}){

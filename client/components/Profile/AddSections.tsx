@@ -1,6 +1,6 @@
 'use client'
-import { Button } from "./ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { Button } from "../ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { useDispatch } from "react-redux";
 import { setOpen } from "@/store/slices/modalSlice";
 const AddSections = () => {

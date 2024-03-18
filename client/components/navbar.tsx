@@ -69,7 +69,7 @@ const Navbar = () => {
                             <DropdownMenuLabel>My Account</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem>
-                                <Link href={`/${user._id}`} className="flex ">
+                                <Link href={`/${user.name}`} className="flex ">
                                     <UserRound className="mr-2 h-4 w-4"/>
                                     <span>Profile</span>
                                 </Link>
@@ -83,7 +83,7 @@ const Navbar = () => {
                             {
                                 user.role === 'recruiter' && (
                                     <DropdownMenuItem>
-                                        <Link href={'/posts'} className="flex ">
+                                        <Link href={`/recruiter/${user.name}/items/myJobs`} className="flex ">
                                             <LayoutDashboard  className="mr-2 h-4 w-4"/>
                                             <span>Dashboard</span>
                                         </Link>
