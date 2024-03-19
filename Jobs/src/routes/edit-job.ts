@@ -75,6 +75,9 @@ router.patch('/api/jobs/edit/:id',requireAuth, isRecruiter,[
         maxSalary:maxSalary
     })
 
-    
+    res.status(200).json({
+        status:'success',
+        job
+    })
 
 }))

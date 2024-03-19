@@ -2,8 +2,8 @@ import { Searchjob } from "@/components/Jobs/Searchjob";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { MapPin } from "lucide-react";
-const page = () => {
+
+const Jobs = () => {
   return (
     <main className="w-full container">
       <section
@@ -56,4 +56,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Jobs;

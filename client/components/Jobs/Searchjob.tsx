@@ -23,11 +23,11 @@ export const Searchjob = () => {
               <SelectContent>
                 <SelectGroup>
                   <SelectLabel>Select Experience</SelectLabel>
-                  <SelectItem value="apple">Less than 1 year</SelectItem>
-                  <SelectItem value="banana">1 to 3 years</SelectItem>
-                  <SelectItem value="blueberry">4 to 6 years</SelectItem>
-                  <SelectItem value="grapes">7 to 10 years</SelectItem>
-                  <SelectItem value="pineapple">More than 10 years</SelectItem>
+                  <SelectItem value="apple">Intern</SelectItem>
+                  <SelectItem value="apple">Fresher</SelectItem>
+                  <SelectItem value="banana">Associate</SelectItem>
+                  <SelectItem value="blueberry">Mid Level</SelectItem>
+                  <SelectItem value="grapes">Senior</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
