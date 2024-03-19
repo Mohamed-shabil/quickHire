@@ -26,6 +26,8 @@ router.post('/api/profile/followers/follow',requireAuth,[
     console.log({userId})
     const isAlreadyFollowing = await Follow.findOne({follow:userId,followedBy:req.currentUser?._id});
 
+    console.log(isAlreadyFollowing);
+
     if(isAlreadyFollowing){
         throw new BadRequestError('You are already following the User');
     }
@@ -33,7 +35,9 @@ router.post('/api/profile/followers/follow',requireAuth,[
         follow:userId,
         followedBy:req.currentUser?._id
     })
+
     console.log({following});
+
     await following.save();
     const payload = {
         follow:userId,
