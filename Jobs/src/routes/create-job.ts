@@ -23,6 +23,15 @@ router.post('/api/jobs/createjobs',requireAuth,isRecruiter,uploadCompanyImage,[
   body('jobDescription')
     .notEmpty()
     .withMessage("job description can't be empty"),
+  body('experience')
+    .notEmpty()
+    .withMessage("experience can't be empty"),
+  body('location')
+    .notEmpty()
+    .withMessage("location can't be empty"),
+  body('openings')
+    .notEmpty()
+    .withMessage("openings can't be empty"),
   body('skills')
     .notEmpty()
     .withMessage("skills can't empty"),
@@ -44,7 +53,10 @@ router.post('/api/jobs/createjobs',requireAuth,isRecruiter,uploadCompanyImage,[
         requirements,
         skills,
         minSalary, 
-        maxSalary
+        maxSalary,
+        experience,
+        location,
+        openings
     } = req.body;
 
     const currentUser = req.currentUser;
@@ -66,7 +78,10 @@ router.post('/api/jobs/createjobs',requireAuth,isRecruiter,uploadCompanyImage,[
       skills,
       minSalary,
       maxSalary,
-      companyImage: file?.location
+      companyImage: file?.location,
+      experience,
+      location,
+      openings
     });
     
     await newJob.save();

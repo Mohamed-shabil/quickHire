@@ -8,6 +8,8 @@ dotenv.config();
 import {NotFoundError, errorHandler, currentUser} from '@quickhire/common'
 import { createJobRoute } from './routes/create-job'
 import { getMyAlljobs } from './routes/get-jobs'
+import { searchRouter } from './routes/search-jobs'
+import { getOneJob } from './routes/get-job'
 
 
 
@@ -46,6 +48,8 @@ app.use((req:Request,res:Response,next:NextFunction)=>{
 
 app.use(createJobRoute);
 app.use(getMyAlljobs)
+app.use(searchRouter);
+app.use(getOneJob);
 
 app.all('*',() => {
     console.log('route not found 404');

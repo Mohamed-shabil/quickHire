@@ -7,7 +7,7 @@ const router = express.Router();
 
 
 
-router.get('/api/job/seach-job',requireAuth,catchAsync(async(req:Request, res:Response)=>{
+router.get('/api/jobs/search-job',requireAuth,catchAsync(async(req:Request, res:Response)=>{
     const { minExp, maxExp, location } = req.query;
 
     const filter:any = {}
@@ -33,10 +33,21 @@ router.get('/api/job/seach-job',requireAuth,catchAsync(async(req:Request, res:Re
     }
 
     const jobs = await Jobs.findAll({
-        where: Object.keys(filter).length > 0 ? filter : undefined
+        where: Object.keys(filter).length > 0 ? filter : undefined,
+        attributes:[
+            '_id',
+            'title',
+            'companyImage',
+            'company',
+            'workPlace',
+            'employmentType',
+            'skills',
+            'minSalary',
+            'maxSalary'
+        ]
     });
 
-    console.log(jobs);
+    console.log('All Jobs',jobs);
 
     res.status(200).json({
         status:'success',
@@ -45,3 +56,5 @@ router.get('/api/job/seach-job',requireAuth,catchAsync(async(req:Request, res:Re
 
 
 }))
+
+export {router as searchRouter}

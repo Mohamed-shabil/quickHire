@@ -11,6 +11,9 @@ export type IJobsType = {
     skills:string[];
     minSalary:number;
     maxSalary:number;
+    openings:number;
+    experience:string;
+    location:string;
 }
 
 export type IDJobsType = IJobsType &{

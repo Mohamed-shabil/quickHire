@@ -36,6 +36,18 @@ export const Jobs:ModelDefined< IDJobsType,IJobsType> = sequelize.define('Jobs',
         type:DataTypes.ENUM('Part-time','Full-time','Internship','Freelance'),
         allowNull:false
     },
+    location:{
+        type:DataTypes.STRING,
+        allowNull:false
+    },
+    experience:{
+        type:DataTypes.STRING,
+        allowNull:false
+    },
+    openings:{
+        type:DataTypes.INTEGER,
+        allowNull:false
+    },
     jobDescription:{
         type:DataTypes.TEXT,
         allowNull:false

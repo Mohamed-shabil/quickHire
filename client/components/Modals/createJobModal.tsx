@@ -59,6 +59,7 @@ const formSchema = z.object({
       message:'Provide a valid Company Name'
     }),
     workplace:z.string(),
+    location:z.string(),
     employmentType:z.string(),
     jobDescription:z.string().min(20,{
       message:'Job Description must be atleast 50 letters long'
@@ -79,19 +80,31 @@ const formSchema = z.object({
       }
     },{
       message:'Maximum Salary Must be a Number'
-    })
+    }),
+    openings:z.string().refine((data)=>{
+      if(data){
+        return parseInt(data)
+      }
+    },{
+      message:'Opening must be a Number and Greater than 0'
+    }),
+    experience:z.string()
 });
+
 const form = useForm({  
     resolver:zodResolver(formSchema),
     defaultValues:{
         title:'',
         company:'',
         workplace:'',
+        location:'',
         employmentType:'',
         jobDescription:'',
         requirements:'',
         minSalary:'',
         maxSalary:'',
+        openings:'',
+        experience:''
     },
     mode:"onTouched"
 });
@@ -104,7 +117,6 @@ const onSubmit = (values: z.infer<typeof formSchema>) => {
   
   const data = new FormData();
 
-  // console.log(values.title)
   data.append('title',values.title);
   data.append('company', values.company);
   data.append('workplace', values.workplace);
@@ -113,6 +125,9 @@ const onSubmit = (values: z.infer<typeof formSchema>) => {
   data.append('requirements', values.requirements);
   data.append('minSalary', values.minSalary);
   data.append('maxSalary', values.maxSalary);
+  data.append('openings',values.openings);
+  data.append('experience',values.experience);
+  data.append('location',values.location);
 
   if (companyImage) {
     data.append('companyImage', companyImage);
@@ -159,6 +174,7 @@ const onSubmit = (values: z.infer<typeof formSchema>) => {
 
   
 const onClose =()=>{
+  form.reset();
   dispatch(setClose())
 }
 const isLoading = form.formState.isSubmitting;
@@ -276,6 +292,26 @@ return (
                   )}
                 />
               </div>
+              <div className="col-span-6">
+                <FormField
+                    name="location"
+                    disabled={isLoading}
+                    control={form.control}
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Location</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="text"
+                                className="mt-1 w-full rounded-md"
+                                {...field} 
+                            />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                  )}
+                />
+              </div>
               <div className="col-span-6 mt-1 mb-2">
                 <FormField
                     name=""
@@ -305,13 +341,15 @@ return (
               <div className="col-span-6">
                 <Button type="button" variant={'fade'} className="border gap-1" 
                   onClick={()=>{
-                    form.trigger(['title','company','employmentType','workplace']);
+                    form.trigger(['title','company','employmentType','workplace','location']);
                     const titleState = form.getFieldState('title')
                     const companyState = form.getFieldState('company')
                     const employmentTypeState = form.getFieldState('employmentType')
                     const workplaceState = form.getFieldState('workplace')
+                    const locationState = form.getFieldState('location');
                     if(!titleState.isDirty || titleState.invalid) return ;
                     if(!companyState.isDirty || companyState.invalid) return ;
+                    if(!locationState.isDirty || locationState.invalid) return ;
                     if(!employmentTypeState.isDirty || employmentTypeState.invalid) return ;
                     if(!workplaceState.isDirty || workplaceState.invalid) return ;
                     setFormStep(1)
@@ -443,6 +481,51 @@ return (
                             </FormControl>
                           <FormMessage />
                       </FormItem>
+                  )}
+                />
+              </div>
+              <div className="col-span-6 sm:col-span-3">
+                <FormField
+                      name="openings"
+                      disabled={isLoading}
+                      control={form.control}
+                      render={({ field }) => (
+                          <FormItem>
+                              <FormLabel>Openings</FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="text"
+                                  className="mt-1 w-full rounded-md"
+                                  {...field} 
+                              />
+                              </FormControl>
+                              <FormMessage />
+                          </FormItem>
+                    )}
+                  />
+              </div>
+              <div className="col-span-6 sm:col-span-3">
+                <FormField
+                  control={form.control}
+                  name="experience"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Experience</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select Experience Level" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                            <SelectItem value='Intern'>Intern</SelectItem>
+                            <SelectItem value='Fresher'>Fresher</SelectItem>
+                            <SelectItem value='MidSenior'>Mid Senior level</SelectItem>
+                            <SelectItem value='Senior'>Senior</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
                   )}
                 />
               </div>
