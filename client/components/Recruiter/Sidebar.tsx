@@ -15,12 +15,12 @@ const Sidebar = () => {
   const options = [
     {
       title:'My Jobs',
-      url:`${basePath}items/myJobs`,
+      url:`${basePath}/my-jobs`,
       icon:<BriefcaseIcon className='w-5 h-5'/>
     },
     {
       title:'Applicants',
-      url:`${basePath}items/applicants`,
+      url:`${basePath}/applicants`,
       icon:<UserRoundSearch className='w-5 h-5'/>
     },
   ]

@@ -146,6 +146,9 @@ export interface Jobs{
   skills:string[],
   minSalary:number,
   maxSalary:number
+  location:string;
+  experience:string;
+  openings:number;
 }
 
 

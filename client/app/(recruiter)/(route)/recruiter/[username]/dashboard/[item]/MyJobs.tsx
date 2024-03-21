@@ -1,16 +1,48 @@
-'use client'
-import { Pencil as EditIcon, Trash2 as DeleteIcon } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Button } from "../ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
-import { Separator } from "../ui/separator";
-import { months,Jobs } from "@/constants/constants";
-import Image from "next/image";
-import Link from "next/link";
+import React from 'react'
+import axios from 'axios'
 
-export function JobCard({job}:{job:Jobs}) {
+import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
+
+import Image from 'next/image'
+import Link from 'next/link'
+
+import { DeleteIcon, EditIcon } from 'lucide-react'
+import { Jobs } from '@/constants/constants'
+import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
+
+
+const getMyJobs = async (token:string,recruiter:string)=> {
+  axios.defaults.withCredentials = true
+  const res = await axios.get(`http://localhost:3005/api/jobs/${recruiter}/getAll`,{
+    headers: {
+      Cookie: `jwt=${token}`
+    }
+  })
+  return res.data.jobs;
+}
+
+const JobsPage = async ({recruiter}:{recruiter:string}) => {
+  const token = cookies().get('jwt')?.value;
+  if(!token){
+    return redirect('/signup'); 
+  }
+  const jobs:Jobs[] = await getMyJobs(token,recruiter);
+  console.log('Hello brohhhhh.......',jobs)
+
+  if(jobs.length === 0){
     return (
-        <Card className="w-[500px]">
+        <div className='flex items-center justify-center min-h-[calc(100vh - 100px)]'>
+           You dont have any Jobs Posted
+        </div>
+    )
+  }
+  return (
+    <main>
+      { jobs.map((job)=>(
+          <Card className="w-[500px]">
             <CardHeader className="gap-4">
                 <div className="flex gap-4 flex-row">
                     <span className="w-12 h-12 flex items-center justify-center">
@@ -41,6 +73,10 @@ export function JobCard({job}:{job:Jobs}) {
                 </Link>
             </CardContent>
             <Separator />
-        </Card>
-    );
+          </Card>
+          ))
+      }
+    </main>
+  )
 }
+export default JobsPage

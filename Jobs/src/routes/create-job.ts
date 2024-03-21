@@ -79,7 +79,7 @@ router.post('/api/jobs/createjobs',requireAuth,isRecruiter,uploadCompanyImage,[
       minSalary,
       maxSalary,
       companyImage: file?.location,
-      experience,
+      experience:experience,
       location,
       openings
     });

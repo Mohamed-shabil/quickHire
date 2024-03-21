@@ -13,7 +13,7 @@ router.get('/api/jobs/:id',requireAuth,catchAsync(async(req:Request,res:Response
         }
     });
     
-    console.log('here is the job ....',job);
+    console.log('here is the job-=--------------------------------------------------',job);
     res.status(200).json({
         status:'status',
         job

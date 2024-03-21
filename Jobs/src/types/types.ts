@@ -21,3 +21,15 @@ export type IDJobsType = IJobsType &{
     createdAt: Date;
     updatedAt: Date;
 };
+
+export type IUserType = {
+    _id:string;
+    name:string;
+    headLine:string;
+    avatar:string;
+}
+
+export type IDUserType = IUserType & {
+    createdAt: Date;
+    updatedAt: Date;
+}

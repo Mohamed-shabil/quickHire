@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Sidebar from '@/components/Recruiter/Sidebar'
 import { Page } from '@/constants/constants';
-import JobsPage from '@/components/Recruiter/JobsPage'
+import JobsPage from '@/app/(recruiter)/(route)/recruiter/[username]/dashboard/[item]/MyJobs'
 
 const Recruiter = () => {
 

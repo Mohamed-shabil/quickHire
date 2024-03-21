@@ -8,29 +8,41 @@ const router = express.Router();
 
 
 router.get('/api/jobs/search-job',requireAuth,catchAsync(async(req:Request, res:Response)=>{
-    const { minExp, maxExp, location } = req.query;
+    const { experience, location, title } = req.query;
 
     const filter:any = {}
-
-    if(minExp && maxExp){
-        filter.experience = {
-            [Op.between]: [minExp, maxExp]
-        };
-    }else if(minExp){
-        filter.experience = {
-            [Op.gte]: minExp
-        }
-    }else if(maxExp){
-        filter.experience = {
-            [Op.lte]:maxExp
-        }
-    }
-
+   
     if(location){
         filter.location = {
             [Op.like]:`%${location}`
         }
     }
+    if(experience){
+        filter.experience = experience
+    }
+    if(title){
+        filter.title = {
+            [Op.like]:`%${title}`
+        }
+
+        filter.company = {
+            [Op.like]:`%${title}`
+        }
+
+        filter.employmentType ={
+            [Op.like]:`%${title}`
+        }
+
+        filter.jobDescription ={
+            [Op.like]:`%${title}`
+        }
+
+        filter.requirements = {
+            [Op.like]:`%${title}`
+        }
+    }
+
+
 
     const jobs = await Jobs.findAll({
         where: Object.keys(filter).length > 0 ? filter : undefined,
@@ -43,11 +55,13 @@ router.get('/api/jobs/search-job',requireAuth,catchAsync(async(req:Request, res:
             'employmentType',
             'skills',
             'minSalary',
-            'maxSalary'
+            'maxSalary',
+            'location',
+            'experience',
+            'openings'
         ]
     });
 
-    console.log('All Jobs',jobs);
 
     res.status(200).json({
         status:'success',
