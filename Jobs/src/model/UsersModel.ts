@@ -14,15 +14,12 @@ export const User:ModelDefined< IDUserType,IUserType > = sequelize.define('Users
     },
     fullName:{
         type:DataTypes.STRING,
-        allowNull:false
     },
     headLine:{
         type:DataTypes.STRING,
-        allowNull:false
     },
     avatar:{
         type:DataTypes.STRING,
-        allowNull:false
     },
     email:{
         type:DataTypes.TEXT,

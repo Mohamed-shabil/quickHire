@@ -36,3 +36,23 @@ export type IDUserType = IUserType & {
     createdAt: Date;
     updatedAt: Date;
 }
+
+
+export type IApplication = {
+    recruiterName:string;
+    recruiter:string;
+    job:string;
+    resume:string;
+    applicant:string;
+    email:string;
+    phone:string;
+    status:string;
+}
+
+export type IDApplication = {
+    _id:string;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+

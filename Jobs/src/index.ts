@@ -1,8 +1,10 @@
 import mongoose from 'mongoose';
 import {app} from './app'
-import { Kafka } from 'kafkajs';
+import { kafkaClient } from './events/kafkaClient';
+import { createUser } from './events/consumer/userCreated'
+import { UpdatedUser } from './events/consumer/updateUser'
 import './config/config'
-
+import {kafkaConsumer} from '@quickhire/common'
 
 const start = async() =>{
     if(!process.env.JWT_KEY){
@@ -12,6 +14,8 @@ const start = async() =>{
         if(!process.env.MONGO_URI){
             throw new Error('Mongo Uri is not defined')
         }
+        new kafkaConsumer(kafkaClient,'job-group-1').consume('user-created',createUser)
+        new kafkaConsumer(kafkaClient,'job-group-2').consume('avatar-updated',UpdatedUser);
     }catch(err){
         console.error(err);
     }

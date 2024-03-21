@@ -13,10 +13,6 @@ export const createUser = async(message:KafkaMessage)=>{
         phone:userData?.phone
     })
 
-    // const user = new User({
-    //     _id:userData._id,
-    //     name:userData.name,
-    // });
 
     console.log("new user :=========",user);
 }

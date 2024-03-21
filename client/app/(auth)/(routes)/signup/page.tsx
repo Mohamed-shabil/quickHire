@@ -37,6 +37,8 @@ export default function Signup() {
         }),
         name:z.string().min(3,{
             message:"Username must be 4 characters long"
+        }).refine((value)=>/^[a-z]*$/.test(value),{
+            message:'Username must be in lowercase'
         }),
         phone:z.string().min(10,{
             message:"Phone number must be 10 numbers long"
@@ -99,24 +101,6 @@ export default function Signup() {
         })
     }
     
-    console.log(process.env.FIREBASE_API);
-    // const signInWithGoogle = async ()=>{
-    //     const provider = new GoogleAuthProvider();
-    //     const result = await signInWithPopup(auth,provider)
-    //     if(user){
-    //         const payload = {
-    //             name:user.displayName,
-    //             email:user.email,
-    //             ...(user.phoneNumber && { phone: user.phoneNumber})
-    //         }
-    //         axios.post('http://localhost:3001/api/users/gAuth',payload).then(res=>{
-    //             dispatch(setUserData(res.data.user));
-    //             router.push('/');
-    //         }).catch((err)=>{
-    //             console.log(err);
-    //         })
-    //     }
-    // }
 
     const isLoading = form.formState.isSubmitting;
 
@@ -149,12 +133,7 @@ export default function Signup() {
                     Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eligendi nam dolorum aliquam,
                     quibusdam aperiam voluptatum.
                 </p>
-                <div className="col-span-6 flex items-center justify-center py-7 ">
-                    {/* <Button variant={"secondary"} onClick={signInWithGoogle} className="w-full max-w-60 border gap-2">
-                        <Image src={'/google.png'} alt={"google"} width={20} height={20}/>
-                        Signin with Google
-                    </Button> */}
-                </div>
+                
                 <Form {...form} >
                     <form onSubmit={form.handleSubmit(onSubmit)} className="mt-8 grid grid-cols-6 gap-6">
                         <div className="col-span-6 sm:col-span-3">
