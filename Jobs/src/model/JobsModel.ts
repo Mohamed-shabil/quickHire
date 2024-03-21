@@ -66,6 +66,10 @@ export const Jobs:ModelDefined< IDJobsType,IJobsType> = sequelize.define('Jobs',
     maxSalary:{
         type:DataTypes.INTEGER
     },
+    isActive :{
+        type:DataTypes.BOOLEAN,
+        defaultValue:true
+    }
 },{
     timestamps:true,
     paranoid:true

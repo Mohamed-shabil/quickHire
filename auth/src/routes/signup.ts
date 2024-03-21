@@ -45,7 +45,7 @@ router.post('/api/users/signup',[
     validateRequest
 ], catchAsync(async (req:Request,res:Response,next:NextFunction)=>{
     const error = validationResult(req);
-    const {name, phone, email, password, ConfirmPassword, otpMethod} = req.body;
+    const {name, phone, email, password, ConfirmPassword} = req.body;
     const usernameExist = await User.findOne({name});
     if(usernameExist){
         throw new BadRequestError('Username is already Reserved');

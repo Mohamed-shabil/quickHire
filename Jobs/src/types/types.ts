@@ -25,8 +25,11 @@ export type IDJobsType = IJobsType &{
 export type IUserType = {
     _id:string;
     name:string;
-    headLine:string;
-    avatar:string;
+    email:string;
+    headLine?:string;
+    phone?:string;
+    avatar?:string;
+    fullName?:string;
 }
 
 export type IDUserType = IUserType & {

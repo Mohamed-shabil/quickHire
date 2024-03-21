@@ -1,8 +1,12 @@
 import { Sequelize } from "sequelize";
 
-export const sequelize = new Sequelize('jobs','postgres','admin1234', {
-    host: 'localhost',
-    dialect:  'postgres',
+export const sequelize = new Sequelize(
+    process.env.SEQUELISE_DB!,
+    process.env.SEQUELISE_USERNAME!,
+    process.env.SEQUELISE_PASSWORD!,
+    {
+    host: process.env.SEQUELISE_HOST!,
+    dialect: 'postgres',
     logging: false
 });
 

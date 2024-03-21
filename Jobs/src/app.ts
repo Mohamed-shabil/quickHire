@@ -10,6 +10,7 @@ import { createJobRoute } from './routes/create-job'
 import { getMyAlljobs } from './routes/get-jobs'
 import { searchRouter } from './routes/search-jobs'
 import { getOneJob } from './routes/get-job'
+import { editJobRouter } from './routes/edit-job'
 
 
 
@@ -50,6 +51,7 @@ app.use(createJobRoute);
 app.use(getMyAlljobs)
 app.use(searchRouter);
 app.use(getOneJob);
+app.use(editJobRouter);
 
 app.all('*',() => {
     console.log('route not found 404');

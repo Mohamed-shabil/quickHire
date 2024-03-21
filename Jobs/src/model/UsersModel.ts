@@ -1,14 +1,18 @@
 import { DataTypes, ModelDefined } from 'sequelize';
 import { sequelize } from '../config/config';
-import { IJobsType, IDJobsType, IUserType, IDUserType} from '../types/types';
+import { IUserType, IDUserType} from '../types/types';
 
 
-export const Jobs:ModelDefined< IUserType,IDUserType > = sequelize.define('Users',{
+export const User:ModelDefined< IDUserType,IUserType > = sequelize.define('Users',{
     _id:{
         type:DataTypes.TEXT,
         primaryKey:true
     },
     name:{
+        type:DataTypes.STRING,
+        allowNull:false
+    },
+    fullName:{
         type:DataTypes.STRING,
         allowNull:false
     },
@@ -18,8 +22,18 @@ export const Jobs:ModelDefined< IUserType,IDUserType > = sequelize.define('Users
     },
     avatar:{
         type:DataTypes.STRING,
-        allowNull:false,
+        allowNull:false
     },
+    email:{
+        type:DataTypes.TEXT,
+        allowNull:false
+    },
+    phone:{
+        type:DataTypes.STRING,
+    },
+    resumes:{
+        type:DataTypes.ARRAY(DataTypes.STRING),
+    }
 },{
     timestamps:true,
     paranoid:true

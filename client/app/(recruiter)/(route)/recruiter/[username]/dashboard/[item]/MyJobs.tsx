@@ -7,7 +7,7 @@ import { redirect } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { DeleteIcon, EditIcon } from 'lucide-react'
+import { Trash2 as DeleteIcon, Pencil as EditIcon } from 'lucide-react'
 import { Jobs } from '@/constants/constants'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -55,9 +55,11 @@ const JobsPage = async ({recruiter}:{recruiter:string}) => {
                         </small>
                     </div>
                     <div className="flex gap-2">
-                        <Button variant={'fade'} size={'icon'}>
-                            <EditIcon size={'1.2em'}/>
-                        </Button>
+                        <Link href={`my-jobs/edit-job/${job._id}`}>
+                          <Button variant={'fade'} size={'icon'}>
+                              <EditIcon size={'1.2em'}/>
+                          </Button>
+                        </Link>
                         <Button variant={'destructive'} size={'icon'}>
                             <DeleteIcon size={'1.2em'}/>
                         </Button>                                        
