@@ -46,11 +46,11 @@ export type IApplication = {
     applicant:string;
     email:string;
     phone:string;
-    status:string;
 }
 
 export type IDApplication = {
     _id:string;
+    status:string;
     createdAt: Date;
     updatedAt: Date;
 }

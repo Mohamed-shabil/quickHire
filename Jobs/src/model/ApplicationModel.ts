@@ -1,4 +1,4 @@
-import { Sequelize, DataTypes, ModelDefined } from 'sequelize';
+import { DataTypes, ModelDefined } from 'sequelize';
 import { sequelize } from '../config/config';
 import { IApplication, IDApplication} from '../types/types';
 
@@ -40,6 +40,7 @@ export const Applications:ModelDefined< IDApplication,IApplication> = sequelize.
     status:{
         type:DataTypes.ENUM('submitted','reviewing','shortlisted','interviewing','accepted','rejected'),
         allowNull:false,
+        defaultValue:'submitted'
     }
 },{
     timestamps:true,

@@ -21,34 +21,15 @@ const upload = multer({
             cb(null,{fieldName:file.fieldname})
         },
         key: function(req,file,cb){
-            cb(null,'job/companyImage/'+Date.now().toString()+'-'+file.originalname)
+            cb(null,'job/resumes/'+Date.now().toString()+'-'+file.originalname)
         }
     }),
     fileFilter: function (req: Request, file: Express.Multer.File, cb: Function) {
-        if (file.mimetype.startsWith('image/')) {
+        if (file.mimetype.startsWith('application/pdf')) {
             cb(null, true);
         } else {
-            cb(new BadRequestError('Only image files are allowed!'));
+            cb(new BadRequestError('Only PDF files are allowed!'));
         }
     }
 })
-
-export const uploadCompanyImage = upload.single('companyImage');
-
-export const ImageConvert = function (req: Request, res: Response, next: NextFunction){
-    const file = req.file as Express.MulterS3.File | undefined;
-    if (!file) {
-        return next();
-    }
-    sharp(file.buffer as Buffer)
-        .resize({ width: 300, height: 300 }) 
-        .toBuffer()
-        .then(data => {
-            file.buffer = data;
-            next();
-        })
-        .catch(err => {
-            console.error('Error resizing image:', err);
-            next(err);
-        });
-};
+export const uploadResume = upload.single('resume');
