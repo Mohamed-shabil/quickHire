@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
+import { Loader2 as Loader } from 'lucide-react'
 import { useRouter } from 'next/navigation';
 
 export const Searchjob = () => {
@@ -27,10 +28,23 @@ export const Searchjob = () => {
     },
 });
   const onSubmit = (values: z.infer<typeof formSchema>) =>{
-    console.log('working ....');
-    router.push(`http://localhost:3000/jobs?title=${values.title}&experience=${values.experience}&location=${values.location}`);
+    const queryParams: { [key: string]: string } = {}
+    if(values.title){
+      queryParams.title = values.title
+    }
+    if(values.location){
+      queryParams.location = values.location
+    }
+    if(values.experience){
+      queryParams.experience = values.experience
+    }
+
+    const url = `http:localhost:3000/jobs${queryParams ? `?${queryParams}` :'' }`
+    router.push(url);
   }
+
   const isLoading = form.formState.isSubmitting;
+
   return ( 
     <div className="flex w-full max-w-[700px] p-5 flex-col">
       <Form {...form} >
@@ -41,7 +55,7 @@ export const Searchjob = () => {
               disabled={isLoading}
               control={form.control}
               render={({ field }) => (
-                  <FormItem>
+                  <FormItem className='w-full'>
                       <FormControl>
                         <Input
                             type="text"
@@ -54,8 +68,13 @@ export const Searchjob = () => {
                   </FormItem>
               )}
             />
-            <Button className='absolute top-1 right-1' type='submit'>
-              Search
+            <Button 
+              className='absolute top-1 right-1'
+              type='submit'
+              disabled={isLoading}>
+              {
+                isLoading ? <Loader/> : 'Search'
+              }
             </Button>
           </div>
           <div className="w-full flex gap-2">
@@ -92,8 +111,6 @@ export const Searchjob = () => {
                 />
               )}
             />
-
-
           </div>
         </form>
       </Form>

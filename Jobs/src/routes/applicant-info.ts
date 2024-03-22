@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/api/jobs/applicant-info',requireAuth,catchAsync(async(req:Request,res:Response)=>{
     const currentUser = req.currentUser
-
+    console.log("APPLICANT_INFO")
     if( !currentUser ){
         throw new NotAutherizedError();
     }
@@ -20,6 +20,7 @@ router.get('/api/jobs/applicant-info',requireAuth,catchAsync(async(req:Request,r
     if(!user){
         throw new BadRequestError('No User with this User-ID');
     }
+    console.log('hello wolrd');
 
     res.status(200).json({
         status:'success',
@@ -27,3 +28,4 @@ router.get('/api/jobs/applicant-info',requireAuth,catchAsync(async(req:Request,r
     })
 }))
 
+export { router as applicantInfoRouter }

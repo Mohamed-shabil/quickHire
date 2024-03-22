@@ -5,6 +5,7 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation';
 import { toast } from '@/components/ui/use-toast';
 import { Jobs } from '@/constants/constants';
+import ApplyJobModal from '../Modals/applyJobModal';
 import Image from 'next/image';
 import DOMPurify from 'dompurify';
 import { 
@@ -14,7 +15,8 @@ import {
     Settings as SkillsIcon,
     Award as ExperienceIcon,
     Users as OpeningsIcon,
-    Building2 as EmploymentIcon
+    Building2 as EmploymentIcon,
+    Zap
 } from 'lucide-react'
 import { Separator } from '../ui/separator';
 import { Button } from '../ui/button';
@@ -70,9 +72,7 @@ export const  JobPreview = async ({currentJob}:{currentJob:string|null}) => {
                             <h2 className="font-bold text-lg py-1">{job.title}</h2>
                         </div>
                     </div>
-                    <Button>
-                        Apply
-                    </Button>
+                    <ApplyJobModal job={job}/>
                 </section>
                 <Separator className='px-4 mt-5'/>
                 <section className='space-y-2 my-4 mt-6 '>
@@ -99,15 +99,16 @@ export const  JobPreview = async ({currentJob}:{currentJob:string|null}) => {
                     </p>
                 </section>
                 <Separator className='mb-2'/>
-                <div className=''>
+                <div >
                     <h1 className='font-bold my-1 text-base'>Job Description</h1>
                     <div dangerouslySetInnerHTML={{
                         __html:job.jobDescription
-                    }} className='text-sm shadow border p-4 rounded'></div>
+                    }} className='text-sm p-4 border rounded-md'></div>
                     <h4  className='font-bold my-1 text-base mt-4'>Requirements</h4>
                     <div dangerouslySetInnerHTML={{
                         __html:job.requirements
-                    }} className='text-sm shadow border p-4 rounded'></div>
+                    }} className='text-sm border p-4 rounded-md '>
+                    </div>
                 </div>
             </div>
         </main>

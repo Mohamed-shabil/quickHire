@@ -30,6 +30,7 @@ export type IUserType = {
     phone?:string;
     avatar?:string;
     fullName?:string;
+    resume:string[];
 }
 
 export type IDUserType = IUserType & {

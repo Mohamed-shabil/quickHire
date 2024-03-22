@@ -50,6 +50,7 @@ export default async function MyProfile({params}:{params:{username:string}}) {
     }
     const profile:User = await getProfile(token,username);
 
+    console.log({profile})
 
     const links= [
         {
@@ -62,6 +63,8 @@ export default async function MyProfile({params}:{params:{username:string}}) {
         ...(profile.portfolio ? [{title:profile.customUrl?.urlName,content:profile.customUrl?.url,url:profile.customUrl?.url}]:[])
     ]
     
+
+    console.log(links);
     return (
         <main className="mb-10">
             <section>

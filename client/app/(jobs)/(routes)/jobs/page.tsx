@@ -7,6 +7,7 @@ import { Jobs } from '@/constants/constants';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { JobPreview } from '@/components/Jobs/JobPreview'
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface IFilter  {
   title:string | null;
@@ -50,7 +51,11 @@ export default  async function page(
   console.log('here is the jobs.....',jobs);
   return (
     <section className="flex w-full h-screen">
-      <JobsCard jobs={jobs}/>
+      <ScrollArea className="w-full max-w-lg border-r p-2 h-screen">
+        {jobs.map((job)=>(
+          <JobsCard job={job}/>
+        ))}
+      </ScrollArea>
       <section className="w-full">
         <JobPreview currentJob={currentJob}/>
       </section>

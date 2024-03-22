@@ -11,6 +11,7 @@ import { getMyAlljobs } from './routes/get-jobs'
 import { searchRouter } from './routes/search-jobs'
 import { getOneJob } from './routes/get-job'
 import { editJobRouter } from './routes/edit-job'
+import { applicantInfoRouter } from './routes/applicant-info'
 
 
 
@@ -47,6 +48,7 @@ app.use((req:Request,res:Response,next:NextFunction)=>{
     next();
 })
 
+app.use(applicantInfoRouter);
 app.use(createJobRoute);
 app.use(getMyAlljobs)
 app.use(searchRouter);
