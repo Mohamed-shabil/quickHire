@@ -12,7 +12,7 @@ import { searchRouter } from './routes/search-jobs'
 import { getOneJob } from './routes/get-job'
 import { editJobRouter } from './routes/edit-job'
 import { applicantInfoRouter } from './routes/applicant-info'
-
+import { uploadResumeRouter } from './routes/upload-resume'
 
 
 export const app = express();
@@ -48,6 +48,7 @@ app.use((req:Request,res:Response,next:NextFunction)=>{
     next();
 })
 
+app.use(uploadResumeRouter);
 app.use(applicantInfoRouter);
 app.use(createJobRoute);
 app.use(getMyAlljobs)

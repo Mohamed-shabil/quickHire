@@ -1,5 +1,6 @@
 import { Sequelize } from "sequelize";
-
+import { User } from '../model/UsersModel'
+import { Resume } from '../model/ResumeModel'
 export const sequelize = new Sequelize(
     process.env.SEQUELISE_DB!,
     process.env.SEQUELISE_USERNAME!,
@@ -10,9 +11,11 @@ export const sequelize = new Sequelize(
     logging: false
 });
 
-sequelize.authenticate().then((res)=>{
-    console.log('Sequeliser connected')
-}).catch((err)=>{
-    console.log(err);
-})
+sequelize.authenticate()
+    .then((res)=>{
+        console.log('Sequeliser connected');
+    }).catch((err)=>{
+        console.log(err);
+    })
+
 

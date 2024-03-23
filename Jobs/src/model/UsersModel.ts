@@ -3,7 +3,7 @@ import { sequelize } from '../config/config';
 import { IUserType, IDUserType} from '../types/types';
 
 
-export const User:ModelDefined< IDUserType,IUserType > = sequelize.define('Users',{
+export const User:ModelDefined< IDUserType,IUserType > = sequelize.define('User',{
     _id:{
         type:DataTypes.TEXT,
         primaryKey:true
@@ -28,13 +28,8 @@ export const User:ModelDefined< IDUserType,IUserType > = sequelize.define('Users
     phone:{
         type:DataTypes.STRING,
     },
-    resumes:{
-        type:DataTypes.ARRAY(DataTypes.STRING),
-    }
 },{
     timestamps:true,
     paranoid:true
 })
-
-
 sequelize.sync({alter:true})

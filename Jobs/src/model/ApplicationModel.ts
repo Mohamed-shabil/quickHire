@@ -3,7 +3,7 @@ import { sequelize } from '../config/config';
 import { IApplication, IDApplication} from '../types/types';
 
 
-export const Applications:ModelDefined< IDApplication,IApplication> = sequelize.define('Applications',{
+export const Applications:ModelDefined< IDApplication,IApplication> = sequelize.define('Application',{
     _id:{
         type:DataTypes.UUID,
         defaultValue:DataTypes.UUIDV4,

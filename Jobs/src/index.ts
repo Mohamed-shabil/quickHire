@@ -4,6 +4,8 @@ import { kafkaClient } from './events/kafkaClient';
 import { createUser } from './events/consumer/userCreated'
 import { UpdatedUser } from './events/consumer/updateUser'
 import './config/config'
+import './model/Relations'
+
 import {kafkaConsumer} from '@quickhire/common'
 
 const start = async() =>{

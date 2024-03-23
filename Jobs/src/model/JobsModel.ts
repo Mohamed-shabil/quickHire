@@ -3,7 +3,7 @@ import { sequelize } from '../config/config';
 import { IJobsType, IDJobsType} from '../types/types';
 
 
-export const Jobs:ModelDefined< IDJobsType,IJobsType> = sequelize.define('Jobs',{
+export const Jobs:ModelDefined< IDJobsType,IJobsType> = sequelize.define('Job',{
     _id:{
         type:DataTypes.UUID,
         defaultValue:DataTypes.UUIDV4,

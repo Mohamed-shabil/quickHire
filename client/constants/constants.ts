@@ -153,3 +153,9 @@ export interface Jobs{
 
 
 export type Page = 'jobs' | 'applicants' | 'candidates' | 'shortListed'
+
+export type Resume = {
+  url:string,
+  user:string,
+  fileName:string
+}

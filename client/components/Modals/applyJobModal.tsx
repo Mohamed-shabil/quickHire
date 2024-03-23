@@ -2,7 +2,7 @@
 import React, { useRef, useState } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription, DialogFooter  } from '../ui/dialog'
 import { Button } from '../ui/button'
-import { FileText, FolderUp, Upload, Zap } from 'lucide-react';
+import { Check, FileText, FileUp, FolderUp, Loader2, Upload, Zap } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -12,10 +12,12 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form';
 import { Input } from '../ui/input';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { Label } from '../ui/label';
+import { toast } from '../ui/use-toast';
+import { Resume } from '@/constants/constants'
 
 export default function ApplyJobModal({job}:{job:Jobs}) {
     const [open , setOpen] = useState(false); 
-    const [resumes, setResumes] = useState<string[]>();
+    const [resumes, setResumes] = useState<Resume[]>([]);
     const [loading , setLoading] = useState(false)
     const newResume = useRef<HTMLInputElement>(null);
 
@@ -39,11 +41,16 @@ export default function ApplyJobModal({job}:{job:Jobs}) {
                     withCredentials:true
                 })
                 console.log(response);
-                setResumes(response.data.resume)
-                const data = {
-                    email:response.data.user.email,
-                    phone:response.data.user.phone,
+                console.log(response.data.user)
+                if(response.data.user.resume){
+                    setResumes(response.data.user.resume)
                 }
+                const data = {
+                    email:response.data.user.email as string,
+                    phone:response.data.user.phone as string,
+                    resume:''
+                }
+                return data
             } catch (error) {
                 console.log(error);
             }
@@ -52,7 +59,25 @@ export default function ApplyJobModal({job}:{job:Jobs}) {
     });
 
     const onSubmit = (values: z.infer<typeof formSchema>)=>{
-
+        console.log(values);
+        axios.post('http:localhost:3005/api/job/apply-job',values,{
+            withCredentials:true
+        })
+        .then((res)=>{
+            console.log(res);
+            toast({
+                title: "Your account has been created ",
+                action: (
+                  <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded"><Check /></div>
+                ),
+              })
+        })
+        .catch(err=>{
+            toast({
+                title:'Something went wrong!😢',
+                description:err.response.data
+            })
+        })
     }
 
     const uploadResume = async (event: React.ChangeEvent<HTMLInputElement>)=>{
@@ -63,8 +88,14 @@ export default function ApplyJobModal({job}:{job:Jobs}) {
             if(resume){
                 data.append('resume',resume);
             } 
-            const response = await axios.post('http://localhost:3005/jobs/upload-resume');
-            
+            const response = await axios.post('http://localhost:3005/api/jobs/upload-resume',data,{
+                withCredentials:true
+            });
+            console.log(response.data)
+            if(response.data.user.resume){
+                setResumes(response.data.user.resume)
+            }
+            console.log(response.data);
         } catch (error) {
             console.log(error);
         }finally{
@@ -87,7 +118,7 @@ export default function ApplyJobModal({job}:{job:Jobs}) {
                             Fill the form to apply for the job. Click Apply job when you're done.
                         </DialogDescription>
                     </DialogHeader>
-                    <form onSubmit={form.handleSubmit(()=>{})} className='grid grid-cols-6 gap-6'>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className='grid grid-cols-6 gap-6'>
                         <div className="col-span-6">
                             <FormField
                                 name='email'
@@ -139,29 +170,42 @@ export default function ApplyJobModal({job}:{job:Jobs}) {
                                                 defaultValue={field.value}
                                                 className="flex flex-row space-y-1 flex-wrap"
                                             >
-                                                <FormItem className="flex items-center space-x-3 space-y-0 max-w-[150px]">
-                                                    <FormControl>
-                                                        <label
-                                                            htmlFor="DeliveryStandard"
-                                                            className="max-w-[150px] flex cursor-pointer items-center justify-between gap-4
-                                                            rounded-lg border border-gray-200 text-sm font-medium
-                                                            shadow-sm has-[:checked]:border-blue-500 p-4
-                                                            has-[:checked]:ring-1 has-[:checked]:ring-blue-500"
-                                                        >
-                                                            <p className='truncate'>Standardasdfasdfasdfasdf</p>
-                                                            <p>
-                                                                <FileText size={'1.4em'}/>
-                                                            </p>
-                                                            <input
-                                                                type="radio"
-                                                                name="DeliveryOption"
-                                                                value="DeliveryStandard"
-                                                                id="DeliveryStandard"
-                                                                className="sr-only"
-                                                            />
-                                                        </label>
-                                                    </FormControl>
-                                                </FormItem>                                        
+                                                {
+                                                    resumes.length !=0 ? 
+                                                    (
+                                                        resumes.map((resume,index)=>(
+                                                            <FormItem className="flex items-center space-x-3 space-y-0 max-w-[150px]" 
+                                                                onClick={()=>{
+                                                                    form.setValue('resume',resume.url)
+                                                                }}>
+                                                                <FormControl>
+                                                                    <label
+                                                                        htmlFor={index.toString()} 
+                                                                        className="max-w-[150px] flex cursor-pointer items-center justify-between gap-4
+                                                                        rounded-lg border border-gray-200 text-sm font-medium
+                                                                        shadow-sm has-[:checked]:border-blue-500 p-4
+                                                                        has-[:checked]:ring-1 has-[:checked]:ring-blue-500"
+                                                                    >
+                                                                        <p className='truncate'>{resume.fileName}</p>
+                                                                        <p>
+                                                                            <FileText className='text-blue-500' size={'1.4em'}/>
+                                                                        </p>
+                                                                        <input
+                                                                            type="radio"
+                                                                            name="resume"
+                                                                            value={resume.url}
+                                                                            id={index.toString()}
+                                                                            className="sr-only"
+                                                                        />
+                                                                    </label>
+                                                                </FormControl>
+                                                            </FormItem>
+                                                        ))
+                                                    ) : 
+                                                    (
+                                                        <h1 className='text-sm'>No Resumes are available</h1>
+                                                    )
+                                                }                                        
                                             </RadioGroup>
                                         </FormControl>
                                     </FormItem>
@@ -169,8 +213,15 @@ export default function ApplyJobModal({job}:{job:Jobs}) {
                             />
                         </div>
                         <div className="col-span-6">
-                            <Label htmlFor='uploadResume' className='p-3 flex gap-2 items-center rounded-sm bg-blue-50 border max-w-[150px]'>
-                                Upload Resume
+                            <Label htmlFor='uploadResume' className='p-2 py-4 flex justify-between items-center rounded-sm bg-blue-50 border max-w-[150px]'>
+                                <span className='flex items-center justify-between w-full'>
+                                    {loading ? 
+                                        <Loader2 className='animate-spin'/> :
+                                        <span className='w-full flex items-center justify-between'>
+                                            <FileUp size={'1.4em'}/> Upload Resume
+                                        </span>
+                                    }
+                                </span>
                                 <Input
                                     type="file"
                                     accept='application/pdf'

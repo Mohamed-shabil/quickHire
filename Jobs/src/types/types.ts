@@ -30,7 +30,6 @@ export type IUserType = {
     phone?:string;
     avatar?:string;
     fullName?:string;
-    resume:string[];
 }
 
 export type IDUserType = IUserType & {
@@ -57,3 +56,14 @@ export type IDApplication = {
 }
 
 
+export type IResume = {
+    user:string;
+    url:string;
+    fileName:string;
+}
+
+export type IDResume = IResume & {
+    _id:string;
+    createdAt: Date;
+    updatedAt: Date;
+}

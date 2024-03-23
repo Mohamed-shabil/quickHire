@@ -4,7 +4,7 @@ import ffmpeg from 'fluent-ffmpeg'
 import sharp from 'sharp';
 import AWS from 'aws-sdk';
 import { Readable } from 'stream'
-import {} from '@quickhire/common'
+
 
 
 const s3 = new AWS.S3({
