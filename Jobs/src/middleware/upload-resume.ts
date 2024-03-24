@@ -34,10 +34,3 @@ const upload = multer({
 })
 export const uploadResume = upload.single('resume');
 
-
-export const setFileName = async(req:Request, res:Response, next:NextFunction)=>{
-    if(req.file){
-        req.body.fileName = req.file.filename
-    }
-    next();
-}

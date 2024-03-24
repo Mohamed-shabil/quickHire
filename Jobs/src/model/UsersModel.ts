@@ -32,4 +32,3 @@ export const User:ModelDefined< IDUserType,IUserType > = sequelize.define('User'
     timestamps:true,
     paranoid:true
 })
-sequelize.sync({alter:true})

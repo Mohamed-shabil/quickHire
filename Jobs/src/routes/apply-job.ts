@@ -26,7 +26,6 @@ router.post('/api/jobs/apply-job/:jobId',requireAuth,uploadResume,[
     const currentUser = req.currentUser;
     const {
         email,
-        recruiterName,
         recruiter,
         phone,
         resume,
@@ -37,7 +36,6 @@ router.post('/api/jobs/apply-job/:jobId',requireAuth,uploadResume,[
     }
     
     const newApplication = await Applications.create({
-        recruiterName,
         recruiter,
         job:jobId,
         resume,
@@ -53,3 +51,6 @@ router.post('/api/jobs/apply-job/:jobId',requireAuth,uploadResume,[
         application:newApplication
     })
 }))
+
+
+export {router as applicantJobRouter}

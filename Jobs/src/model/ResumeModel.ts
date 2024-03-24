@@ -31,6 +31,6 @@ export const Resume:ModelDefined< IDResume, IResume> = sequelize.define('Resume'
     underscored: true,
 })
 
-sequelize.sync({alter:true})
+
 
 

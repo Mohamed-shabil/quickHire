@@ -39,7 +39,7 @@ export const Searchjob = () => {
       queryParams.experience = values.experience
     }
 
-    const url = `http:localhost:3000/jobs${queryParams ? `?${queryParams}` :'' }`
+    const url = `jobs${queryParams ? `?${queryParams}` :'' }`
     router.push(url);
   }
 

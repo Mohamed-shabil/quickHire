@@ -8,12 +8,18 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { Jobs } from '@/constants/constants';
-import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { Input } from '../ui/input';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { Label } from '../ui/label';
 import { toast } from '../ui/use-toast';
 import { Resume } from '@/constants/constants'
+
+type FieldValues = {
+    email: string;
+    phone: string;
+    resume: string;
+};
 
 export default function ApplyJobModal({job}:{job:Jobs}) {
     const [open , setOpen] = useState(false); 
@@ -30,7 +36,13 @@ export default function ApplyJobModal({job}:{job:Jobs}) {
         },{
             message:'Phone Number must be Numbers'
         }),
-        resume:z.string(),
+        resume:z.string().refine((data)=>{
+            if(data.length){
+                return data.length
+            }
+        },{
+            message:'Select a Resume'
+        }),
     })
 
     const form = useForm({  
@@ -45,7 +57,7 @@ export default function ApplyJobModal({job}:{job:Jobs}) {
                 if(response.data.user.resume){
                     setResumes(response.data.user.resume)
                 }
-                const data = {
+                const data : FieldValues = {
                     email:response.data.user.email as string,
                     phone:response.data.user.phone as string,
                     resume:''
@@ -58,21 +70,25 @@ export default function ApplyJobModal({job}:{job:Jobs}) {
         mode:"onTouched"
     });
 
-    const onSubmit = (values: z.infer<typeof formSchema>)=>{
+    const onSubmit = async (values:z.infer<typeof formSchema>)=>{
         console.log(values);
-        axios.post('http:localhost:3005/api/job/apply-job',values,{
+        axios.post(`http://localhost:3005/api/jobs/apply-job/${job._id}`,{
+            ...values,
+            recruiter:job.recruiter,
+        },{
             withCredentials:true
         })
         .then((res)=>{
             console.log(res);
             toast({
-                title: "Your account has been created ",
+                title: "Job Application has been submitted",
                 action: (
                   <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded"><Check /></div>
                 ),
               })
         })
         .catch(err=>{
+            console.log(err);
             toast({
                 title:'Something went wrong!😢',
                 description:err.response.data
@@ -103,6 +119,7 @@ export default function ApplyJobModal({job}:{job:Jobs}) {
         }
     }
     
+    const isLoading = form.formState.isSubmitting
     return (
         <Dialog open={open} onOpenChange={e=>setOpen(e)}>
             <DialogTrigger asChild>
@@ -174,30 +191,25 @@ export default function ApplyJobModal({job}:{job:Jobs}) {
                                                     resumes.length !=0 ? 
                                                     (
                                                         resumes.map((resume,index)=>(
-                                                            <FormItem className="flex items-center space-x-3 space-y-0 max-w-[150px]" 
-                                                                onClick={()=>{
-                                                                    form.setValue('resume',resume.url)
-                                                                }}>
+                                                            <FormItem className="flex items-center space-x-3 space-y-0" key={index.toString()}>
                                                                 <FormControl>
-                                                                    <label
-                                                                        htmlFor={index.toString()} 
-                                                                        className="max-w-[150px] flex cursor-pointer items-center justify-between gap-4
-                                                                        rounded-lg border border-gray-200 text-sm font-medium
-                                                                        shadow-sm has-[:checked]:border-blue-500 p-4
-                                                                        has-[:checked]:ring-1 has-[:checked]:ring-blue-500"
-                                                                    >
-                                                                        <p className='truncate'>{resume.fileName}</p>
-                                                                        <p>
-                                                                            <FileText className='text-blue-500' size={'1.4em'}/>
-                                                                        </p>
-                                                                        <input
-                                                                            type="radio"
-                                                                            name="resume"
-                                                                            value={resume.url}
-                                                                            id={index.toString()}
-                                                                            className="sr-only"
-                                                                        />
-                                                                    </label>
+                                                                    <div className="flex items-center space-x-2">
+                                                                        <Label
+                                                                            htmlFor={index.toString()}
+                                                                            className="flex min-w-[150px] max-w-[150px] cursor-pointer justify-between
+                                                                            gap-4 rounded-lg border border-gray-200 
+                                                                            bg-white p-4 text-sm font-medium shadow-sm 
+                                                                            has-[:checked]:border-blue-500 text-wrap truncate
+                                                                            has-[:checked]:ring-1 has-[:checked]:ring-blue-500"
+                                                                        >
+                                                                            <span className='flex truncate items-center gap-3 w-full'>
+                                                                                <FileText size={'1.1em'} className='text-blue-500'/> {resume.fileName}
+                                                                            </span>
+                                                                            <FormControl>
+                                                                                <RadioGroupItem value={resume.url} id={index.toString()} />
+                                                                            </FormControl>
+                                                                        </Label>
+                                                                    </div>
                                                                 </FormControl>
                                                             </FormItem>
                                                         ))
@@ -208,17 +220,18 @@ export default function ApplyJobModal({job}:{job:Jobs}) {
                                                 }                                        
                                             </RadioGroup>
                                         </FormControl>
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
                         </div>
                         <div className="col-span-6">
-                            <Label htmlFor='uploadResume' className='p-2 py-4 flex justify-between items-center rounded-sm bg-blue-50 border max-w-[150px]'>
+                            <Label htmlFor='uploadResume' className='p-2 py-3 flex justify-between items-center rounded-sm bg-blue-500/30 border max-w-[150px]'>
                                 <span className='flex items-center justify-between w-full'>
                                     {loading ? 
                                         <Loader2 className='animate-spin'/> :
                                         <span className='w-full flex items-center justify-between'>
-                                            <FileUp size={'1.4em'}/> Upload Resume
+                                            <FileUp size={'1.4em'} className='text-blue-500'/> Upload Resume
                                         </span>
                                     }
                                 </span>
@@ -233,7 +246,13 @@ export default function ApplyJobModal({job}:{job:Jobs}) {
                             </Label>
                         </div>
                         <DialogFooter className='flex items-center justify-end col-span-6'>
-                            <Button type="submit">Apply Job</Button>
+                            <Button 
+                                variant="gooeyLeft"
+                                type="submit"
+                                disabled={isLoading}
+                            >
+                                {isLoading ? <Loader2 className='animate-spin'/> : 'Apply'}    
+                            </Button>
                         </DialogFooter>
                     </form>
                 </Form>

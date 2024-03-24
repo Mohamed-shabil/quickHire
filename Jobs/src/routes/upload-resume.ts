@@ -1,13 +1,15 @@
 import express,{Request, Response} from 'express'
-import { setFileName, uploadResume } from '../middleware/upload-resume'
+import { uploadResume } from '../middleware/upload-resume'
 import { BadRequestError, NotAutherizedError, catchAsync, requireAuth } from '@quickhire/common';
 import { User } from '../model/UsersModel'
 import { Resume } from '../model/ResumeModel';
 const router = express.Router();
 
-router.post('/api/jobs/upload-resume',requireAuth,setFileName,uploadResume,catchAsync(async(req:Request,res:Response)=>{
+router.post('/api/jobs/upload-resume',requireAuth,uploadResume,catchAsync(async(req:Request,res:Response)=>{
 
     const file = req.file as Express.MulterS3.File | undefined;
+
+    console.log('uploaded file',file)
     const currentUser = req.currentUser
 
     if(!currentUser){
@@ -18,14 +20,10 @@ router.post('/api/jobs/upload-resume',requireAuth,setFileName,uploadResume,catch
         throw new BadRequestError('Resume is not provided');
     }
     
-    const newResume = file.location;
-
-    console.log(newResume)
-
 
     const resume = await Resume.create({
-        fileName:'Shabil',
-        url:newResume,
+        fileName: file.originalname,
+        url:file.location,
         user:currentUser._id
     });
     console.log('RESUME :- ',resume.dataValues);

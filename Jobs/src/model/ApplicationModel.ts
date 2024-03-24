@@ -3,15 +3,11 @@ import { sequelize } from '../config/config';
 import { IApplication, IDApplication} from '../types/types';
 
 
-export const Applications:ModelDefined< IDApplication,IApplication> = sequelize.define('Application',{
+export const Applications:ModelDefined<IApplication,IDApplication> = sequelize.define('Application',{
     _id:{
         type:DataTypes.UUID,
         defaultValue:DataTypes.UUIDV4,
         primaryKey:true
-    },
-    recruiterName:{
-        type:DataTypes.STRING,
-        allowNull:false
     },
     recruiter:{
         type:DataTypes.STRING,
@@ -47,5 +43,3 @@ export const Applications:ModelDefined< IDApplication,IApplication> = sequelize.
     paranoid:true
 })
 
-
-sequelize.sync({alter:true})

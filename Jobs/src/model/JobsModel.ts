@@ -75,5 +75,3 @@ export const Jobs:ModelDefined< IDJobsType,IJobsType> = sequelize.define('Job',{
     paranoid:true
 })
 
-
-sequelize.sync({alter:true})
