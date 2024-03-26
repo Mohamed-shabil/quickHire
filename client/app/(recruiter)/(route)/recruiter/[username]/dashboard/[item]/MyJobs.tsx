@@ -44,7 +44,7 @@ const JobsPage = async ({recruiter}:{recruiter:string}) => {
   return (
     <main>
       { jobs.map((job)=>(
-          <Card className="w-[500px]">
+          <Card className="w-full max-w-[500px]">
             <CardHeader className="gap-4">
                 <div className="flex gap-4 flex-row">
                     <span className="w-12 h-12 flex items-center justify-center">

@@ -4,12 +4,13 @@ import Sidebar from '@/components/Recruiter/Sidebar'
 import { Jobs, Page } from '@/constants/constants';
 import JobsCard from '@/components/Jobs/JobsCard';
 import { Button } from '@/components/ui/button';
-import { Pencil, Plus, Trash2 } from 'lucide-react';
+import { Check, Pencil, Plus, Trash2, X } from 'lucide-react';
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation';
 import { toast } from '@/components/ui/use-toast';
 import DeactivateJob from '@/components/Recruiter/DeactivateJob'
 import CreateJobTrigger from '@/components/Recruiter/CreateJobTrigger';
+import DeleteJobTrigger from '@/components/Recruiter/DeleteJobTrigger';
 import axios from 'axios';
 
 
@@ -29,6 +30,9 @@ const getMyJob = async (token:string,recruiter:string)=>{
         })
     }
 }
+
+
+
 
 const Recruiter = async ({params}:{params:{username:string}}) => {
     const token = cookies().get('jwt')?.value
@@ -56,9 +60,7 @@ const Recruiter = async ({params}:{params:{username:string}}) => {
                                             <Button variant={'fade'} size={'icon'}>
                                                 <Pencil/>
                                             </Button>
-                                            <Button variant={'destructive'} size={'icon'}>
-                                                <Trash2 />
-                                            </Button>
+                                            <DeleteJobTrigger job={job} />
                                         </div>
                                         <DeactivateJob job={job}/>
                                     </div>
