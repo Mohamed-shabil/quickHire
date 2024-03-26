@@ -149,6 +149,7 @@ export interface Jobs{
   location:string;
   experience:string;
   openings:number;
+  isActive:boolean;
 }
 
 

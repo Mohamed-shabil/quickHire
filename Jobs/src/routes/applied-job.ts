@@ -9,11 +9,11 @@ router.get('/api/jobs/applied-jobs/:userId',requireAuth,catchAsync(async(req:Req
     const userId = req.params.userId;
     
     const applications = await Applications.findAll({
-        where:{
+        where: {
             applicant:userId
         }
     });
-
+    console.log(applications);
     res.status(200).json({
         status:'success',
         applications

@@ -10,7 +10,7 @@ import { MapPin as LocationIcon, Briefcase as JobTypeIcon} from 'lucide-react'
 const JobsCard = ({job}:{job:Jobs}) => {
   return (
     <>
-        <Link href={`jobs?currentJob=${job._id}`} key={job._id}>
+        <Link href={`jobs?currentJob=${job._id}`} key={job._id} >
             <div className="border shadow p-4 rounded-md mb-2 px-6">
                 <div className="flex flex-row space-x-4">
                     <div className='my-auto flex shrink-0'>

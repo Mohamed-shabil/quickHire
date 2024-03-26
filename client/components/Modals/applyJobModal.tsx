@@ -123,7 +123,7 @@ export default function ApplyJobModal({job}:{job:Jobs}) {
     return (
         <Dialog open={open} onOpenChange={e=>setOpen(e)}>
             <DialogTrigger asChild>
-                <Button>
+                <Button variant={'default'} disabled={job.isActive}>
                     Apply <Zap size={'1em'} />
                 </Button>
             </DialogTrigger>
@@ -247,7 +247,6 @@ export default function ApplyJobModal({job}:{job:Jobs}) {
                         </div>
                         <DialogFooter className='flex items-center justify-end col-span-6'>
                             <Button 
-                                variant="gooeyLeft"
                                 type="submit"
                                 disabled={isLoading}
                             >

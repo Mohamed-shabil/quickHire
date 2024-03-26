@@ -1,6 +1,4 @@
 import { Sequelize } from "sequelize";
-import { User } from '../model/UsersModel'
-import { Resume } from '../model/ResumeModel'
 export const sequelize = new Sequelize(
     process.env.SEQUELISE_DB!,
     process.env.SEQUELISE_USERNAME!,
@@ -17,5 +15,4 @@ sequelize.authenticate()
     }).catch((err)=>{
         console.log(err);
     })
-
 

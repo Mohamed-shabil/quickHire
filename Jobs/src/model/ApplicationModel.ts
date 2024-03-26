@@ -3,7 +3,7 @@ import { sequelize } from '../config/config';
 import { IApplication, IDApplication} from '../types/types';
 
 
-export const Applications:ModelDefined<IApplication,IDApplication> = sequelize.define('Application',{
+export const Applications:ModelDefined<IDApplication,IApplication> = sequelize.define('Application',{
     _id:{
         type:DataTypes.UUID,
         defaultValue:DataTypes.UUIDV4,
@@ -34,7 +34,7 @@ export const Applications:ModelDefined<IApplication,IDApplication> = sequelize.d
         allowNull:false
     },
     status:{
-        type:DataTypes.ENUM('submitted','reviewing','shortlisted','interviewing','accepted','rejected'),
+        type:DataTypes.ENUM('submitted','reviewing','shortlisted','accepted','rejected'),
         allowNull:false,
         defaultValue:'submitted'
     }

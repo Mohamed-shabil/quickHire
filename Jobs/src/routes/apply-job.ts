@@ -3,6 +3,7 @@ import { body } from 'express-validator'
 import { requireAuth, NotAutherizedError, catchAsync } from '@quickhire/common'
 import { uploadResume } from '../middleware/upload-resume'
 import { Applications } from '../model/ApplicationModel'
+import { IApplication } from '../types/types'
 const router = express.Router()
 
 router.post('/api/jobs/apply-job/:jobId',requireAuth,uploadResume,[
@@ -36,12 +37,12 @@ router.post('/api/jobs/apply-job/:jobId',requireAuth,uploadResume,[
     }
     
     const newApplication = await Applications.create({
-        recruiter,
-        job:jobId,
-        resume,
-        email,
-        phone,
         applicant:currentUser._id,
+        email,
+        job:jobId,
+        phone,
+        recruiter,
+        resume
     });
 
     console.log(newApplication);

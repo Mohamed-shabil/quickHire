@@ -18,6 +18,7 @@ export type IJobsType = {
 
 export type IDJobsType = IJobsType &{
     _id:string;
+    isActive:boolean;
     createdAt: Date;
     updatedAt: Date;
 };
@@ -47,7 +48,7 @@ export type IApplication = {
     phone:string;
 }
 
-export type IDApplication = {
+export type IDApplication = IApplication & {
     _id:string;
     status:string;
     createdAt: Date;

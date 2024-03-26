@@ -6,10 +6,11 @@ import { setOpen } from '@/store/slices/modalSlice';
 import AddSections from './AddSections';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import { RootState } from '@/store/reducers';
+import { useRouter } from 'next/navigation'
 export function ProfileOptions({profile}:any) {
     const dispatch = useDispatch();
     const user = useSelector((state:RootState)=>state.user.userData);
-    
+    const router = useRouter();
   return (
     <>
         <AddSections/>
@@ -22,6 +23,7 @@ export function ProfileOptions({profile}:any) {
                     {user?.role == 'recruiter' ? 
                         <DropdownMenuItem >Post a job</DropdownMenuItem> :
                         <></>}
+                    <DropdownMenuItem onClick={()=> router.push('/my-jobs')}>My Jobs</DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
         </Button>

@@ -15,6 +15,7 @@ import { applicantInfoRouter } from './routes/applicant-info'
 import { uploadResumeRouter } from './routes/upload-resume'
 import { applicantJobRouter } from './routes/apply-job'
 import { appliedJobsRouter } from './routes/applied-job'
+import { jobActivateRouter } from './routes/activate-job'
 
 
 export const app = express();
@@ -59,6 +60,7 @@ app.use(getMyAlljobs)
 app.use(searchRouter);
 app.use(getOneJob);
 app.use(editJobRouter);
+app.use(jobActivateRouter);
 
 app.all('*',() => {
     console.log('route not found 404');

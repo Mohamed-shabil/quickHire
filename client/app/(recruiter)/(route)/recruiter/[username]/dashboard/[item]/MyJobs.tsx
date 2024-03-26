@@ -12,6 +12,8 @@ import { Jobs } from '@/constants/constants'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { Switch } from '@/components/ui/switch'
+import { Label } from '@/components/ui/label'
 
 
 const getMyJobs = async (token:string,recruiter:string)=> {
@@ -62,7 +64,11 @@ const JobsPage = async ({recruiter}:{recruiter:string}) => {
                         </Link>
                         <Button variant={'destructive'} size={'icon'}>
                             <DeleteIcon size={'1.2em'}/>
-                        </Button>                                        
+                        </Button>
+                        <div className="flex items-center space-x-2">
+                        <Switch id="deactivate" />
+                        <Label htmlFor="deactivate">stop taking application for this role</Label>
+                      </div>                                        
                     </div>
                 </div>
             </CardHeader>
