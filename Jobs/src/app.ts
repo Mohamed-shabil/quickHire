@@ -17,6 +17,8 @@ import { applicantJobRouter } from './routes/apply-job'
 import { appliedJobsRouter } from './routes/applied-job'
 import { jobActivateRouter } from './routes/activate-job'
 import { deleteJobRouter } from './routes/delete-job'
+import { getApplicantsRouter } from './routes/get-applicants'
+import { changeApplicationStatus } from './routes/change-application-status'
 
 
 export const app = express();
@@ -52,6 +54,9 @@ app.use((req:Request,res:Response,next:NextFunction)=>{
     next();
 })
 
+app.use(getApplicantsRouter)
+
+
 app.use(uploadResumeRouter);
 app.use(appliedJobsRouter);
 app.use(applicantInfoRouter);
@@ -63,9 +68,13 @@ app.use(getOneJob);
 app.use(editJobRouter);
 app.use(jobActivateRouter);
 app.use(deleteJobRouter);
+app.use(changeApplicationStatus);
+
+
+
 
 app.all('*',() => {
-    console.log('route not found 404');
+    console.log('Route not found 404');
     throw new NotFoundError('route not found');
 })
 

@@ -43,7 +43,7 @@ export type IApplication = {
     recruiter:string;
     job:string;
     resume:string;
-    applicant:string;
+    applicantId:string;
     email:string;
     phone:string;
 }
@@ -51,6 +51,7 @@ export type IApplication = {
 export type IDApplication = IApplication & {
     _id:string;
     status:string;
+    owner:IDUserType;
     createdAt: Date;
     updatedAt: Date;
 }

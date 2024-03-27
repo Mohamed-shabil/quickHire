@@ -83,7 +83,7 @@ const Navbar = () => {
                             {
                                 user.role === 'recruiter' && (
                                     <DropdownMenuItem>
-                                        <Link href={`/recruiter/${user.name}/items/myJobs`} className="flex ">
+                                        <Link href={`/recruiter/${user.name}/dashboard`} className="flex ">
                                             <LayoutDashboard  className="mr-2 h-4 w-4"/>
                                             <span>Dashboard</span>
                                         </Link>

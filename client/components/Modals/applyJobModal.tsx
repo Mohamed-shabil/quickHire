@@ -123,7 +123,7 @@ export default function ApplyJobModal({job}:{job:Jobs}) {
     return (
         <Dialog open={open} onOpenChange={e=>setOpen(e)}>
             <DialogTrigger asChild>
-                <Button variant={'default'} disabled={job.isActive}>
+                <Button variant={'default'} disabled={!job.isActive}>
                     Apply <Zap size={'1em'} />
                 </Button>
             </DialogTrigger>

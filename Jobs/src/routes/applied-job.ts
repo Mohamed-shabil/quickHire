@@ -10,7 +10,7 @@ router.get('/api/jobs/applied-jobs/:userId',requireAuth,catchAsync(async(req:Req
     
     const applications = await Applications.findAll({
         where: {
-            applicant:userId
+            applicantId:userId
         }
     });
     console.log(applications);

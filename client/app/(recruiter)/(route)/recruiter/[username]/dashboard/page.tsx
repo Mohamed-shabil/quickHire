@@ -12,6 +12,7 @@ import DeactivateJob from '@/components/Recruiter/DeactivateJob'
 import CreateJobTrigger from '@/components/Recruiter/CreateJobTrigger';
 import DeleteJobTrigger from '@/components/Recruiter/DeleteJobTrigger';
 import axios from 'axios';
+import Link from 'next/link';
 
 
 const getMyJob = async (token:string,recruiter:string)=>{
@@ -57,14 +58,18 @@ const Recruiter = async ({params}:{params:{username:string}}) => {
                                 <div className='border rounded-md shadow-sm p-4 '>
                                     <div className='w-full flex flex-row items-center justify-between mb-2'>
                                         <div className='max-w-min flex gap-2'>
-                                            <Button variant={'fade'} size={'icon'}>
-                                                <Pencil/>
-                                            </Button>
+                                            <Link href={`dashboard/edit-job/${job._id}`}>
+                                                <Button variant={'fade'} size={'icon'}>
+                                                    <Pencil/>
+                                                </Button>
+                                            </Link>
                                             <DeleteJobTrigger job={job} />
                                         </div>
                                         <DeactivateJob job={job}/>
                                     </div>
-                                    <JobsCard  job={job}/>
+                                    <Link href={`dashboard/${job._id}`}>
+                                        <JobsCard  job={job}/>
+                                    </Link>
                                 </div>
                             ))
                         ):

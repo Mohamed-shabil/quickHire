@@ -160,3 +160,16 @@ export type Resume = {
   user:string,
   fileName:string
 }
+
+
+export type Application = {
+  _id:string,
+  recruiter:string,
+  job:string,
+  resume:string,
+  email:string,
+  phone:string,
+  applicantId:string,
+  status:string,
+  owner:any;
+}

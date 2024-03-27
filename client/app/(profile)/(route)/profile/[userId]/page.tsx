@@ -23,7 +23,6 @@ interface Link {
 
 
 const getProfile = async (token:string,userId:string) =>{
-    console.log('here is the token',token)
     axios.defaults.withCredentials = true;
     const res = await axios.get(`http://localhost:3003/api/profile/${userId}`,{
         headers: {
@@ -81,7 +80,7 @@ export default async function Profile({params}:{params:{userId:string}}) {
                     </div>
                 </section>
                 <section className="flex gap-4 my-auto">
-                    <ProfileOptions profile={profile}/>
+                    {/* <ProfileOptions profile={profile}/> */}
                 </section>
             </Container>
             <Separator className="container my-8" />
@@ -118,6 +117,7 @@ export default async function Profile({params}:{params:{userId:string}}) {
                 </Container> :
                 <></>         
             }
+            <Separator className="container my-8 " />
             {profile.projects?.length ? 
                 <Container>
                     <Heading variant="profile-side">Projects</Heading>

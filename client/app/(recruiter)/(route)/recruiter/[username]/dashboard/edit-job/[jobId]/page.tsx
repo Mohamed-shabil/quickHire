@@ -155,7 +155,7 @@ const EditJob = ({params}:{params:{jobId:string}}) => {
 
     return (
         <div className='w-full container flex items-center justify-center'>
-            <div className='min-w-[700px]'>
+            <div className='w-full max-w-[700px]'>
                 <Form {...form} >
                     <form onSubmit={form.handleSubmit(onSubmit)} >
                         <div className="grid grid-cols-6 gap-2">

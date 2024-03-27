@@ -74,7 +74,7 @@ export const  JobPreview = async ({currentJob}:{currentJob:string|null}) => {
                     </div>
                     <ApplyJobModal job={job}/>
                 </section>
-                {job.isActive ? '' : (<p className='text-xs text-rose-500 mt-2'>No longer accepting application</p>)}
+                {!!job.isActive ? '' : (<p className='text-xs text-rose-500 mt-2'>No longer accepting application</p>)}
                 <Separator className='px-4 mt-5'/>
                 <section className='space-y-2 my-4 mt-6 '>
                     <p className="font-normal text-base flex gap-2 items-center"><LocationIcon size={'1.2em'} className='text-blue-600'/> {job.location}</p>
@@ -91,8 +91,8 @@ export const  JobPreview = async ({currentJob}:{currentJob:string|null}) => {
                     <p className="font-normal text-base flex gap-2 items-center"><CashIcon size={'1.2em'} className='text-blue-600'/> {currency.format(job.minSalary)} - {currency.format(job.maxSalary)}</p>
                     <p className="font-normal text-base flex gap-2 items-center"><SkillsIcon size={'1.2em'} className='text-blue-600'/>
                         {
-                            job.skills.map((skill)=>(
-                                <span className='bg-blue-500/10 p-1 rounded'>
+                            job.skills.map((skill,index)=>(
+                                <span className='bg-blue-500/10 p-1 rounded' key={index}>
                                     <p className='text-blue-500 text-xs'>{skill}</p>
                                 </span>
                             ))

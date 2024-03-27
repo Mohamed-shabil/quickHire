@@ -8,6 +8,7 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { JobPreview } from '@/components/Jobs/JobPreview'
 import { ScrollArea } from '@/components/ui/scroll-area';
+import Link from 'next/link';
 
 interface IFilter  {
   title:string | null;
@@ -53,7 +54,9 @@ export default  async function page(
     <section className="flex w-full h-screen">
       <ScrollArea className="w-full max-w-lg border-r p-2 h-screen">
         {jobs.map((job)=>(
-          <JobsCard job={job}/>
+          <Link href={`jobs?currentJob=${job._id}`} key={job._id} >
+            <JobsCard job={job}/>
+          </Link>
         ))}
       </ScrollArea>
       <section className="w-full">

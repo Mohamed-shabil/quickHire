@@ -64,7 +64,7 @@ const PostCard = ({post}:{post:PostType}) => {
         <div className="w-full flex flex-col items-center justify-center my-3">
             <span className="w-full max-w-lg block rounded-lg p-3 shadow-sm border">
                 <div className="flex h-full itmes-center">
-                    <Link href={`/profile/${post.creator._id}`} className="flex flex-1 gap-2 items-center">
+                    <Link href={`/profile/${post.creator.name}`} className="flex flex-1 gap-2 items-center">
                         <Avatar className="mb-2">
                             <AvatarImage src={post.creator.avatar} alt="@shadcn" className="object-cover" />
                             <AvatarFallback>CN</AvatarFallback>

@@ -47,11 +47,11 @@ app.use(cookieParser());
 
 app.use(morgan('dev'));
 
-// app.use((req,res,next)=>{
-//     console.log("JWT TOKEN IS HERE:-",req.cookies?.jwt);
-//     console.log(req.currentUser);
-//     next();
-// })
+app.use((req,res,next)=>{
+    console.log("JWT TOKEN IS HERE:-",req.cookies?.jwt);
+    console.log(req.currentUser);
+    next();
+})
 
 app.use(currentUser);
 
