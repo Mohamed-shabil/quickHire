@@ -17,6 +17,8 @@ import { myProfileRouter } from './routes/Myprofile'
 import { getProfileRouter } from './routes/getProfile'
 import { projectRoute } from './routes/projects'
 import { searchProfile } from './routes/searchProfile'
+import { Profile } from './model/profile'
+import mongoose from 'mongoose'
 
 
 dotenv.config();
@@ -47,13 +49,14 @@ app.use(cookieParser());
 
 app.use(morgan('dev'));
 
+
+app.use(currentUser);
+
 app.use((req,res,next)=>{
     console.log("JWT TOKEN IS HERE:-",req.cookies?.jwt);
     console.log(req.currentUser);
     next();
 })
-
-app.use(currentUser);
 
 app.use(currentUserRouter)
 app.use(searchProfile);     
@@ -66,6 +69,7 @@ app.use(avatarRouter);
 app.use(linksRouter);
 app.use(followRoute)
 app.use(projectRoute);
+
 
 
 app.all('*',() => {

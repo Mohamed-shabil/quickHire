@@ -32,7 +32,7 @@ router.post('/api/profile/education',requireAuth,[
 ],catchAsync(async(req:Request,res:Response)=>{
     const error = validationResult(req);
     const {school, degree, startMonth, startYear, endMonth, endYear, grade} = req.body;
-    const user = await Profile.findOne({userId:req.currentUser?._id});
+    const user = await Profile.findOne({_id:req.currentUser?._id});
     if(!user){
         throw new NotAutherizedError();
     }

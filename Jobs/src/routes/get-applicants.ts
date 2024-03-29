@@ -18,7 +18,7 @@ router.get('/api/jobs/:jobId/get-applicants',requireAuth,isRecruiter,catchAsync(
 
     const applicants = await Applications.findAll({
         where:{
-            job:jobId,
+            jobId:jobId,
             recruiter:currentUser._id
         },
         include: [{ model: User, as: 'owner' }]

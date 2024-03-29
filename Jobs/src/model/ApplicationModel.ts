@@ -1,6 +1,7 @@
 import { DataTypes, ModelDefined } from 'sequelize';
 import { sequelize } from '../config/config';
 import { IApplication, IDApplication} from '../types/types';
+import { Jobs } from './JobsModel';
 
 
 export const Applications:ModelDefined<IDApplication,IApplication> = sequelize.define('Application',{
@@ -13,9 +14,13 @@ export const Applications:ModelDefined<IDApplication,IApplication> = sequelize.d
         type:DataTypes.STRING,
         allowNull:false
     },
-    job:{
-        type:DataTypes.TEXT,
-        allowNull:false
+    jobId:{
+        type:DataTypes.UUID,
+        allowNull:false,
+        references:{
+            model:'Jobs',
+            key:'_id'
+        }
     },
     resume:{
         type:DataTypes.TEXT,
@@ -29,12 +34,12 @@ export const Applications:ModelDefined<IDApplication,IApplication> = sequelize.d
         type:DataTypes.TEXT,
         allowNull:false
     },
-    applicantId: { // Use `applicantId` for clarity (foreign key)
-        type: DataTypes.TEXT, // Match User model's ID type
+    applicantId: {
+        type: DataTypes.TEXT, 
         allowNull: false,
-        references: { // Define foreign key relationship
-          model: 'Users', // Reference the User model
-          key: '_id', // Reference the primary key of the User model
+        references: { 
+          model: 'Users', 
+          key: '_id', 
         },
     },
     status:{

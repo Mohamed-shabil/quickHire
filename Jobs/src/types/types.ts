@@ -41,7 +41,7 @@ export type IDUserType = IUserType & {
 
 export type IApplication = {
     recruiter:string;
-    job:string;
+    jobId:string;
     resume:string;
     applicantId:string;
     email:string;

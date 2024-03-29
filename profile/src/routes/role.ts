@@ -15,7 +15,7 @@ router.patch('/api/profile/selectRole',[
     
     const errors = validationResult(req);
     const {role} = req.body;
-    const user = await Profile.findOne({userId:req.currentUser?._id});
+    const user = await Profile.findOne({_id:req.currentUser?._id});
     console.log(user);
     if(!user){
         throw new NotAutherizedError();

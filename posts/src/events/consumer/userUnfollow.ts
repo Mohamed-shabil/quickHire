@@ -3,7 +3,7 @@ import { User } from "../../model/UserModal";
 import { KafkaMessage } from "kafkajs";
 
 
-export const userFollow = async(message:KafkaMessage)=>{
+export const userUnfollow = async(message:KafkaMessage)=>{
     const unFollowData = JSON.parse(message.value!.toString())
     console.log('unFOllow ',unFollowData)
     

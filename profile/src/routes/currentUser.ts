@@ -10,7 +10,7 @@ router.get('/api/profile/currentUser',requireAuth,catchAsync(async(req:Request,r
     if(!req.currentUser){
         throw new NotAutherizedError();
     }
-    const user = await Profile.findOne({userId:req.currentUser._id});
+    const user = await Profile.findOne({_id:req.currentUser._id});
     if(!user){
         throw new BadRequestError('User with this ID does not exist');
     }

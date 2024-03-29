@@ -3,6 +3,7 @@ import express,{Request,Response} from 'express';
 import { body } from 'express-validator'
 import { Applications } from '../model/ApplicationModel';
 import { User } from '../model/UsersModel';
+import { Jobs } from '../model/JobsModel';
 const router = express.Router();
 
 router.patch('/api/jobs/application/change-status',requireAuth,isRecruiter,[
@@ -15,7 +16,7 @@ router.patch('/api/jobs/application/change-status',requireAuth,isRecruiter,[
 ],catchAsync(async(req:Request,res:Response)=>{
     const {jobId, status} = req.body;
     const currentUser = req.currentUser;
-
+    console.log('Job Id is here ....',jobId);
     if(!currentUser){
         throw new NotAutherizedError();
     }
@@ -23,12 +24,14 @@ router.patch('/api/jobs/application/change-status',requireAuth,isRecruiter,[
     const applicantion = await Applications.findOne({
         where:{
             recruiter:currentUser._id,
-            job:jobId,
+            jobId:jobId,
         },
-        include:{
-            model:User,
-            as:'owner'
-        }
+        include:[
+            {
+                model:User,
+                as:'owner'
+            },
+        ],
     });
 
 
@@ -36,12 +39,12 @@ router.patch('/api/jobs/application/change-status',requireAuth,isRecruiter,[
         throw new BadRequestError('No job with this job ID')
     }
 
-    applicantion.update({
+    applicantion.set({
         status:status
     });
 
-
     await applicantion.save();
+
     console.log('application is here ',applicantion);
     res.status(200).json({
         status:'success',

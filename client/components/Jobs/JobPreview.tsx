@@ -57,7 +57,7 @@ export const  JobPreview = async ({currentJob}:{currentJob:string|null}) => {
 
     const job:Jobs = await getJob(token,currentJob);
     return (
-        <main className='p-2 max-h-screen overflow-y-scroll '>   
+        <main className='p-2 max-h-screen overflow-y-scroll'>   
             <div className="p-4 rounded-md mb-2 px-6">
                 <section className='flex justify-between align-middle'>
                     <div className="flex flex-row space-x-4">
@@ -103,11 +103,11 @@ export const  JobPreview = async ({currentJob}:{currentJob:string|null}) => {
                     <h1 className='font-bold my-1 text-base'>Job Description</h1>
                     <div dangerouslySetInnerHTML={{
                         __html:job.jobDescription
-                    }} className='text-sm p-4 border rounded-md'></div>
+                    }} className='text-sm p-4 border rounded-md dark:text-white'></div>
                     <h4  className='font-bold my-1 text-base mt-4'>Requirements</h4>
                     <div dangerouslySetInnerHTML={{
                         __html:job.requirements
-                    }} className='text-sm border p-4 rounded-md '>
+                    }} className='text-sm border p-4 rounded-md dark:text-white'>
                     </div>
                 </div>
             </div>

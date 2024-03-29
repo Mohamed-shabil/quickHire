@@ -49,7 +49,7 @@ router.patch('/api/profile/project/',requireAuth,[
         links
     } = req.body;
 
-    const user = await Profile.findOne({userId:req.currentUser?._id});
+    const user = await Profile.findOne({_id:req.currentUser?._id});
     if(!user){
         throw new NotAutherizedError();
     }

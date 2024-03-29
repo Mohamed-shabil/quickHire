@@ -17,7 +17,7 @@ router.patch('/api/profile/avatar',requireAuth,ImageConverter,uploadProfie,catch
     const fileLocation = fileWithLocation.location; 
     console.log(fileWithLocation);
 
-    const profile = await Profile.findOne({userId:req.currentUser?._id});
+    const profile = await Profile.findOne({_id:req.currentUser?._id});
 
     if(!profile){
         throw new NotAutherizedError();
@@ -30,7 +30,7 @@ router.patch('/api/profile/avatar',requireAuth,ImageConverter,uploadProfie,catch
     await profile.save();
 
     const payload = {
-        _id:profile.userId,
+        _id:profile._id,
         fullname:profile.fullName,
         username:profile.username,
         avatar:profile.avatar,

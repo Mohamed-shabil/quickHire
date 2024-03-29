@@ -24,7 +24,7 @@ router.patch('/api/profile/links',requireAuth,[
 ],catchAsync(async(req:Request,res:Response)=>{
     const error = validationResult(req);
     const {location, portfolio, customUrl, urlName} = req.body;
-    const userProfile = await Profile.findOne({userId:req.currentUser?._id})
+    const userProfile = await Profile.findOne({_id:req.currentUser?._id})
     
     if(!userProfile){
         throw new NotAutherizedError();
