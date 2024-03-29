@@ -12,6 +12,7 @@ import { getOnePost } from './routes/getPost';
 import { likePostRouter } from './routes/likePost';
 import { getAllComments } from './routes/getComments';
 import { commentRouter } from './routes/comments';
+import { reportRoute } from './routes/report-post';
 
 dotenv.config();
 
@@ -52,6 +53,8 @@ app.use(getOnePost);
 app.use(likePostRouter)
 app.use(getAllComments);
 app.use(commentRouter);
+app.use(reportRoute)
+
 app.use(errorHandler);
 
 

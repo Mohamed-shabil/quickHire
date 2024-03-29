@@ -17,7 +17,10 @@ const UserSchema = new mongoose.Schema({
     },
     posts:{
         type:mongoose.Schema.Types.ObjectId,
-    }
+    },
+    saved:[{
+        type:mongoose.Schema.Types.ObjectId
+    }]
 })
 
 type User = InferSchemaType<typeof UserSchema>

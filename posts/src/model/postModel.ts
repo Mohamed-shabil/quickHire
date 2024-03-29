@@ -16,6 +16,10 @@ const PostSchema = new mongoose.Schema({
         userId:{
           type:mongoose.Schema.Types.ObjectId
         },
+        reason:{
+          type:String,
+          enum:['harassment','discrimination','violence','spam','inappropriate content','privacy violation','other']
+        },
         createdAt:{
           type:Date,
           default:Date.now
