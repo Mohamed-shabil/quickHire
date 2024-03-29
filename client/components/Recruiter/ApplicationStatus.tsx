@@ -7,7 +7,7 @@ function ApplicationStatus({application}:{application:Application}) {
     const changeStatus = (value:string)=>{
         console.log(value);
         axios.patch('http://localhost:3005/api/jobs/application/change-status',{
-            jobId:application.job,
+            jobId:application.jobId,
             status:value
         },{
             withCredentials:true

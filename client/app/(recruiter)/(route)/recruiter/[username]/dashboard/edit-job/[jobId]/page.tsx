@@ -111,7 +111,6 @@ const EditJob = ({params}:{params:{jobId:string}}) => {
             data.append('skills[]',item);
         })
       
-      
         axios.patch(`http://localhost:3005/api/jobs/edit-job/${jobId}`,data,{
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -121,7 +120,6 @@ const EditJob = ({params}:{params:{jobId:string}}) => {
         .then((res) => {
             toast({
                 title: "Job edited successfully! 🥳",
-                // description: "Job  Successfully!",
                 action: (
                     <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded"><Check /></div>
                 ),

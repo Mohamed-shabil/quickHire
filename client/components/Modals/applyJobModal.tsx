@@ -14,6 +14,7 @@ import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { Label } from '../ui/label';
 import { toast } from '../ui/use-toast';
 import { Resume } from '@/constants/constants'
+import moment from 'moment';
 
 type FieldValues = {
     email: string;
@@ -122,11 +123,18 @@ export default function ApplyJobModal({job}:{job:Jobs}) {
     const isLoading = form.formState.isSubmitting
     return (
         <Dialog open={open} onOpenChange={e=>setOpen(e)}>
-            <DialogTrigger asChild>
-                <Button variant={'default'} disabled={!job.isActive}>
-                    Apply <Zap size={'1em'} />
-                </Button>
-            </DialogTrigger>
+            {
+                job.appliedAt ? (
+                    <p className='text-gray-500 text-xs text-center align-middle'>You already Applied on : {moment(job.appliedAt).calendar()} </p>
+                ) :
+                (
+                    <DialogTrigger asChild>
+                        <Button variant={'default'} disabled={!job.isActive}>
+                            Apply <Zap size={'1em'} />
+                        </Button>
+                    </DialogTrigger>
+                )
+            }
             <DialogContent className="sm:max-w-[600px] flex flex-col">
                 <Form {...form}>
                     <DialogHeader>

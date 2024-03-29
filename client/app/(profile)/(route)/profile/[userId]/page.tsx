@@ -10,9 +10,12 @@ import { EducationCard } from '@/components/Profile/EducationCard'
 import {User,Education,Project,Experience} from '@/constants/constants'
 import axios from "axios";
 import { cookies } from "next/headers";
+import { ProjectCard } from "@/components/Profile/ProjectCart";
 import { Button } from "@/components/ui/button";
-import { MessageSquareMore } from "lucide-react";
-import { ProfileOptions } from "@/components/Profile/ProfileOption";
+import { MessageCircleMore } from "lucide-react";
+import { promises } from "dns";
+import Link from "next/link";
+
 
 interface Link {
     title:string;
@@ -21,14 +24,15 @@ interface Link {
 }
 
 
-
-const getProfile = async (token:string,userId:string) =>{
+const getProfile = async (token:string,userId:string):Promise<{profile:User,followers:number,followings:number}>=>{
     axios.defaults.withCredentials = true;
     const res = await axios.get(`http://localhost:3003/api/profile/${userId}`,{
         headers: {
             Cookie: `jwt=${token}`
         }
     });
+
+    console.log('someone profile',res.data);
     return res.data.profile;
 }
 
@@ -37,9 +41,9 @@ export default async function Profile({params}:{params:{userId:string}}) {
     const token = cookies().get('jwt')?.value;
     const {userId} = params;
     if(!token){
-        return redirect('/signup'); 
+        return redirect('/signup');
     }
-    const profile = await getProfile(token,params.userId);
+    const {profile,followers,followings} = await getProfile(token,params.userId);
 
     const gotoChat = ()=>{
         redirect(`/chats/${userId}`);
@@ -79,8 +83,26 @@ export default async function Profile({params}:{params:{userId:string}}) {
                         <p className="text-slate-400">{profile.headline || profile.email}</p>
                     </div>
                 </section>
+                <section className="mt-10">
+                    <div className="flex items-center justify-center">
+                        <div className="text-center border-r border-gray-500 p-4">
+                            <p className="font-bold text-2xl">{followers}</p>
+                            <p className="text-slate-400">Followers</p>
+                        </div>
+                        <div className="text-center p-4">
+                            <p className="font-bold text-2xl">{followings}</p>
+                            <p className="text-slate-400">Followings</p>
+                        </div>
+                    </div>
+                </section>
                 <section className="flex gap-4 my-auto">
                     {/* <ProfileOptions profile={profile}/> */}
+                    <Link href={`/chats?user=${userId}`}>
+                        <Button variant={'default'}>
+                            <MessageCircleMore />
+                        </Button>
+                    </Link>
+
                 </section>
             </Container>
             <Separator className="container my-8" />
@@ -111,7 +133,7 @@ export default async function Profile({params}:{params:{userId:string}}) {
                     <Heading variant="profile-side">Experience</Heading>
                     <section className="flex-grow grid grid-cols-1 lg:grid-cols-2 gap-4">
                         {profile.experience.map((experience:Experience,index:number) => (
-                            <ExperienceCard key={index} experience={experience} />
+                            <ExperienceCard key={index} experience={experience} userId={userId} />
                         ))}
                     </section>
                 </Container> :
@@ -122,8 +144,8 @@ export default async function Profile({params}:{params:{userId:string}}) {
                 <Container>
                     <Heading variant="profile-side">Projects</Heading>
                     <section className="flex-grow grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        {profile.experience?.map((experience:Experience,index:number) => (
-                            <ExperienceCard key={index} experience={experience} />
+                        {profile.projects?.map((project:Project,index:number) => (
+                            <ProjectCard key={index} project={project}/>
                         ))}
                     </section>
                 </Container> :

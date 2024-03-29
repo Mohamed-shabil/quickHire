@@ -26,17 +26,21 @@ export default function EditPost(){
             const data:PostType = res.data.post
             setPost(data);
         })
-        console.log(post?.caption)
     },[])
+
+    console.log(post?.caption);
+
     return(
         <div className="flex items-center justify-center">
             <div className="w-[450px]">
                 {post && post.media && post.media.length > 0 && (
-                    <Image className="mb-10 rounded" src={post.media[0].url} alt="" width={400} height={300} />
+                    <Image className="mb-10 rounded w-full" src={post.media[0].url} alt="" width={400} height={300} />
                 )}
-                <Textarea className="mb-10" placeholder="Enter your caption" onChange={(e)=>{setCaption(e.target.value)}}>
-                    {post?.caption}
-                </Textarea>
+                <Textarea className="mb-10"
+                    placeholder="Enter your caption" 
+                    onChange={(e)=>{setCaption(e.target.value)}}
+                    value={post?.caption}
+                />
                 <Button className="" onClick={onSubmit}>Update</Button>
             </div>
         </div>

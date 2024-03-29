@@ -8,22 +8,32 @@ import { useSelector } from 'react-redux'
 import { RootState } from '@/store/reducers'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import JobsCard from '@/components/Jobs/JobsCard'
-import { Jobs } from '@/constants/constants'
+import { Application, Jobs } from '@/constants/constants'
 
 
 export default function MyJobs() {
-  const [jobs,setJobs] = useState<Jobs>()
-  const user = useSelector((state:RootState)=>state.user.userData);
+  
+  const user = useSelector((state:RootState)=> state.user.userData);
+  const [ applications, setApplications ] = useState<Application[]>([]);
 
   useEffect(()=>{
-    axios.get(`http://localhost:3005/api/jobs/applied-jobs/${user?._id}`)
-      .then((res)=>{
-        console.log(res.data)
-      })
-  },[]);
+    axios.get(`http://localhost:3005/api/jobs/applied-jobs`,{
+      withCredentials:true
+    }).then((res)=>{
+      setApplications(res.data.applications)
+      console.log(res);
+    }).catch(err=>{
+      console.log(err);
+    })
+  },[]) 
+  
+  const applied = applications.filter((application)=> application.status === 'applied')
+  const submitted = applications.filter((application)=> application.status === "submitted")
+  const reviewed = applications.filter((application)=> application.status === 'reviewed')
+  const shortlisted = applications.filter((application)=> application.status === 'shortlisted');
+  const rejected = applications.filter((application)=> application.status === 'shortlisted');
 
-
-
+  console.log({submitted});
   return (
     <div className='container'>
       <div className='flex items-center justify-center'>
@@ -35,19 +45,56 @@ export default function MyJobs() {
             <Tabs defaultValue="all" className="w-full">
               <TabsList className='w-full flex items-center justify-between flex-wrap h-auto'>
                 <TabsTrigger value="all" className='text-xs shadow-none'>All</TabsTrigger>
-                <TabsTrigger value="applied" >Applied</TabsTrigger>
-                <TabsTrigger value="reviewed" >Reviewed</TabsTrigger>
-                <TabsTrigger value="shortlisted" >Shortlisted</TabsTrigger>
+                <TabsTrigger value="submitted">Submitted</TabsTrigger>
+                <TabsTrigger value="applied">Applied</TabsTrigger>
+                <TabsTrigger value="reviewed">Reviewed</TabsTrigger>
+                <TabsTrigger value="shortlisted">Shortlisted</TabsTrigger>
                 <TabsTrigger value="rejected">Rejected</TabsTrigger>
               </TabsList>
 
               <TabsContent value="all" >
-                
+                {
+                  applications.map((application)=>(
+                    <JobsCard job={application.job}/>
+                  ))
+                }
               </TabsContent>
-              <TabsContent value="applied">applied</TabsContent>
-              <TabsContent value="reviewed">reviewed</TabsContent>
-              <TabsContent value="shortlisted">shortlisted</TabsContent>
-              <TabsContent value="rejected">rejected</TabsContent>
+              <TabsContent value="submitted" >
+                {
+                  submitted && submitted.map((application)=>( 
+                    <JobsCard job={application.job}/>
+                  ))
+                }
+              </TabsContent>
+              <TabsContent value="applied" >
+                {
+                  applied && applied.map((application)=>( 
+                    <JobsCard job={application.job}/>
+                  ))
+                }
+              </TabsContent>
+              <TabsContent value="reviewed" >
+                {
+                  reviewed && reviewed.map((application)=>( 
+                    <JobsCard job={application.job}/>
+                  ))
+                }
+              </TabsContent>
+              <TabsContent value="shortlisted" >
+                {
+                  shortlisted && shortlisted.map((application)=>( 
+                    <JobsCard job={application.job}/>
+                  ))
+                }
+              </TabsContent>
+              <TabsContent value="rejected" >
+                {
+                  rejected && rejected.map((application)=>( 
+                    <JobsCard job={application.job}/>
+                  ))
+                }
+              </TabsContent>
+              
             </Tabs>
           </div>
         </Card>

@@ -42,6 +42,7 @@ interface JobFormData {
   maxSalary?: string;
   [key: string]: string | undefined; // Index signature allowing any string key
 }
+
 export function CreateJobModal() {
 const router  = useRouter();
 const dispatch = useDispatch();

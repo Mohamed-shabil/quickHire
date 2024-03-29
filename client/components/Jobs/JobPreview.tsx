@@ -19,7 +19,6 @@ import {
     Zap
 } from 'lucide-react'
 import { Separator } from '../ui/separator';
-import { Button } from '../ui/button';
 
 const getJob = async (token:string,currentJob:string)=>{
    try {
@@ -41,7 +40,7 @@ export const  JobPreview = async ({currentJob}:{currentJob:string|null}) => {
     const token = cookies().get('jwt')?.value;
 
     if(!currentJob){
-        return <h1>Job Id is not given</h1>
+        return <h1>Select a Job to see more</h1>
     }
     if(!token){
         toast({

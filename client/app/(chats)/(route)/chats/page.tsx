@@ -10,7 +10,7 @@ import Image from "next/image";
 import { Chats } from "@/constants/constants";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/reducers";
-import { redirect } from "next/navigation";
+import { redirect, useParams, useSearchParams } from "next/navigation";
 import moment from 'moment';
 import ChatSection from "@/components/ChatSection";
 
@@ -31,10 +31,13 @@ function Chats() {
     const [ chats, setChats] = useState<Chats[]>([]);
     const [ chatSend, setChatSend] = useState(false);
 
+    const searchParams = useSearchParams()
+    const chatUser = searchParams.get('user');
+
     const currentUser = useSelector((state:RootState)=>state.user.userData); 
 
     useEffect(()=>{
-        axios.get(`http://localhost:3006/api/chats/history/${user?._id}`)
+            axios.get(`http://localhost:3006/api/chats/history/${user?._id}`)
             .then((res)=>{
                 console.log(res);
                 setChats(res.data.chats);
@@ -47,24 +50,43 @@ function Chats() {
     useEffect(()=>{
         axios.get('http://localhost:3006/api/chats/getAll')
             .then(res=>{
-                console.log(res.data.chats)
+                console.log('chatsuser -----',res.data.chats)
                 setChatUsers(res.data.chats);
             }).catch(err=>{
                 console.log(err);
             })
+        
     },[])
 
+    useEffect(()=>{
+        console.log('Im working....')
+        axios.get('http://localhost:3006/api/chats/searchProfile',{
+            params:{
+                name:chatUser
+            }
+        })
+        .then((res)=>{
+                console.log(res.data.users);
+                setChatUsers(res.data.users)
+        }).catch((err)=>{
+                console.log(err);
+        })
+    },[])
     
 
     const onSearch = async(value:string)=>{
         axios.defaults.withCredentials = true
-        axios.get(`http://localhost:3006/api/chats/searchProfile?name=${value}`)
-            .then((res)=>{
+        axios.get('http://localhost:3006/api/chats/searchProfile',{
+            params:{
+                name:value
+            }
+        })
+        .then((res)=>{
                 console.log(res.data.users);
                 setChatUsers(res.data.users)
-            }).catch((err)=>{
+        }).catch((err)=>{
                 console.log(err);
-            })
+        })
     }
 
     const handleInputChange = async(event: React.ChangeEvent<HTMLInputElement>)=>{
@@ -88,7 +110,7 @@ function Chats() {
                             </div>
                             <ScrollArea className="overflow-y-auto h-[70vh]">
                                 {
-                                    chatUsers?.length ? 
+                                    chatUsers?.length ?
                                     chatUsers.map((chatUser)=>(
                                         <>
                                         {

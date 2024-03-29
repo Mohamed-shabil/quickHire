@@ -7,6 +7,7 @@ import AddSections from './AddSections';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import { RootState } from '@/store/reducers';
 import { useRouter } from 'next/navigation'
+import Link from 'next/link';
 export function ProfileOptions({profile}:any) {
     const dispatch = useDispatch();
     const user = useSelector((state:RootState)=>state.user.userData);
@@ -23,7 +24,9 @@ export function ProfileOptions({profile}:any) {
                     {user?.role == 'recruiter' ? 
                         <DropdownMenuItem >Post a job</DropdownMenuItem> :
                         <></>}
-                    <DropdownMenuItem onClick={()=> router.push('/my-jobs')}>My Jobs</DropdownMenuItem>
+                    <Link href={`/${user?.name}/my-jobs`}>
+                        <DropdownMenuItem >My Jobs</DropdownMenuItem>
+                    </Link>
                 </DropdownMenuContent>
             </DropdownMenu>
         </Button>

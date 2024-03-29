@@ -43,7 +43,7 @@ export type Project = {
   
 export type User = {
     avatar:string;
-    userId: string;
+    _id: string;
     fullName?: string;
     headline?: string;
     bio?: string;
@@ -87,23 +87,26 @@ interface Report {
   createdAt?: Date;
 }
 
-
+export type creator= {
+  _id:string,
+  avatar:string,
+  name:string;
+  headLine:string;
+  followers:string[],
+  followings:string[]
+}
 export type PostType = {
   _id:string;
-  creator: {
-    _id:string,
-    avatar:string,
-    name:string;
-    headLine:string;
-    followers:string[],
-    followings:string[]
-  };
+  creator: creator[];
+  creatorId: string;
   caption?: string;
   media?: Media[];
   liked:boolean;
   followingCreator:boolean;
   comments?: Comment[];
-  likes:[],
+  isLikedByCurrentUser:boolean;
+  isFollowing:boolean;
+  totalLikes:number;
   report?: Report[];
   createdAt:Date
 }
@@ -150,6 +153,7 @@ export interface Jobs{
   experience:string;
   openings:number;
   isActive:boolean;
+  appliedAt?:Date
 }
 
 
@@ -165,11 +169,17 @@ export type Resume = {
 export type Application = {
   _id:string,
   recruiter:string,
-  job:string,
+  jobId: Jobs,
   resume:string,
   email:string,
   phone:string,
   applicantId:string,
   status:string,
   owner:any;
+}
+
+export type follower = {
+  follow: User,
+  followedBy:User|string,
+  _id:string
 }

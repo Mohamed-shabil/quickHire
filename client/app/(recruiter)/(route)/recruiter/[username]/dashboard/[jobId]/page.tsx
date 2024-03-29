@@ -29,6 +29,8 @@ async function Applicants({params}:{params:{jobId:string}}) {
         return redirect('/signin');
     }
     const jobId = params.jobId;
+
+    console.log(jobId);
     
     const applications:Application[] = await getApplicant(token,jobId);
     console.log('her eis  klsahdkfjhjaksjd',applications);
