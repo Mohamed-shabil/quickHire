@@ -16,6 +16,8 @@ import { verifyOtpRouter } from './routes/verifyOtp';
 import { googleAuthRouter } from './routes/verifyAuth';
 import { resetPasswordRouter } from './routes/resetPassword';
 import { roleRouter } from './routes/setupRole'
+import { blockUserRoute } from './routes/block-user'
+
 
 export const app = express();
 
@@ -59,6 +61,8 @@ app.use(resentOtpRouter);
 app.use(resetPasswordRouter);
 app.use(googleAuthRouter);
 app.use(roleRouter);
+app.use(blockUserRoute);
+
 
 app.all('*',() => {
     console.log('route not found 404');

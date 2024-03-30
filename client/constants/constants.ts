@@ -183,3 +183,7 @@ export type follower = {
   followedBy:User|string,
   _id:string
 }
+
+export const ADMIN = 'admin'
+export const SEEKER = 'seeker'
+export const RECRUITER = 'recruiter'

@@ -1,5 +1,5 @@
 import express,{Request,Response} from 'express'
-import { NotAutherizedError, requireAuth} from '@quickhire/common'
+import { NotAutherizedError, requireAuth, validateRequest} from '@quickhire/common'
 import catchAsync from '../utils/catchAsync';
 import { body } from 'express-validator';
 import { Posts } from '../model/postModel';
@@ -8,7 +8,8 @@ const router = express.Router();
 router.patch('/api/posts/:postId/report',requireAuth,[
     body('reason')
         .notEmpty()
-        .withMessage("Reasons can't be empty")
+        .withMessage("Reasons can't be empty"),
+        validateRequest
 ],catchAsync(async(req:Request,res:Response)=>{
     
     const { postId } = req.params;

@@ -17,7 +17,7 @@ router.delete('/api/posts/saved-post/:postId',requireAuth,catchAsync(async(req:R
         {_id:currentUser._id},
         { $push:{saved:postId}}
     );
-
+    
     res.status(201).json({
         status:'success',
         user:user
