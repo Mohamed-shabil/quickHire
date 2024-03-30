@@ -6,7 +6,7 @@ const InfluencerList = () => {
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Recent Sales</CardTitle>
+                <CardTitle>Most Followed Users</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-8">
                 <div className="flex items-center gap-4">

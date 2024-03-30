@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.515.0",
-    "@quickhire/common": "^1.0.31",
+    "@quickhire/common": "^1.0.33",
     "@types/cookie-parser": "^1.4.6",
     "@types/cors": "^2.8.17",
     "@types/morgan": "^1.9.9",

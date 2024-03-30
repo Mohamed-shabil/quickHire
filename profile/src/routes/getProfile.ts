@@ -10,9 +10,14 @@ router.get('/api/profile/:username',requireAuth,catchAsync(async(req,res)=>{
     const username = req.params.username;
     const currentUser = req.currentUser
     console.log(username)
-    const profile = await Profile.findOne({username:username})
-    const followers = await Follow.countDocuments({follow:currentUser?._id});
-    const followings = await Follow.countDocuments({followedBy:currentUser?._id});
+    
+
+    const [ profile, followers, followings ] = await Promise.all([
+        Profile.findOne({username:username}),
+        Follow.countDocuments({follow:currentUser?._id}),
+        Follow.countDocuments({followedBy:currentUser?._id})
+    ]);
+
     console.log(profile)
     if(!profile){
         throw new NotAutherizedError();
