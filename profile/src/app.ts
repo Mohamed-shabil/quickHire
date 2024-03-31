@@ -19,6 +19,7 @@ import { projectRoute } from './routes/projects'
 import { searchProfile } from './routes/searchProfile'
 import { Profile } from './model/profile'
 import mongoose from 'mongoose'
+import { mostFollowedUsersRoute } from './routes/most-followed-profiles'
 
 
 dotenv.config();
@@ -58,6 +59,7 @@ app.use((req,res,next)=>{
     next();
 })
 
+app.use(mostFollowedUsersRoute)
 app.use(currentUserRouter)
 app.use(searchProfile);     
 app.use(myProfileRouter);

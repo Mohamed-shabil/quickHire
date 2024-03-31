@@ -4,7 +4,7 @@ import catchAsync from '../utils/catchAsync';
 import { NotAutherizedError, requireAuth, validateRequest } from '@quickhire/common';
 import { body,validationResult } from 'express-validator';
 import {KafkaProducer} from '@quickhire/common'
-import { kafkaClient } from '../kafka/kafkaClient';
+import { kafkaClient } from '../events/kafkaClient';
 import { createSendToken } from '../utils/createSendToken';
 const router = express.Router();
 

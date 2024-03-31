@@ -10,7 +10,7 @@ import catchAsync from '../utils/catchAsync'
 import bcrypt from 'bcryptjs';
 import OtpVerification from '../model/otp';
 import { KafkaProducer } from '@quickhire/common';
-import { kafkaClient } from '../kafka/kafkaClient';
+import { kafkaClient } from '../events/kafkaClient';
 
 import { createSendToken } from '../utils/createSendToken';
 

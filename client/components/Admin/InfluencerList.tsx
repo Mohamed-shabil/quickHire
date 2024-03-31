@@ -1,94 +1,67 @@
-import React from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import axios from "axios";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { User } from "@/constants/constants";
+import { Button } from "../ui/button";
 
-const InfluencerList = () => {
-    return (
-        <Card>
-            <CardHeader>
-                <CardTitle>Most Followed Users</CardTitle>
-            </CardHeader>
-            <CardContent className="grid gap-8">
-                <div className="flex items-center gap-4">
-                    <Avatar className="hidden h-9 w-9 sm:flex">
-                        <AvatarImage src="/avatars/01.png" alt="Avatar" />
-                        <AvatarFallback>OM</AvatarFallback>
-                    </Avatar>
-                    <div className="grid gap-1">
-                        <p className="text-sm font-medium leading-none">
-                            Olivia Martin
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                            olivia.martin@email.com
-                        </p>
-                    </div>
-                    <div className="ml-auto font-medium">
-                        +$1,999.00
-                    </div>
-                </div>
-                <div className="flex items-center gap-4">
-                    <Avatar className="hidden h-9 w-9 sm:flex">
-                        <AvatarImage src="/avatars/02.png" alt="Avatar" />
-                        <AvatarFallback>JL</AvatarFallback>
-                    </Avatar>
-                    <div className="grid gap-1">
-                        <p className="text-sm font-medium leading-none">
-                            Jackson Lee
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                            jackson.lee@email.com
-                        </p>
-                    </div>
-                    <div className="ml-auto font-medium">+$39.00</div>
-                </div>
-                <div className="flex items-center gap-4">
-                    <Avatar className="hidden h-9 w-9 sm:flex">
-                        <AvatarImage src="/avatars/03.png" alt="Avatar" />
-                        <AvatarFallback>IN</AvatarFallback>
-                    </Avatar>
-                    <div className="grid gap-1">
-                        <p className="text-sm font-medium leading-none">
-                            Isabella Nguyen
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                            isabella.nguyen@email.com
-                        </p>
-                    </div>
-                    <div className="ml-auto font-medium">+$299.00</div>
-                </div>
-                <div className="flex items-center gap-4">
-                    <Avatar className="hidden h-9 w-9 sm:flex">
-                        <AvatarImage src="/avatars/04.png" alt="Avatar" />
-                        <AvatarFallback>WK</AvatarFallback>
-                    </Avatar>
-                    <div className="grid gap-1">
-                        <p className="text-sm font-medium leading-none">
-                            William Kim
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                            will@email.com
-                        </p>
-                    </div>
-                    <div className="ml-auto font-medium">+$99.00</div>
-                </div>
-                <div className="flex items-center gap-4">
-                    <Avatar className="hidden h-9 w-9 sm:flex">
-                        <AvatarImage src="/avatars/05.png" alt="Avatar" />
-                        <AvatarFallback>SD</AvatarFallback>
-                    </Avatar>
-                    <div className="grid gap-1">
-                        <p className="text-sm font-medium leading-none">
-                            Sofia Davis
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                            sofia.davis@email.com
-                        </p>
-                    </div>
-                    <div className="ml-auto font-medium">+$39.00</div>
-                </div>
-            </CardContent>
-          </Card>
-    )
-}
+const getMostFollowedUsers = async (token: string) => {
+  const response = await axios.get(
+    "http://localhost:3003/api/profile/most-followed",
+    {
+      headers: {
+        Cookie: `jwt=${token}`,
+      },
+    }
+  );
+  return response.data.users as { count: number; profile: User }[];
+};
 
-export default InfluencerList
+const InfluencerList = async () => {
+  const token = cookies().get("jwt")?.value;
+  if (!token) {
+    return redirect("/signin");
+  }
+
+  const users = await getMostFollowedUsers(token);
+  console.log(users[0]);
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Most Followed Users</CardTitle>
+      </CardHeader>
+      <CardContent className="grid gap-8">
+        {users.map((user) => (
+          <div className="flex items-center gap-4">
+            <Avatar className="hidden h-9 w-9 sm:flex">
+              <AvatarImage
+                src={user.profile.avatar}
+                alt="Avatar"
+                className="object-cover"
+              />
+              <AvatarFallback>OM</AvatarFallback>
+            </Avatar>
+            <div className="grid gap-1">
+              <p className="text-sm font-medium leading-none">
+                {user.profile.fullName || user.profile.username}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                {user.profile.email}
+              </p>
+            </div>
+            <div className="ml-auto font-medium">
+              <Button size={"mini"} variant={"fade"}>
+                View
+              </Button>
+            </div>
+          </div>
+        ))}
+      </CardContent>
+    </Card>
+  );
+};
+
+export default InfluencerList;

@@ -31,22 +31,22 @@ export default function Navbar() {
           Dashboard
         </Link>
         <Link
-          href="#"
+          href="admin/users"
           className="text-muted-foreground transition-colors hover:text-foreground"
         >
-          Orders
+          Users
         </Link>
         <Link
           href="#"
           className="text-muted-foreground transition-colors hover:text-foreground"
         >
-          Products
+          Posts
         </Link>
         <Link
           href="#"
           className="text-muted-foreground transition-colors hover:text-foreground"
         >
-          Customers
+          Reports
         </Link>
         <Link
           href="#"
@@ -75,10 +75,10 @@ export default function Navbar() {
               Dashboard
             </Link>
             <Link
-              href="#"
+              href="/users"
               className="text-muted-foreground hover:text-foreground"
             >
-              Orders
+              Users
             </Link>
             <Link
               href="#"
