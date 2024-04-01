@@ -12,7 +12,7 @@ import OtpVerification from '../model/otp';
 import { KafkaProducer } from '@quickhire/common';
 import { kafkaClient } from '../events/kafkaClient';
 
-import { createSendToken } from '../utils/createSendToken';
+import { createAccessToken,createRefreshToken } from '../utils/Token';
 
 const router = express.Router();
 
@@ -117,8 +117,16 @@ router.post('/api/users/signup',[
         isBlocked:user.isBlocked,
         role:user.role,
     }
-
-    createSendToken(payload,res);
+    const refreshToken = createRefreshToken(user._id.toString());
+    const accessToken = createAccessToken(payload);
+    
+    res.status(201)
+        .cookie('_accessToken',refreshToken)
+        .cookie('_refreshToken',accessToken)
+        .json({
+            status:'success',
+            user:payload
+        });
 }));
 
 

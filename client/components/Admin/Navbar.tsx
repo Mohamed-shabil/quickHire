@@ -75,7 +75,7 @@ export default function Navbar() {
               Dashboard
             </Link>
             <Link
-              href="/users"
+              href="users"
               className="text-muted-foreground hover:text-foreground"
             >
               Users

@@ -1,25 +1,21 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import UserList from "@/components/Admin/UsersList";
 import React from "react";
+import { SEEKER } from "@/constants/constants";
+import { RECRUITER } from "@/constants/constants";
 const page = () => {
   return (
-    <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 mt-2">
-      <Tabs defaultValue="all">
-        <div className="flex items-center">
-          <TabsList>
-            <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="active">Active</TabsTrigger>
-            <TabsTrigger value="draft">Draft</TabsTrigger>
-            <TabsTrigger value="archived" className="hidden sm:flex">
-              Archived
-            </TabsTrigger>
-          </TabsList>
-        </div>
+    <>
         <TabsContent value="all">
-          <UserList />
+          <UserList role="" />
         </TabsContent>
-      </Tabs>
-    </main>
+        <TabsContent value="seeker">
+          <UserList role={SEEKER} />
+        </TabsContent>
+        <TabsContent value="recruiter">
+          <UserList role={RECRUITER} />
+        </TabsContent>
+    </>
   );
 };
 

@@ -17,6 +17,7 @@ import { googleAuthRouter } from './routes/verifyAuth';
 import { resetPasswordRouter } from './routes/resetPassword';
 import { roleRouter } from './routes/setupRole'
 import { blockUserRoute } from './routes/block-user'
+import { getAllUsersRoute } from './routes/get-all'
 
 
 export const app = express();
@@ -62,6 +63,7 @@ app.use(resetPasswordRouter);
 app.use(googleAuthRouter);
 app.use(roleRouter);
 app.use(blockUserRoute);
+app.use(getAllUsersRoute)
 
 
 app.all('*',() => {

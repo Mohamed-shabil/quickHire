@@ -10,7 +10,7 @@ import { Container } from "@/components/Container";
 import { redirect } from "next/navigation";
 import { EducationCard } from '@/components/Profile/EducationCard'
 
-import {User,Education,Project,Experience} from '@/constants/constants'
+import {Profile,Education,Project,Experience} from '@/constants/constants'
 import axios from "axios";
 import { ProfileUpload } from "@/components/Profile/profileUpload";
 import { ProfileOptions } from "@/components/Profile/ProfileOption";
@@ -18,7 +18,7 @@ import { ProjectCard } from "@/components/Profile/ProjectCart";
 import Link from "next/link";
 import { FollowerListModal } from "@/components/Modals/FollowersListModal";
 
-const getProfile = async (token:string,username:string):Promise<{profile:User,followers:number,followings:number}>=>{
+const getProfile = async (token:string,username:string):Promise<{profile:Profile,followers:number,followings:number}>=>{
     console.log('here is the token',token)
     axios.defaults.withCredentials = true;
     const res = await axios.get(`http://localhost:3003/api/profile/my-profile/${username}`,{

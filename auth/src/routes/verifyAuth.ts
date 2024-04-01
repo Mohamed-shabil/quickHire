@@ -4,8 +4,8 @@ import {body, validationResult} from 'express-validator'
 import catchAsync from '../utils/catchAsync';
 import {User} from '../model/user'
 import { BadRequestError, validateRequest } from '@quickhire/common';
-import { createSendToken } from '../utils/createSendToken';
-import { PayloadInterface } from '../utils/createSendToken';
+import { createAccessToken,createRefreshToken } from '../utils/Token';
+import { PayloadInterface } from '../utils/Token';
 
 const router = express.Router();
 interface JwtPayload{
@@ -44,7 +44,16 @@ router.post('/api/users/gAuth',[
         if(userExist?.phone){
             payload.phone = userExist.phone
         } 
-        createSendToken(payload,res);
+        const refreshToken = createRefreshToken(userExist._id.toString());
+        const accessToken = createAccessToken(payload);
+    
+        res.status(201)
+            .cookie('_accessToken',refreshToken)
+            .cookie('_refreshToken',accessToken)
+            .json({
+                status:'success',
+                user:payload
+            });
     }
     const newUser = new User({
         name,
@@ -64,7 +73,16 @@ router.post('/api/users/gAuth',[
         isBlocked:newUser.isBlocked,
         role:newUser.role
     };
-    createSendToken(payload,res);
+    const refreshToken = createRefreshToken(newUser._id.toString());
+    const accessToken = createAccessToken(payload);
+    
+    res.status(201)
+        .cookie('_accessToken',refreshToken)
+        .cookie('_refreshToken',accessToken)
+        .json({
+            status:'success',
+            user:payload
+        });
 }));
 
 export { router as googleAuthRouter}

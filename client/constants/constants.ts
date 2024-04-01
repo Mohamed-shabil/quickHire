@@ -41,7 +41,7 @@ export type Project = {
     links: string[];
 };
   
-export type User = {
+export type Profile = {
     avatar:string;
     _id: string;
     fullName?: string;
@@ -157,7 +157,6 @@ export interface Jobs{
 }
 
 
-export type Page = 'jobs' | 'applicants' | 'candidates' | 'shortListed'
 
 export type Resume = {
   url:string,
@@ -179,9 +178,23 @@ export type Application = {
 }
 
 export type follower = {
-  follow: User,
-  followedBy:User|string,
+  follow: Profile,
+  followedBy:Profile|string,
   _id:string
+}
+
+
+export type User = {
+  _id:string,
+  name:string,
+  email:string,
+  phone:string,
+  verified:boolean,
+  isBlocked:boolean,
+  avatar:string,
+  fullName:string,
+  headLine:string,
+  role: UserType
 }
 
 export const ADMIN = 'admin'

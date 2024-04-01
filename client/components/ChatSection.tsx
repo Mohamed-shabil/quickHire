@@ -129,7 +129,7 @@ const ChatSection = ({user}:{user:ChatUser}) => {
             <div className="absolute bottom-2 left-0 p-2 w-full">
                 <div className="flex item-center justify-between gap-2 relative">
                     <div className='absolute inset-y-2 left-2'>
-                        {/* <DropdownMenu >
+                        <DropdownMenu >
                             <DropdownMenuTrigger><Paperclip strokeWidth={1.5} className='w-5' /></DropdownMenuTrigger>
                             <DropdownMenuContent className='p-2'>
                                 <Label htmlFor='media-image'>
@@ -157,7 +157,7 @@ const ChatSection = ({user}:{user:ChatUser}) => {
                                     </DropdownMenuItem>
                                 </Label>
                             </DropdownMenuContent>
-                        </DropdownMenu> */}
+                        </DropdownMenu>
                     </div>
                     <Input 
                         type="text" 

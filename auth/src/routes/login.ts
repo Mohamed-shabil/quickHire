@@ -4,7 +4,7 @@ import { validateRequest, BadRequestError} from '@quickhire/common'
 import bcrypt from 'bcryptjs'
 import { User } from '../model/user';
 import jwt from 'jsonwebtoken'
-import { createSendToken } from '../utils/createSendToken';
+import { createAccessToken,createRefreshToken } from '../utils/Token';
 
 const router = express.Router();
 
@@ -43,7 +43,16 @@ async(req:Request,res:Response)=>{
             isBlocked:existingUser.isBlocked,
             role:existingUser.role
         }
-        createSendToken(payload,res);
+        const refreshToken = createRefreshToken(existingUser._id.toString());
+        const accessToken = createAccessToken(payload);
+    
+        res.status(201)
+            .cookie('_accessToken',refreshToken)
+            .cookie('_refreshToken',accessToken)
+            .json({
+                status:'success',
+                user:payload
+            });
     } catch (error) {
         console.log(error);
     }
