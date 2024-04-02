@@ -18,7 +18,7 @@ router.patch('/api/jobs/:jobId',requireAuth,isRecruiter,catchAsync(async(req:Req
     const job = await Jobs.findOne({
         where:{
             _id:jobId,
-            recruiter:recruiter?._id
+            recruiterId:recruiter?._id
         }
     })
     

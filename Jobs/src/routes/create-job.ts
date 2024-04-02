@@ -1,7 +1,8 @@
 import { Jobs } from "../model/JobsModel"
+import { User } from '../model/UsersModel'
 import express,{Request,Response} from 'express';
 import catchAsync from '../utils/catchAsync'
-import { isRecruiter, requireAuth, NotAutherizedError, validateRequest} from "@quickhire/common";
+import { isRecruiter, requireAuth, NotAutherizedError, validateRequest, BadRequestError} from "@quickhire/common";
 import { uploadCompanyImage } from '../middleware/upload'
 import { body } from "express-validator";
 
@@ -66,8 +67,21 @@ router.post('/api/jobs/createjobs',requireAuth,isRecruiter,uploadCompanyImage,[
     }
     const file = req.file as Express.MulterS3.File | undefined
 
+    const recruiter = await User.findOne({where:{_id:currentUser._id}});
+
+    if(!recruiter){
+      throw new NotAutherizedError();
+    }
+
+    if(recruiter.dataValues.isPremium){
+      const jobCount = await Jobs.count({where:{recruiterId:recruiter.dataValues._id}});
+      if(jobCount >= 3 ){
+        throw new BadRequestError('You are exceeded the limit, Upgrade to premium to create more jobs.')
+      }
+    }
+
     const newJob = await Jobs.create({
-      recruiter: currentUser._id,
+      recruiterId: currentUser._id,
       recruiterName:currentUser.name,
       title,
       company,

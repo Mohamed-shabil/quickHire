@@ -21,7 +21,7 @@ router.get('/api/users/get-token',catchAsync(async(req:Request,res:Response)=>{
         isBlocked:user.isBlocked,
         role:user.role,
     }
-    const newRefreshToken = createRefreshToken(user._id.toString());
+    const newRefreshToken = createRefreshToken({_id:user._id.toString()});
     const accessToken = createAccessToken(payload);
     
     res.status(201)

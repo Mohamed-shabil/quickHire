@@ -33,7 +33,6 @@ async function Applicants({params}:{params:{jobId:string}}) {
     console.log(jobId);
     
     const applications:Application[] = await getApplicant(token,jobId);
-    console.log('her eis  klsahdkfjhjaksjd',applications);
     
     return (
         <section className='container'>

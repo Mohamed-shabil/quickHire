@@ -55,42 +55,42 @@ export default function MyJobs() {
               <TabsContent value="all" >
                 {
                   applications.map((application)=>(
-                    <JobsCard job={application.job}/>
+                    <JobsCard job={application.jobId}/>
                   ))
                 }
               </TabsContent>
               <TabsContent value="submitted" >
                 {
                   submitted && submitted.map((application)=>( 
-                    <JobsCard job={application.job}/>
+                    <JobsCard job={application.jobId}/>
                   ))
                 }
               </TabsContent>
               <TabsContent value="applied" >
                 {
                   applied && applied.map((application)=>( 
-                    <JobsCard job={application.job}/>
+                    <JobsCard job={application.jobId}/>
                   ))
                 }
               </TabsContent>
               <TabsContent value="reviewed" >
                 {
                   reviewed && reviewed.map((application)=>( 
-                    <JobsCard job={application.job}/>
+                    <JobsCard job={application.jobId}/>
                   ))
                 }
               </TabsContent>
               <TabsContent value="shortlisted" >
                 {
                   shortlisted && shortlisted.map((application)=>( 
-                    <JobsCard job={application.job}/>
+                    <JobsCard job={application.jobId}/>
                   ))
                 }
               </TabsContent>
               <TabsContent value="rejected" >
                 {
                   rejected && rejected.map((application)=>( 
-                    <JobsCard job={application.job}/>
+                    <JobsCard job={application.jobId}/>
                   ))
                 }
               </TabsContent>

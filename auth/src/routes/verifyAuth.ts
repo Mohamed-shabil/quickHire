@@ -4,7 +4,7 @@ import {body, validationResult} from 'express-validator'
 import catchAsync from '../utils/catchAsync';
 import {User} from '../model/user'
 import { BadRequestError, validateRequest } from '@quickhire/common';
-import { createAccessToken,createRefreshToken } from '../utils/Token';
+import { createAccessToken } from '../utils/Token';
 import { PayloadInterface } from '../utils/Token';
 
 const router = express.Router();
@@ -44,12 +44,10 @@ router.post('/api/users/gAuth',[
         if(userExist?.phone){
             payload.phone = userExist.phone
         } 
-        const refreshToken = createRefreshToken(userExist._id.toString());
         const accessToken = createAccessToken(payload);
     
         res.status(201)
-            .cookie('_accessToken',refreshToken)
-            .cookie('_refreshToken',accessToken)
+            .cookie('jwt',accessToken)
             .json({
                 status:'success',
                 user:payload
@@ -73,11 +71,9 @@ router.post('/api/users/gAuth',[
         isBlocked:newUser.isBlocked,
         role:newUser.role
     };
-    const refreshToken = createRefreshToken(newUser._id.toString());
     const accessToken = createAccessToken(payload);
     
     res.status(201)
-        .cookie('_accessToken',refreshToken)
         .cookie('_refreshToken',accessToken)
         .json({
             status:'success',

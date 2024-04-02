@@ -8,10 +8,10 @@ export const Subscription: ModelDefined<any, any> = sequelize.define('Subscripti
         primaryKey: true
     },
     recruiterId: {
-        type: DataTypes.UUID,
+        type: DataTypes.TEXT,
         allowNull: false,
         references: {
-            model: 'User',
+            model: 'Users',
             key: '_id'
         }
     },

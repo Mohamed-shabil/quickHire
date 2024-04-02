@@ -7,7 +7,7 @@ import { Container } from "@/components/Container";
 import { redirect } from "next/navigation";
 import { EducationCard } from '@/components/Profile/EducationCard'
 
-import {User,Education,Project,Experience} from '@/constants/constants'
+import {User,Education,Project,Experience, Profile} from '@/constants/constants'
 import axios from "axios";
 import { cookies } from "next/headers";
 import { ProjectCard } from "@/components/Profile/ProjectCart";
@@ -24,11 +24,11 @@ interface Link {
 }
 
 
-const getProfile = async (token:string,userId:string):Promise<{profile:User,followers:number,followings:number}>=>{
+const getProfile = async (token:string,userId:string):Promise<{profile:Profile,followers:number,followings:number}>=>{
     axios.defaults.withCredentials = true;
     const res = await axios.get(`http://localhost:3003/api/profile/${userId}`,{
         headers: {
-            Cookie: `jwt=${token}`
+            Cookie: `_accessToken=${token}`
         }
     });
 
@@ -38,7 +38,7 @@ const getProfile = async (token:string,userId:string):Promise<{profile:User,foll
 
 export default async function Profile({params}:{params:{userId:string}}) {
 
-    const token = cookies().get('jwt')?.value;
+    const token = cookies().get('_accessToken')?.value;
     const {userId} = params;
     if(!token){
         return redirect('/signup');

@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react'
 import Sidebar from '@/components/Recruiter/Sidebar'
-import { Jobs, Page } from '@/constants/constants';
+import { Jobs } from '@/constants/constants';
 import JobsCard from '@/components/Jobs/JobsCard';
 import { Button } from '@/components/ui/button';
 import { Check, Pencil, Plus, Trash2, X } from 'lucide-react';
@@ -48,7 +48,11 @@ const Recruiter = async ({params}:{params:{username:string}}) => {
             <div className='w-full h-full container '>
                 <header className='flex items-start h-16 justify-between w-full'>
                     <h1 className='font-semibold text-xl'>My Jobs</h1>
-                    <CreateJobTrigger/>
+                    {
+                        jobs?.length == 3 ? 
+                            <h2>You are already complete all your 3 free job posts</h2> :
+                            <CreateJobTrigger />
+                    }
                 </header>
                 <section className='flex items-start flex-wrap'>
                     {

@@ -10,7 +10,7 @@ import { ExperienceCard } from '@/components/Profile/ExperienceCard'
 import axios from 'axios'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { User } from '@/constants/constants'
+import { Profile } from '@/constants/constants'
 
 const getProfile = async (token:string,username:string) =>{
   console.log('here is the token',token)
@@ -30,7 +30,7 @@ export default async function EditProfile({params}:{params:{username:string}}) {
     return redirect('/signup'); 
   }
 
-  const profile:User = await getProfile(token,username);
+  const profile:Profile = await getProfile(token,username);
   console.log({profile});
 
   return (
@@ -63,7 +63,7 @@ export default async function EditProfile({params}:{params:{username:string}}) {
               <AccordionTrigger>Experiece</AccordionTrigger>
               <AccordionContent className='flex-grow grid grid-cols-1 lg:grid-cols-2 gap-4'>
                 {profile.experience?.map((experience,i)=>(
-                  <ExperienceCard experience={experience} key={i}/>
+                  <ExperienceCard experience={experience} key={i} userId={profile._id}/>
                 ))}
               </AccordionContent>
             </AccordionItem>

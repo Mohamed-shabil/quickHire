@@ -11,22 +11,9 @@ export interface PayloadInterface{
     role:string
 }
 
-export const signToken = (payload:PayloadInterface)=>{
-    return 
-} 
-
 export const createAccessToken = (payload:PayloadInterface)=>{
-    const token = jwt.sign(payload,process.env.JWT_ACCESSTOKEN_EXPIRESIN!,{
-        expiresIn:process.env.JWT_EXPIRESIN,
+    const token = jwt.sign(payload,process.env.JWT_KEY!,{
+        expiresIn: process.env.JWT_ACCESSTOKEN_EXPIRESIN!,
     });
-    
-    return token;
-}
-
-export const createRefreshToken = (payload:string)=>{
-    const token = jwt.sign(payload,process.env.JWT_REFRESHTOKEN_EXPIRESIN!,{
-        expiresIn:process.env.JWT_EXPIRESIN,
-    });
-    
     return token;
 }

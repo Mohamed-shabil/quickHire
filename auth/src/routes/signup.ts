@@ -11,8 +11,7 @@ import bcrypt from 'bcryptjs';
 import OtpVerification from '../model/otp';
 import { KafkaProducer } from '@quickhire/common';
 import { kafkaClient } from '../events/kafkaClient';
-
-import { createAccessToken,createRefreshToken } from '../utils/Token';
+import { createAccessToken } from '../utils/Token';
 
 const router = express.Router();
 
@@ -117,12 +116,10 @@ router.post('/api/users/signup',[
         isBlocked:user.isBlocked,
         role:user.role,
     }
-    const refreshToken = createRefreshToken(user._id.toString());
-    const accessToken = createAccessToken(payload);
+    const jwt = createAccessToken(payload);
     
     res.status(201)
-        .cookie('_accessToken',refreshToken)
-        .cookie('_refreshToken',accessToken)
+        .cookie('jwt',jwt)
         .json({
             status:'success',
             user:payload

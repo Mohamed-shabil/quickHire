@@ -3,8 +3,7 @@ const router = express.Router();
 
 router.get('/api/users/signout',(req,res)=>{
     res.status(200)
-        .clearCookie('_accessToken')
-        .clearCookie('_refreshToken')
+        .clearCookie('jwt')
         .json({
             status:'success',
             user:{}

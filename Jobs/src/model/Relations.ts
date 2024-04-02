@@ -1,4 +1,4 @@
-import {User} from './UsersModel';
+import { User } from './UsersModel';
 import { Resume } from './ResumeModel';
 import { Jobs } from './JobsModel'
 import { Applications } from './ApplicationModel';
@@ -30,6 +30,12 @@ Applications.belongsTo(Jobs,{
     foreignKey:'jobId',
     as:'job'
 })
+
+
+Jobs.belongsTo(User,{ foreignKey: 'recruiterId' });
+
+User.hasMany(Jobs,{ foreignKey: 'recruiterId' });
+
 
 sequelize.sync({alter:true}).then((res)=>{
     console.log('SEQUELIZE IS SYNC')

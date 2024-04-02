@@ -1,5 +1,5 @@
 export type IJobsType = {
-    recruiter:string;
+    recruiterId:string;
     recruiterName:string;
     title:string;
     company:string;
@@ -34,6 +34,7 @@ export type IUserType = {
 }
 
 export type IDUserType = IUserType & {
+    isPremium: boolean;
     createdAt: Date;
     updatedAt: Date;
 }

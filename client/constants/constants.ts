@@ -185,6 +185,7 @@ export type follower = {
 
 
 export type User = {
+  experience: any;
   _id:string,
   name:string,
   email:string,

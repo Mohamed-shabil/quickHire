@@ -5,7 +5,7 @@ import { NotAutherizedError, requireAuth, validateRequest } from '@quickhire/com
 import { body,validationResult } from 'express-validator';
 import {KafkaProducer} from '@quickhire/common'
 import { kafkaClient } from '../events/kafkaClient';
-import { createAccessToken,createRefreshToken } from '../utils/Token';
+import { createAccessToken } from '../utils/Token';
 const router = express.Router();
 
 router.patch('/api/auth/users/selectRole',[
@@ -37,12 +37,10 @@ router.patch('/api/auth/users/selectRole',[
     console.log(payload);
     new KafkaProducer(kafkaClient).produce('user-created',payload);
     
-    const refreshToken = createRefreshToken(user._id.toString());
-    const accessToken = createAccessToken(payload);
+    const jwt = createAccessToken(payload);
     
     res.status(201)
-        .cookie('_accessToken',refreshToken)
-        .cookie('_refreshToken',accessToken)
+        .cookie('jwt',jwt)
         .json({
             status:'success',
             user:payload

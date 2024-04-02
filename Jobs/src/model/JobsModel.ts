@@ -10,12 +10,15 @@ export const Jobs:ModelDefined< IDJobsType,IJobsType> = sequelize.define('Job',{
         primaryKey:true
     },
     recruiterName:{
-        type:DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:false
     },
-    recruiter:{
-        type:DataTypes.STRING,
-        allowNull:false
+    recruiterId:{
+        type: DataTypes.TEXT,
+        references: {
+            model: 'Users',
+            key: '_id',
+        },
     },
     title:{
         type:DataTypes.STRING,

@@ -16,7 +16,7 @@ router.delete('/api/jobs/:jobId/delete-job',requireAuth,isRecruiter,catchAsync(a
     const job = await Jobs.destroy({
         where:{
             _id:jobId,
-            recruiter:recruiter._id
+            recruiterId:recruiter._id
         }
     });
 
