@@ -201,3 +201,6 @@ export type User = {
 export const ADMIN = 'admin'
 export const SEEKER = 'seeker'
 export const RECRUITER = 'recruiter'
+
+
+export type planType = 'yearly'|'monthly'

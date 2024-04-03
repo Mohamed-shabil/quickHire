@@ -5,6 +5,8 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 dotenv.config();
 import {NotFoundError, errorHandler, currentUser} from '@quickhire/common'
+import { subscriptionRoute } from './route/subscribe'
+import { createSubscriptionRoute } from './route/create-subscription-plan'
 
 
 
@@ -41,7 +43,8 @@ app.use((req,res,next)=>{
     next();
 })
 
-
+app.use(createSubscriptionRoute)
+app.use(subscriptionRoute);
 
 app.all('*',() => {
     console.log('route not found 404');

@@ -28,11 +28,6 @@ export const User:ModelDefined< IDUserType,IUserType > = sequelize.define('User'
     phone:{
         type:DataTypes.STRING,
     },
-    isPremium: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false
-    }
-
 },{
     timestamps:true,
     paranoid:true

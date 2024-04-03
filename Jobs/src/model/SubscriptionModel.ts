@@ -15,9 +15,14 @@ export const Subscription: ModelDefined<any, any> = sequelize.define('Subscripti
             key: '_id'
         }
     },
-    isPremium: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false
+    subscriptionName:{
+        type:DataTypes.STRING,
+    },
+    postLimit:{
+        type:DataTypes.INTEGER
+    },
+    postCount:{
+        type:DataTypes.INTEGER
     },
     subscriptionStartDate: {
         type: DataTypes.DATE,

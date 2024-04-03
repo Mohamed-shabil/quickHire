@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import {app} from './app'
+import { kafkaConsumer } from '@quickhire/common';
 
 const start = async() =>{
     if(!process.env.JWT_KEY){
@@ -12,6 +13,8 @@ const start = async() =>{
         console.log(process.env.MONGO_URI);
         await mongoose.connect(process.env.MONGO_URI);
         console.log("[PAYMENT DB] Database Connected Successfully!");
+        new kafkaConsumer(kafkaClient,'payment-group-1').consume('user-created',createUser)
+        new kafkaConsumer(kafkaClient,'payment-group-2').consume('avatar-updated',UpdatedUser);
     }catch(err){
         console.error(err);
     }
