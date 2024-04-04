@@ -5,8 +5,11 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 dotenv.config();
 import {NotFoundError, errorHandler, currentUser} from '@quickhire/common'
-import { subscriptionRoute } from './routes/subscribe'
+// import { subscriptionRoute } from './routes/subscribe'
 import { createSubscriptionRoute } from './routes/create-subscription-plan'
+import { subscriptionsRoute } from './routes/subscriptions'
+import { editSubscriptionRoute } from './routes/edit-subscription-plan'
+import { deleteSubscriptionRoute } from './routes/delete-subscription-plan'
 
 
 
@@ -14,13 +17,13 @@ import { createSubscriptionRoute } from './routes/create-subscription-plan'
 export const app = express();
 
 app.use(cors({
-    origin:'http://localhost:3000',
+    origin: process.env.CORS_ORIGIN!,
     methods:['POST','GET','DELETE','PATCH'],
     credentials: true,
 }))
 
 app.options('*', cors({
-    origin: 'http://localhost:3000',
+    origin: process.env.CORS_ORIGIN!,
     credentials: true,
 }));
 
@@ -44,8 +47,11 @@ app.use((req,res,next)=>{
 })
 
 app.use(createSubscriptionRoute)
-app.use(subscriptionRoute);
-app.use(subscriptionRoute)
+app.use(subscriptionsRoute);
+app.use(editSubscriptionRoute);
+app.use(deleteSubscriptionRoute);
+
+// app.use(subscriptionRoute)
 
 app.all('*',() => {
     console.log('route not found 404');

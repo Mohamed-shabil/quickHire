@@ -18,6 +18,7 @@ import { resetPasswordRouter } from './routes/resetPassword';
 import { roleRouter } from './routes/setupRole'
 import { blockUserRoute } from './routes/block-user'
 import { getAllUsersRoute } from './routes/get-all'
+import { adminLoginRoute } from './routes/admin-login'
 
 
 export const app = express();
@@ -65,6 +66,8 @@ app.use(roleRouter);
 app.use(blockUserRoute);
 app.use(getAllUsersRoute)
 
+
+app.use(adminLoginRoute);
 
 app.all('*',() => {
     console.log('route not found 404');

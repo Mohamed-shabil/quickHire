@@ -48,6 +48,7 @@ export default function Signin() {
   const router = useRouter();
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log(values);
+    axios.defaults.withCredentials = true;
     axios
       .post("http://localhost:3001/api/users/signin", values)
       .then((res) => {
@@ -178,9 +179,9 @@ export default function Signin() {
                     type="submit"
                     disabled={isLoading}
                     className="inline-block shrink-0 rounded-md border border-blue-600
-                                bg-blue-600 px-12 py-3 text-sm font-medium text-white transition 
-                                hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring
-                                active:text-blue-500"
+                     bg-blue-600 px-12 py-3 text-sm font-medium text-white transition 
+                     hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring
+                     active:text-blue-500"
                   >
                     Create an account
                   </Button>
@@ -200,8 +201,4 @@ export default function Signin() {
       </div>
     </section>
   );
-}
-
-function dispatch(arg0: any) {
-  throw new Error("Function not implemented.");
 }

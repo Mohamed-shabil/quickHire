@@ -17,3 +17,7 @@ export const createAccessToken = (payload:PayloadInterface)=>{
     });
     return token;
 }
+export const cookieOption = {
+    expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+    httpOnly: true,
+}

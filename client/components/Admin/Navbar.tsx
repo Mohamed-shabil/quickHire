@@ -3,15 +3,6 @@ import Link from "next/link";
 import React from "react";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-} from "../ui/dropdown-menu";
-import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 
 export default function Navbar() {
   return (
@@ -53,6 +44,12 @@ export default function Navbar() {
           className="text-muted-foreground transition-colors hover:text-foreground"
         >
           Analytics
+        </Link>
+        <Link
+          href="admin/subscription"
+          className="text-muted-foreground transition-colors hover:text-foreground"
+        >
+          Subscription
         </Link>
       </nav>
       <Sheet>
@@ -97,6 +94,12 @@ export default function Navbar() {
               className="text-muted-foreground hover:text-foreground"
             >
               Analytics
+            </Link>
+            <Link
+              href="#"
+              className="text-muted-foreground hover:text-foreground"
+            >
+              Subscription
             </Link>
           </nav>
         </SheetContent>

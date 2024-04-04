@@ -202,5 +202,13 @@ export const ADMIN = 'admin'
 export const SEEKER = 'seeker'
 export const RECRUITER = 'recruiter'
 
+export type billingPeriod = 'week' | 'month' | 'year'
 
-export type planType = 'yearly'|'monthly'
+export type Subscription = {
+  _id:string;
+  planName:string;
+  postLimit:number;
+  price:number;
+  description:string;
+  billingPeriod:billingPeriod
+}
