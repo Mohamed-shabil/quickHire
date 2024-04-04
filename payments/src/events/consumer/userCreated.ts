@@ -9,6 +9,7 @@ export const createUser = async(message:KafkaMessage)=>{
     const user = new User({
         _id:userData._id,
         name:userData.name,
+        email:userData.email
     });
 
     await user.save()

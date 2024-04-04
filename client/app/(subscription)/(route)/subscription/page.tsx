@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/reducers";
+
 import {
   Card,
   CardContent,
@@ -12,23 +12,44 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Subscription } from "@/constants/constants";
-import { cookies } from "next/headers";
+import { Loader2 } from "lucide-react";
 
-const getSubscriptionPlan = async (token: string) => {
-  const response = await axios.get(
-    "http://localhost:3007/api/payments/subscription",
-    {
-      headers: {
-        cookie: `jwt=${token}`,
-      },
-    }
-  );
-  return response.data.subscriptions as Subscription[];
-};
+const page = () => {
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>();
+  const [loading, setLoading] = useState<boolean>(false);
 
-const page = async () => {
-  const token = cookies().get("jwt")?.value as string;
-  const subscriptions = await getSubscriptionPlan(token);
+  useEffect(() => {
+    axios
+      .get("http://localhost:3007/api/payments/subscription", {
+        withCredentials: true,
+      })
+      .then((res) => {
+        setSubscriptions(res.data.subscriptions);
+      });
+  }, []);
+  const openStripe = async (subscription: Subscription) => {
+    console.log("open Stripe");
+    console.log(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
+    const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
+
+    const response = await axios.post(
+      `http://localhost:3007/api/payments/subscribe/${subscription._id}`,
+      {},
+      {
+        withCredentials: true,
+      }
+    );
+
+    localStorage.setItem("_stripe-session",response.data.session.id);
+
+    console.log(response.data);
+
+    await stripe?.redirectToCheckout({sessionId:response.data.session.id});
+
+
+    setLoading(false);
+  };
+
   return (
     <section className="w-100 min-h-screen container">
       <div className=" text-center text-2xl w-full justify-center align-middle py-5">
@@ -41,20 +62,23 @@ const page = async () => {
         </p>
       </div>
       <div className="flex flex-wrap gap-2 items-center justify-center">
-        {subscriptions.map((subscriptions) => (
-          <Card className="w-full max-w-[400px]">
-            <CardHeader>
-              <h3 className="font-medium text-primary text-2xl">
-                {subscriptions.planName}
-              </h3>
-              <h4 className="text-xl">₹ {subscriptions.price}</h4>
-            </CardHeader>
-            <CardContent>{subscriptions.description}</CardContent>
-            <CardFooter>
-              <Button>Subscribe Now</Button>
-            </CardFooter>
-          </Card>
-        ))}
+        {subscriptions &&
+          subscriptions.map((subscriptions) => (
+            <Card className="w-full max-w-[400px]">
+              <CardHeader>
+                <h3 className="font-medium text-primary text-2xl">
+                  {subscriptions.planName}
+                </h3>
+                <h4 className="text-xl">₹ {subscriptions.price}</h4>
+              </CardHeader>
+              <CardContent>{subscriptions.description}</CardContent>
+              <CardFooter>
+                <Button onClick={() => openStripe(subscriptions)}>
+                  {loading ? <Loader2 size={'0.9em'}/> : 'Subscribe' }
+                </Button>
+              </CardFooter>
+            </Card>
+          ))}
       </div>
     </section>
   );

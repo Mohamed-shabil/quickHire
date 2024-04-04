@@ -10,6 +10,8 @@ import { createSubscriptionRoute } from './routes/create-subscription-plan'
 import { subscriptionsRoute } from './routes/subscriptions'
 import { editSubscriptionRoute } from './routes/edit-subscription-plan'
 import { deleteSubscriptionRoute } from './routes/delete-subscription-plan'
+import { SubscribeRoute } from './routes/subscribe'
+import { stripeWebhookRoute } from './routes/webhook'
 
 
 
@@ -29,6 +31,8 @@ app.options('*', cors({
 
 app.set('trust proxy',true); 
 
+app.use(stripeWebhookRoute)
+
 app.use(json());
 
 
@@ -46,6 +50,8 @@ app.use((req,res,next)=>{
     next();
 })
 
+
+app.use(SubscribeRoute)
 app.use(createSubscriptionRoute)
 app.use(subscriptionsRoute);
 app.use(editSubscriptionRoute);

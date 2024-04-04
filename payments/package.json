@@ -17,6 +17,7 @@
     "@types/kafkajs": "^1.9.0",
     "@types/morgan": "^1.9.9",
     "@types/nodemailer": "^6.4.14",
+    "@types/stripe": "^8.0.417",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
     "cookie-session": "^2.1.0",
