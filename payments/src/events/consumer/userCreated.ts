@@ -1,17 +1,18 @@
 import { User } from "../../model/UserModel";
 import { KafkaMessage } from "kafkajs";
-import { BadRequestError} from '@quickhire/common';
+import { BadRequestError } from "@quickhire/common";
 
-export const createUser = async(message:KafkaMessage)=>{
-    const userData = JSON.parse(message.value!.toString())
-    console.log('User Creating',userData)
-    
+export const createUser = async (message: KafkaMessage) => {
+    const userData = JSON.parse(message.value!.toString());
+    console.log("User Creating", userData);
+
     const user = new User({
-        _id:userData._id,
-        name:userData.name,
-        email:userData.email
+        _id: userData._id,
+        name: userData.name,
+        email: userData.email,
+        role: userData.role,
     });
 
-    await user.save()
-    console.log("new user :=========",user);
-}
+    await user.save();
+    console.log("new user :=========", user);
+};

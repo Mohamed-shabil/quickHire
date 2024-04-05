@@ -1,7 +1,7 @@
 import { NotFoundError, catchAsync } from "@quickhire/common";
 import { stripe } from "../utils/stripe";
 import express, { Request, Response } from "express";
-import { Subscribers } from "../model/subscribers";
+import { Subscribers } from "../model/subscribersModel";
 import mongoose from "mongoose";
 import Stripe from "stripe";
 import { User } from "../model/UserModel";
@@ -41,13 +41,22 @@ router.post(
             data = req.body.object;
             eventType = req.body.type;
         }
-        console.log("Data is here -----", data);
+        // console.log("Data is here -----", data);
         if (eventType === "checkout.session.completed") {
             const customer = (await stripe.customers.retrieve(
                 data.customer
             )) as Stripe.Response<Stripe.Customer>;
-            console.log("Customer  is here =====", customer);
+            // console.log("Customer  is here =====", customer);
+
             const user = await User.findOne({ _id: customer.metadata.userId });
+
+            if (!user) {
+                return res.status(400).json({
+                    status: "fail",
+                    message: "User is not found",
+                });
+            }
+
             if (data.payment_status !== "paid") {
                 return res.status(400).json({
                     status: "fail",
@@ -55,23 +64,16 @@ router.post(
                     payment: data,
                 });
             }
-            const payment = new Subscribers({
+            const subscriber = new Subscribers({
                 stripeId: data.id,
                 subscription: data.metadata.subscription,
                 userId: data.metadata.userId,
+                endDate: new Date(data.metadata.subscriptionTenure),
+                startDate: new Date(),
             });
-            await payment.save();
-            if (!user) {
-                return res.status(400).json({
-                    status: "fail",
-                    message: "User is not found",
-                });
-            }
-            user.subscription = data.metadata.subscription;
-
-            user.subscriptionEnds = data.metadata.subscriptionTenure;
-
+            user.subscription = subscriber._id;
             await user.save();
+            await subscriber.save();
         }
         res.send().end();
     })

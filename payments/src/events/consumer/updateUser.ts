@@ -14,6 +14,7 @@ export const UpdatedUser = async(message:KafkaMessage)=>{
     user.avatar = userData.avatar
     user.headLine = userData.headline
     user.fullName = userData.fullname
+    user.role = userData.role
 
     await user.save()
     console.log("new user :=========",user);
