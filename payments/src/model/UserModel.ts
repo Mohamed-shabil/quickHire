@@ -28,6 +28,9 @@ const userSchema = new Schema({
     },
     stripeUserId:{
         type:String,
+    },
+    subscriptionEnds:{
+        type:Date
     }
 })
 

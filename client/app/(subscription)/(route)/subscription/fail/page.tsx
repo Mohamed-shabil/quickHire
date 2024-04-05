@@ -1,22 +1,21 @@
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Check, Terminal } from "lucide-react";
+import { Check, X } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
-const SubscriptionSuccess = () => {
+const page = () => {
     return (
         <section className="container w-full h-[90vh]">
-            <div className="h-full flex items-center justify-center flex-col">
+            <div className="h-full flex items-center justify-center">
                 <div className="max-w-md grid grid-cols-6 border p-2 rounded-md space-x-2 shadow-md">
                     <div className="flex items-center justify-center ">
-                        <div className="bg-emerald-500 rounded-md p-4">
-                            <Check className="text-white" />
+                        <div className="bg-rose-500 rounded-md p-4">
+                            <X className="text-white" />
                         </div>
                     </div>
                     <div className="col-span-5">
                         <h1 className="text-base font-medium ">
-                            Payment Successfull
+                            Payment failed
                         </h1>
                         <p className="text-sm text-secondary-foreground">
                             Lorem ipsum dolor sit amet consectetur adipisicing
@@ -32,4 +31,4 @@ const SubscriptionSuccess = () => {
     );
 };
 
-export default SubscriptionSuccess;
+export default page;
