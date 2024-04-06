@@ -11,7 +11,7 @@ const LinkCard = ({
                 {link.title}
             </small>
             <br />
-            <a className="font-semibold flex" href={link.url}>
+            <a className="font-semibold flex text-sm" href={link.url}>
                 {link.content}
                 <LinkIcon className="ms-2 mt-1" size="1em" />
             </a>

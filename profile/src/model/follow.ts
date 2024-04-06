@@ -4,12 +4,12 @@ const FollowSchema = new mongoose.Schema({
     // ID of the user following
     followedBy: { 
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'profile' 
+        ref: 'Profile'
     }, 
     // ID of the user being followed
     follow: {
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'profile' 
+        ref: 'Profile' 
     }, 
     followedAt: { 
         type: Date, 

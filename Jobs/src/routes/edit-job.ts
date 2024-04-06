@@ -1,12 +1,13 @@
 import express,{Request, Response} from 'express'
 import { requireAuth, catchAsync, isRecruiter, validateRequest, NotAutherizedError, BadRequestError } from '@quickhire/common';
+import { ImageConvert, uploadCompanyImage} from '../middleware/upload'
 import { body } from 'express-validator'
 import { Jobs } from '../model/JobsModel';
 
 
 const router = express.Router();
 
-router.patch('/api/jobs/edit/:id',requireAuth, isRecruiter,[
+router.patch('/api/jobs/edit-job/:jobId',requireAuth,isRecruiter,ImageConvert,uploadCompanyImage,[
     body('title')
         .notEmpty()
         .withMessage(" Title Can't be empty"),
@@ -40,7 +41,6 @@ router.patch('/api/jobs/edit/:id',requireAuth, isRecruiter,[
     const {
         title,
         company,
-        companyImage,
         workPlace,
         employmentType,
         jobDescription,
@@ -49,6 +49,8 @@ router.patch('/api/jobs/edit/:id',requireAuth, isRecruiter,[
         minSalary,
         maxSalary
     } = req.body
+
+    const file = req.file as Express.MulterS3.File | undefined
 
     if(!currentUser){
         throw new NotAutherizedError();
@@ -62,11 +64,11 @@ router.patch('/api/jobs/edit/:id',requireAuth, isRecruiter,[
     if(!job){
         throw new BadRequestError('job post with this ID is not found')
     }
-
+    console.log('File Location ------ ',file?.location);
     job.set({
         title:title,
         company : company,
-        companyImage:companyImage,
+        companyImage:file?.location,
         workPlace: workPlace,
         employmentType:employmentType,
         jobDescription:jobDescription,
@@ -77,9 +79,13 @@ router.patch('/api/jobs/edit/:id',requireAuth, isRecruiter,[
     })
 
     await job.save();
-
+    
     res.status(200).json({
         status:'success',
-        job,
+        job
     })
+
 }))
+
+
+export {router as editJobRouter}

@@ -9,9 +9,9 @@ const mainLayout = async ({children}:{children:React.ReactNode;}) => {
             <ModalProvider/>
             <Navbar/>
             <section className="flex items-start justify-between">
-                <aside className="z-30 w-full max-w-[300px]">
+                {/* <aside className="z-30 w-full max-w-[300px]">
                     <Sidebar />
-                </aside>
+                </aside> */}
                 <main className="w-full">
                     {children}
                 </main>

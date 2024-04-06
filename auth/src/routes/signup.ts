@@ -10,9 +10,8 @@ import catchAsync from '../utils/catchAsync'
 import bcrypt from 'bcryptjs';
 import OtpVerification from '../model/otp';
 import { KafkaProducer } from '@quickhire/common';
-import { kafkaClient } from '../kafka/kafkaClient';
-
-import { createSendToken } from '../utils/createSendToken';
+import { kafkaClient } from '../events/kafkaClient';
+import { createAccessToken } from '../utils/Token';
 
 const router = express.Router();
 
@@ -45,7 +44,7 @@ router.post('/api/users/signup',[
     validateRequest
 ], catchAsync(async (req:Request,res:Response,next:NextFunction)=>{
     const error = validationResult(req);
-    const {name, phone, email, password, ConfirmPassword, otpMethod} = req.body;
+    const {name, phone, email, password, ConfirmPassword} = req.body;
     const usernameExist = await User.findOne({name});
     if(usernameExist){
         throw new BadRequestError('Username is already Reserved');
@@ -117,8 +116,14 @@ router.post('/api/users/signup',[
         isBlocked:user.isBlocked,
         role:user.role,
     }
-
-    createSendToken(payload,res);
+    const jwt = createAccessToken(payload);
+    
+    res.status(201)
+        .cookie('jwt',jwt)
+        .json({
+            status:'success',
+            user:payload
+        });
 }));
 
 

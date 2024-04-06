@@ -13,6 +13,15 @@ const userSchema = new Schema({
     phone:{
         type:String,
     },
+    fullName:{
+        type:String
+    },
+    headLine:{
+        type:String
+    },
+    avatar:{
+        type:String
+    },
     password:{
         type:String,
     },

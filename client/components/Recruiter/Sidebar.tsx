@@ -2,7 +2,6 @@
 import React from 'react'
 import { BriefcaseIcon, Plus, UserRoundSearch } from 'lucide-react';
 import Link from 'next/link';
-import { Separator } from '../ui/separator';
 import { Button } from '../ui/button';
 import { usePathname } from 'next/navigation';
 import { useDispatch } from 'react-redux';
@@ -15,12 +14,12 @@ const Sidebar = () => {
   const options = [
     {
       title:'My Jobs',
-      url:`${basePath}items/myJobs`,
+      url:`my-jobs`,
       icon:<BriefcaseIcon className='w-5 h-5'/>
     },
     {
       title:'Applicants',
-      url:`${basePath}items/applicants`,
+      url:`applicants`,
       icon:<UserRoundSearch className='w-5 h-5'/>
     },
   ]

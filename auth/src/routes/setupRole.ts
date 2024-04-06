@@ -4,8 +4,8 @@ import catchAsync from '../utils/catchAsync';
 import { NotAutherizedError, requireAuth, validateRequest } from '@quickhire/common';
 import { body,validationResult } from 'express-validator';
 import {KafkaProducer} from '@quickhire/common'
-import { kafkaClient } from '../kafka/kafkaClient';
-import { createSendToken } from '../utils/createSendToken';
+import { kafkaClient } from '../events/kafkaClient';
+import { createAccessToken } from '../utils/Token';
 const router = express.Router();
 
 router.patch('/api/auth/users/selectRole',[
@@ -22,7 +22,9 @@ router.patch('/api/auth/users/selectRole',[
         throw new NotAutherizedError();
     }
     user.role = role;
+
     await user.save();
+
     const payload = {
         _id:user._id.toString(),
         email:user.email,
@@ -35,7 +37,14 @@ router.patch('/api/auth/users/selectRole',[
     console.log(payload);
     new KafkaProducer(kafkaClient).produce('user-created',payload);
     
-    createSendToken(payload,res);
+    const jwt = createAccessToken(payload);
+    
+    res.status(201)
+        .cookie('jwt',jwt)
+        .json({
+            status:'success',
+            user:payload
+        });
     
     return res.status(200).json({
         status:'success',

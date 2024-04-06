@@ -22,13 +22,12 @@ const PostCard = ({post}:{post:PostType}) => {
     const router = useRouter();
 
     const currentUser = useSelector((state:RootState)=>state.user.userData);
-    // console.log('currentUser from Post Card',currentUser)
     const [truncate, setTruncate] = useState<boolean>(false);
     const [like, setLike] = useState(post.liked);
-    const [likeCount, setLikeCount] = useState(post.likes?.length ? post.likes?.length : 0);
+    const [likeCount, setLikeCount] = useState(post.totalLikes);
     const [comment, setComment] = useState(false);
-    const [isFollowing, setIsFollowing] = useState<boolean>(post.followingCreator);
-
+    const [isFollowing, setIsFollowing] = useState<boolean>(post.isFollowing);
+    
 
     const likePost = async (postId:string)=>{
         setLike(!like)
@@ -48,12 +47,12 @@ const PostCard = ({post}:{post:PostType}) => {
     const handleFollow = async ()=>{
         if(isFollowing){
             setIsFollowing(!isFollowing)
-            axios.delete(`http://localhost:3003/api/profile/followers/unfollow/${post.creator._id}`).then(res=>{
+            axios.delete(`http://localhost:3003/api/profile/followers/unfollow/${post.creatorId}`).then(res=>{
                 console.log(res);
             })
         }else{
             setIsFollowing(!isFollowing)
-            axios.post('http://localhost:3003/api/profile/followers/follow',{userId:post.creator._id}).then(res=>{
+            axios.post(`http://localhost:3003/api/profile/followers/follow/${post.creatorId}`,).then(res=>{
                 console.log(res);
             })
         }
@@ -64,24 +63,28 @@ const PostCard = ({post}:{post:PostType}) => {
         <div className="w-full flex flex-col items-center justify-center my-3">
             <span className="w-full max-w-lg block rounded-lg p-3 shadow-sm border">
                 <div className="flex h-full itmes-center">
-                    <Link href={`/profile/${post.creator._id}`} className="flex flex-1 gap-2 items-center">
+                    <Link href={`/profile/${post.creator[0].name}`} className="flex flex-1 gap-2 items-center">
                         <Avatar className="mb-2">
-                            <AvatarImage src={post.creator.avatar} alt="@shadcn" className="object-cover" />
+                            <AvatarImage src={post.creator[0].avatar} alt="@shadcn" className="object-cover" />
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
                         <div>
                             <h1 className="font-medium capitalize">
-                                {post.creator.name}
+                                {post.creator[0].name}
                             </h1>
                             <p className="text-xs capitalize">
-                                {post.creator.headLine}
+                                {post.creator[0].headLine}
                             </p>
                         </div>
                     </Link>
                     {
-                        post.creator._id != currentUser?._id ? 
+                        post.creator[0]._id != currentUser?._id ? 
                         (<Button variant={'fade'} size={'mini'} className="mt-2" onClick={handleFollow}>{isFollowing ? 'Following' : 'Follow'}</Button>) :
-                        <></>
+                        <Link href={`posts/editPost/${post._id}`}>
+                            <Button variant={'ghost'}>
+                                Edit Post
+                            </Button>
+                        </Link>
                     }
                 </div>
                 <Separator className="my-1"/>
@@ -129,18 +132,17 @@ const PostCard = ({post}:{post:PostType}) => {
                             </div>
                         </Button>
 
-                        <Button variant={'ghost'} className="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2">
+                        {/* <Button variant={'ghost'} className="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2">
                             <Bookmark className="text-blue-600 cursor-pointer"/>
                             <div className="mt-1.5 sm:mt-0">
                                 <p className="text-gray-500 font-normal text-xs">Save</p>
                                 <p className="font-medium"></p>
 
                             </div>
-                        </Button>
+                        </Button> */}
                     </div>
                     { comment ? <CommentBox postId={post._id}/> : ""}
                 </div>
-                
             </span>
         </div>
     );

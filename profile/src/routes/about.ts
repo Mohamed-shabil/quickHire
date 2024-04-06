@@ -22,7 +22,7 @@ router.post('/api/profile/about',requireAuth,[
 ],catchAsync(async(req:Request,res:Response)=>{
     const error = validationResult(req);
     const {fullName, bio, headline} = req.body;
-    const userProfile = await Profile.findOne({userId:req.currentUser?._id})
+    const userProfile = await Profile.findOne({_id:req.currentUser?._id})
     
     if(!userProfile){
         throw new NotAutherizedError();
@@ -33,7 +33,7 @@ router.post('/api/profile/about',requireAuth,[
     
     await userProfile.save();
     const payload = {
-        _id:userProfile.userId,
+        _id:userProfile._id,
         fullname:userProfile.fullName,
         username:userProfile.username,
         avatar:userProfile.avatar,

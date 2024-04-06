@@ -8,7 +8,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { date, string, z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -21,7 +21,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Check, X } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { Experience } from "@/constants/constants"
-import { useEffect, useState } from "react"
 
 
 export function ExperienceFormModal() {
@@ -162,7 +161,8 @@ export function ExperienceFormModal() {
                             <FormLabel> Company Name </FormLabel>
                             <FormControl>
                               <Input
-                                defaultValue={experience.companyName || ''}
+                                // defaultValue={experience.companyName || ''}
+                                defaultValue={field.value}
                                 type="text"
                                 className="mt-1 w-full rounded-md"
                                 {...field} />
@@ -183,7 +183,8 @@ export function ExperienceFormModal() {
                             <FormControl>
                               <Input
                                 type="text"
-                                defaultValue={experience.companyName || ''}
+                                // defaultValue={experience.companyName || ''}
+                                defaultValue={field.value}
                                 className="mt-1 w-full rounded-md"
                                 {...field} />
                             </FormControl>
@@ -200,7 +201,10 @@ export function ExperienceFormModal() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Start Month</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={experience.companyName || ''}>
+                      <Select onValueChange={field.onChange} 
+                        // defaultValue={experience.companyName || ''}
+                        defaultValue={field.value}
+                        >
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select Start Month display" />
@@ -225,7 +229,11 @@ export function ExperienceFormModal() {
                     render={({ field }) => (
                     <FormItem>
                       <FormLabel>Start Year</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={experience.companyName || ''}>
+                      <Select 
+                        onValueChange={field.onChange} 
+                        // defaultValue={experience.companyName || ''}
+                        defaultValue={field.value}
+                        >
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select End Year" />
@@ -249,7 +257,10 @@ export function ExperienceFormModal() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>End Month</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={experience.companyName || ''}>
+                      <Select onValueChange={field.onChange} 
+                        // defaultValue={experience.companyName || ''}
+                        defaultValue={field.value}
+                        >
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select End Month" />
@@ -273,7 +284,10 @@ export function ExperienceFormModal() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>End Year</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={experience.companyName || ''}>
+                      <Select onValueChange={field.onChange} 
+                        // defaultValue={experience.companyName || ''}
+                        defaultValue={field.value}
+                        >
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select End Year" />

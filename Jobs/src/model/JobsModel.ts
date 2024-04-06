@@ -3,19 +3,22 @@ import { sequelize } from '../config/config';
 import { IJobsType, IDJobsType} from '../types/types';
 
 
-export const Jobs:ModelDefined< IDJobsType,IJobsType> = sequelize.define('Jobs',{
+export const Jobs:ModelDefined< IDJobsType,IJobsType> = sequelize.define('Job',{
     _id:{
         type:DataTypes.UUID,
         defaultValue:DataTypes.UUIDV4,
         primaryKey:true
     },
     recruiterName:{
-        type:DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull:false
     },
-    recruiter:{
-        type:DataTypes.STRING,
-        allowNull:false
+    recruiterId:{
+        type: DataTypes.TEXT,
+        references: {
+            model: 'Users',
+            key: '_id',
+        },
     },
     title:{
         type:DataTypes.STRING,
@@ -36,6 +39,18 @@ export const Jobs:ModelDefined< IDJobsType,IJobsType> = sequelize.define('Jobs',
         type:DataTypes.ENUM('Part-time','Full-time','Internship','Freelance'),
         allowNull:false
     },
+    location:{
+        type:DataTypes.STRING,
+        allowNull:false
+    },
+    experience:{
+        type:DataTypes.STRING,
+        allowNull:false
+    },
+    openings:{
+        type:DataTypes.INTEGER,
+        allowNull:false
+    },
     jobDescription:{
         type:DataTypes.TEXT,
         allowNull:false
@@ -54,10 +69,12 @@ export const Jobs:ModelDefined< IDJobsType,IJobsType> = sequelize.define('Jobs',
     maxSalary:{
         type:DataTypes.INTEGER
     },
+    isActive :{
+        type:DataTypes.BOOLEAN,
+        defaultValue:true
+    }
 },{
     timestamps:true,
     paranoid:true
 })
 
-
-sequelize.sync({alter:true})

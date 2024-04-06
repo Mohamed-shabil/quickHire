@@ -1,10 +1,6 @@
 import mongoose, { Schema, InferSchemaType } from 'mongoose';
 
 const profileSchema = new Schema({
-    userId:{
-        type:String,
-        required:true
-    },
     username:{
         type:String,
         required:true
@@ -71,14 +67,7 @@ const profileSchema = new Schema({
         image:String,
         links:[String]
     }],
-    // followers:[{
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref:'profile'
-    // }],
-    // following:[{
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref:'profile'
-    // }]
+
 })
 
 type ProfileType = InferSchemaType<typeof profileSchema>

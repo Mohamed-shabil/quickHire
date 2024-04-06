@@ -1,59 +1,67 @@
-import { Searchjob } from "@/components/Jobs/Searchjob";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { MapPin } from "lucide-react";
-const page = () => {
-  return (
-    <main className="w-full container">
-      <section
-        className="w-full h-52 rounded 
-        bg-gradient-to-r from-[#0052D4] via-[#4364F7] to-[#6FB1FC] 
-        flex items-center justify-center"
-      >
-        <Searchjob />
-      </section>
-      <section className="flex w-full h-screen ">
-        <ScrollArea className="w-full max-w-lg border-r p-2 h-screen">
-          <div className="border shadow p-3 rounded ">
-            <div className="flex flex-row space-x-2 mb-2">
-              <Avatar>
-                <AvatarImage src="https://github.com/vercel.png" />
-                <AvatarFallback>VC</AvatarFallback>
-              </Avatar>
-              <div className="flex flex-1 flex-col">
-                <h3 className="font-normal text-sm leading-3 text-slate-700-600">
-                  Google
-                </h3>
-                <h2 className="font-medium text-sm py-1">Web developer</h2>
-                <p className="font-normal text-xs">New York, USA</p>
-                <div className="flex space-x-2 mt-1">
-                  <Badge
-                    variant={"secondary"}
-                    className="text-blue-500 font-normal"
-                  >
-                    Node js
-                  </Badge>
-                  <Badge
-                    variant={"secondary"}
-                    className="text-blue-500 font-normal"
-                  >
-                    React js
-                  </Badge>
-                  <Badge
-                    variant={"secondary"}
-                    className="text-blue-500 font-normal"
-                  >
-                    Express js
-                  </Badge>
-                </div>
-              </div>
-            </div>
-          </div>
-        </ScrollArea>
-      </section>
-    </main>
-  );
-};
+import React from 'react'
+import axios from 'axios';
+import JobsCard from '@/components/Jobs/JobsCard'
 
-export default page;
+import { toast } from '@/components/ui/use-toast';
+import { Jobs } from '@/constants/constants';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { JobPreview } from '@/components/Jobs/JobPreview'
+import { ScrollArea } from '@/components/ui/scroll-area';
+import Link from 'next/link';
+
+interface IFilter  {
+  title:string | null;
+  location: string | null;
+  experience :string | null;
+}
+
+const getJobs = async (token:string,filter:IFilter)=>{
+  axios.defaults.withCredentials = true;
+  const res = await axios.get(`http://localhost:3005/api/jobs/search-job?experience=${filter.experience}&location=${filter.location}`,{
+      headers:{
+          Cookie: `jwt=${token}`
+      }
+  });
+
+  return res.data.jobs;
+}
+
+export default  async function page(
+  {searchParams}:
+  {
+    searchParams?: { [key: string]: string | undefined }
+  }) {
+
+  const token = cookies().get('jwt')?.value;
+  const currentJob = searchParams?.currentJob || ''
+  const filter = {
+    location : searchParams?.location || '',
+    title : searchParams?.location || '',
+    experience : searchParams?.experience || '',
+  }
+  
+  if(!token){
+      toast({
+          title:"You are not authenticated !",
+          description:"Please login to continue"
+      })
+      return redirect('/signup');
+  }   
+  const jobs:Jobs[] = await getJobs(token,filter);
+  console.log('here is the jobs.....',jobs);
+  return (
+    <section className="flex w-full h-screen">
+      <ScrollArea className="w-full max-w-lg border-r p-2 h-screen">
+        {jobs.map((job)=>(
+          <Link href={`jobs?currentJob=${job._id}`} key={job._id} >
+            <JobsCard job={job}/>
+          </Link>
+        ))}
+      </ScrollArea>
+      <section className="w-full">
+        <JobPreview currentJob={currentJob}/>
+      </section>
+  </section>
+  )
+}

@@ -16,10 +16,8 @@ router.patch('/api/posts/comments',requireAuth,[
         .withMessage("Comment can't be Empty"),
         validateRequest
 ],catchAsync(async(req:Request,res:Response)=>{
-    const errors = validationResult(req);
-    console.log('working here')
+
     const {postId,comment} = req.body;
-    console.log('postId -----',postId)
     const post = await Posts.findById(postId);
     if(!post){
         throw new NotFoundError('Post with this ID not Found')

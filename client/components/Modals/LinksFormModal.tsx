@@ -20,7 +20,6 @@ import { Textarea } from "../ui/textarea"
 import { useSelector,useDispatch } from "react-redux"
 import { RootState } from "@/store/reducers";
 import { setClose } from '@/store/slices/modalSlice'
-import useQuery from '@/hooks/useQuery'
 import { useRouter } from "next/navigation"
 
 export function LinkFormModal() {

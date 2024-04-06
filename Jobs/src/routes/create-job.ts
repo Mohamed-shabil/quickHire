@@ -1,7 +1,8 @@
 import { Jobs } from "../model/JobsModel"
+import { User } from '../model/UsersModel'
 import express,{Request,Response} from 'express';
 import catchAsync from '../utils/catchAsync'
-import { isRecruiter, requireAuth, NotAutherizedError, validateRequest} from "@quickhire/common";
+import { isRecruiter, requireAuth, NotAutherizedError, validateRequest, BadRequestError} from "@quickhire/common";
 import { uploadCompanyImage } from '../middleware/upload'
 import { body } from "express-validator";
 
@@ -23,6 +24,15 @@ router.post('/api/jobs/createjobs',requireAuth,isRecruiter,uploadCompanyImage,[
   body('jobDescription')
     .notEmpty()
     .withMessage("job description can't be empty"),
+  body('experience')
+    .notEmpty()
+    .withMessage("experience can't be empty"),
+  body('location')
+    .notEmpty()
+    .withMessage("location can't be empty"),
+  body('openings')
+    .notEmpty()
+    .withMessage("openings can't be empty"),
   body('skills')
     .notEmpty()
     .withMessage("skills can't empty"),
@@ -44,7 +54,10 @@ router.post('/api/jobs/createjobs',requireAuth,isRecruiter,uploadCompanyImage,[
         requirements,
         skills,
         minSalary, 
-        maxSalary
+        maxSalary,
+        experience,
+        location,
+        openings
     } = req.body;
 
     const currentUser = req.currentUser;
@@ -53,9 +66,22 @@ router.post('/api/jobs/createjobs',requireAuth,isRecruiter,uploadCompanyImage,[
       throw new NotAutherizedError()
     }
     const file = req.file as Express.MulterS3.File | undefined
-    console.log('WORK PLACE -------',workplace);
+
+    const recruiter = await User.findOne({where:{_id:currentUser._id}});
+
+    if(!recruiter){
+      throw new NotAutherizedError();
+    }
+
+    if(recruiter.dataValues.isPremium){
+      const jobCount = await Jobs.count({where:{recruiterId:recruiter.dataValues._id}});
+      if(jobCount >= 3 ){
+        throw new BadRequestError('You are exceeded the limit, Upgrade to premium to create more jobs.')
+      }
+    }
+
     const newJob = await Jobs.create({
-      recruiter: currentUser._id,
+      recruiterId: currentUser._id,
       recruiterName:currentUser.name,
       title,
       company,
@@ -66,12 +92,13 @@ router.post('/api/jobs/createjobs',requireAuth,isRecruiter,uploadCompanyImage,[
       skills,
       minSalary,
       maxSalary,
-      companyImage: file?.location
+      companyImage: file?.location,
+      experience:experience,
+      location,
+      openings
     });
     
     await newJob.save();
-
-    console.log(newJob)
 
     res.status(201).json({
       status:'success',

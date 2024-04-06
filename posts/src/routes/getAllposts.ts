@@ -7,86 +7,110 @@ const router = express.Router();
 
 router.get('/api/posts/show',catchAsync(async(req:Request,res:Response)=>{
     const currentUser = req.currentUser?._id;
-    const posts = await Posts.aggregate([
-        {
-            $match: {} // You can add any match conditions here
-        },
-        {
-            $lookup: {
-                from: 'likes',
-                let: { postId: '$_id', currentUser: new mongoose.Types.ObjectId(currentUser) },
-                pipeline: [
-                    {
-                        $match: {
-                            $expr: {
-                                $and: [
-                                    { $eq: ['$post', '$$postId'] },
-                                    { $eq: ['$user', '$$currentUser'] }
-                                ]
-                            }
-                        }
-                    },
-                    {
-                        $project: {
-                            _id: 0,
-                            liked: { $literal: true }
-                        }
-                    }
-                ],
-                as: 'likes'
-            }
-        },
-        {
-            $addFields: {
-                liked: { $cond: { if: { $gt: [{ $size: '$likes' }, 0] }, then: true, else: false } }
-            }
-        },
-        {
-            $lookup: {
-                from: 'users',
-                localField: 'creatorId',
-                foreignField: '_id',
-                as: 'creator'
-            }
-        },
-        {
-            $unwind: '$creator'
-        },
-        {
-            $lookup: {
-                from: 'followers',
-                let: { creatorId: '$creator._id', currentUser: new mongoose.Types.ObjectId(currentUser) },
-                pipeline: [
-                    {
-                        $match: {
-                            $expr: {
-                                $and: [
-                                    { $eq: ['$followedBy', '$$currentUser'] },
-                                    { $eq: ['$follow', '$$creatorId'] }
-                                ]
-                            }
-                        }
-                    },
-                    {
-                        $project: {
-                            _id: 0,
-                            following: { $literal: true }
-                        }
-                    }
-                ],
-                as: 'following'
-            }
-        },
-        {
-            $addFields: {
-                followingCreator: { $cond: { if: { $gt: [{ $size: '$following' }, 0] }, then: true, else: false } }
-            }
-        },
-        {
-            $sort: { createdAt: -1 }
-        }
-    ]);
+    // const posts = await Posts.aggregate([
 
+      
+    //     {
+    //         $lookup: {
+    //           from: "likes",
+    //           localField: "_id",
+    //           foreignField: "post",
+    //           as: "likes"
+    //         }
+    //      },
+    //      {
+    //         $lookup: {
+    //           from: "follow",
+    //           localField: "creatorId",
+    //           foreignField: "follow",
+    //           as: "followers"
+    //         }
+    //      },
+    //      {
+    //         $lookup: {
+    //           from: "users",
+    //           localField: "creatorId",
+    //           foreignField: "_id",
+    //           as: "creator"
+    //         }
+    //      },
+    //      {
+    //         $addFields: {
+    //           isLikedByCurrentUser: {
+    //             $in: [currentUser, "$likes.user"]
+    //           },
+    //           isFollowedByCurrentUser: {
+    //             $in: [currentUser,"$followers.followedBy"]
+    //           },
+    //           totalLikes: { $size: "$likes" }
+    //         }
+    //      },
+    //      {
+    //         $project: {
+    //           likes: 0,
+    //           followers: 0
+    //         }
+    //      },
+    //      {
+    //         $sort: { createdAt: -1 }
+    //      }
+    // ]);
+    const posts = await Posts.aggregate([
+      {
+          $lookup: {
+              from: "likes",
+              localField: "_id",
+              foreignField: "post",
+              as: "likes"
+          }
+      },
+      {
+          $lookup: {
+              from: "users",
+              localField: "creatorId",
+              foreignField: "_id",
+              as: "creator"
+          }
+      },
+      {
+          $lookup: {
+              from: "follows",
+              let: { creatorId: "$creatorId" },
+              pipeline: [
+                  {
+                      $match: {
+                          $expr: {
+                              $and: [
+                                  { $eq: ["$follow", "$$creatorId"] },
+                                  { $eq: ["$followedBy", new mongoose.Types.ObjectId(currentUser)] }
+                              ]
+                          }
+                      }
+                  }
+              ],
+              as: "currentUserFollowingCreator"
+          }
+      },
+      {
+          $addFields: {
+              isLikedByCurrentUser: {
+                  $in: [currentUser, "$likes.user"]
+              },
+              isFollowing: { $ne: [{ $size: "$currentUserFollowingCreator" }, 0] },
+              totalLikes: { $size: "$likes" }
+          }
+      },
+      {
+          $project: {
+              likes: 0,
+              followers: 0,
+              currentUserFollowingCreator: 0
+          }
+      },
+      {
+          $sort: { createdAt: -1 }
+      }
+  ]);
 
     console.log('ALL POSTS',posts);
 

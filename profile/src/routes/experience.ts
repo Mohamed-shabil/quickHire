@@ -30,7 +30,7 @@ router.post('/api/profile/experience',requireAuth,[
 
     const {companyName, position, startMonth, startYear, endMonth, endYear} = req.body;
 
-    const user = await Profile.findOne({userId:req.currentUser?._id});
+    const user = await Profile.findOne({_id:req.currentUser?._id});
     if(!user){
         throw new NotAutherizedError();
     }

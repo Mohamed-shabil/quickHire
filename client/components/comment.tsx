@@ -27,7 +27,7 @@ export function Comment({comment}:{comment:comment}){
                     <h1 className="font-medium text-sm">{comment.user.name}</h1>
                     <h1 className="text-gray-500 text-xs mb-1">{comment.user.headLine}</h1>
                     <p className="text-sm font-normal text-slate-600">{comment.comment}</p>
-                    {/* <span className="text-xs text-slate-500">{date.toLocaleDateString()}</span> */}
+                    <span className="text-xs text-slate-500 float-end">{date.toLocaleDateString()}</span>
                 </div>
             </div>
         </div>

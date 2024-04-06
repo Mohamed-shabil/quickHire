@@ -5,7 +5,7 @@ import {UpdatedUser} from './events/consumer/updateUser';
 import {createUser} from './events/consumer/userCreated';
 import {app} from './app'
 import { userFollow } from './events/consumer/userFollow';
-
+import { userUnfollow } from './events/consumer/userUnfollow'
 const start = async() =>{
     if(!process.env.JWT_KEY){
         throw new Error('jwt Key is not defined')
@@ -20,9 +20,9 @@ const start = async() =>{
         
         new kafkaConsumer(kafkaClient,'post-group-1').consume('user-created',createUser);
         new kafkaConsumer(kafkaClient,'post-group-2').consume('avatar-updated',UpdatedUser);
-        new kafkaConsumer(kafkaClient,'post-group-3').consume('user-followed',userFollow)
-        new kafkaConsumer(kafkaClient,'post-group-4').consume('user-unFollowed',userFollow)
         new kafkaConsumer(kafkaClient,'post-group-5').consume('headline-updated',UpdatedUser);
+        new kafkaConsumer(kafkaClient,'post-group-3').consume('user-followed',userFollow);
+        new kafkaConsumer(kafkaClient,'post-group-4').consume('user-unFollowed',userUnfollow);
 
         
     }catch(err){

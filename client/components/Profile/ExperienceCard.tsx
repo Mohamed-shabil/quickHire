@@ -5,18 +5,20 @@ import { Button } from "../ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { Separator } from "../ui/separator";
 import { Experience, months } from "@/constants/constants";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setOpen } from "@/store/slices/modalSlice";
 import axios from "axios";
 import { toast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
+import { RootState } from "@/store/reducers";
 
 
-export function ExperienceCard({experience,}:{experience:Experience}){
+export function ExperienceCard({experience,userId}:{experience:Experience,userId:string}){
     const dispatch = useDispatch();
     const router = useRouter();
     console.log(experience);
-
+    const user = useSelector((state:RootState)=> state.user.userData);
+    
     const deleteExperience = (company:string,position:string)=>{
         axios.patch('http://localhost:3003/api/profile/experience/delete',{experienceId:experience._id})
             .then((res)=>{
@@ -53,21 +55,18 @@ export function ExperienceCard({experience,}:{experience:Experience}){
                         {experience.companyName}
                     </small>
                 </div>
-                <div className="flex gap-1 ">
-                    <Button 
-                        variant={"fade"} 
-                        size={"mini"}
-                        onClick={()=>dispatch(setOpen({type:'ExperienceFormModal',data:experience}))}
-                        >
-                        <Pencil className="w-5 h-5" />
-                    </Button>
-                    <Button 
-                        variant={"fade"} 
-                        size={"mini"} 
-                        onClick={()=>deleteExperience(experience.companyName,experience.position)}>
-                        <Trash2 className="text-rose-500 w-5 h-5" />
-                    </Button>
-                </div>
+                {
+                    user?._id == userId &&(
+                        <div className="flex gap-1 ">
+                            <Button 
+                                variant={"fade"} 
+                                size={"mini"} 
+                                onClick={()=>deleteExperience(experience.companyName,experience.position)}>
+                                <Trash2 className="text-rose-500 w-5 h-5" />
+                            </Button>
+                        </div>
+                    )
+                }
             </CardHeader>
             <CardContent className="flex gap-2 text-slate-400 text-sm">
                 <p>{months[parseInt(experience.startDate.startMonth)]}-{experience.startDate.startYear}</p>
