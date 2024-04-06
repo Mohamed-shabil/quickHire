@@ -13,7 +13,7 @@ import { deleteSubscriptionRoute } from "./routes/delete-subscription-plan";
 import { SubscribeRoute } from "./routes/subscribe";
 import { stripeWebhookRoute } from "./routes/webhook";
 import { transationsRoute } from "./routes/get-transaction";
-import { analyticsDataRoute } from "./routes/dashboard-data";
+import { analyticsDataRoute } from "./routes/analytics";
 
 export const app = express();
 
