@@ -74,8 +74,6 @@ export type Profile = {
     experience?: Experience[];
     education?: Education[];
     projects?: Project[];
-    followers?: string[];
-    following?: string[];
 };
 
 // posts type
@@ -95,8 +93,9 @@ interface Comment {
     createdAt?: Date;
 }
 
-interface Report {
+export interface Report {
     userId?: string;
+    reason: string;
     createdAt?: Date;
 }
 
@@ -120,7 +119,7 @@ export type PostType = {
     isLikedByCurrentUser: boolean;
     isFollowing: boolean;
     totalLikes: number;
-    report?: Report[];
+    report: Report[];
     createdAt: Date;
 };
 
