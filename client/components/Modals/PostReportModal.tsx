@@ -72,8 +72,8 @@ function PostReportModal({ postId }: { postId: string }) {
 
     return (
         <Dialog>
-            <DialogTrigger className="flex items-center">
-                <Flag className="mr-2 h-4 w-4" />
+            <DialogTrigger className="flex items-center" asChild>
+                <Flag className="mr-2 h-4 w-4" /> Report
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>

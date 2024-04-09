@@ -7,13 +7,14 @@ dotenv.config();
 import { NotFoundError, errorHandler, currentUser } from "@quickhire/common";
 // import { subscriptionRoute } from './routes/subscribe'
 import { createSubscriptionRoute } from "./routes/create-subscription-plan";
-import { subscriptionsRoute } from "./routes/subscriptions";
+import { subscriptionsRoute } from "./routes/get-subscriptions";
 import { editSubscriptionRoute } from "./routes/edit-subscription-plan";
 import { deleteSubscriptionRoute } from "./routes/delete-subscription-plan";
 import { SubscribeRoute } from "./routes/subscribe";
 import { stripeWebhookRoute } from "./routes/webhook";
 import { transationsRoute } from "./routes/get-transaction";
 import { analyticsDataRoute } from "./routes/analytics";
+import { mySubscriptionRoute } from "./routes/my-subscription";
 
 export const app = express();
 
@@ -59,6 +60,7 @@ app.use(createSubscriptionRoute);
 app.use(subscriptionsRoute);
 app.use(editSubscriptionRoute);
 app.use(deleteSubscriptionRoute);
+app.use(mySubscriptionRoute);
 
 // app.use(subscriptionRoute)
 

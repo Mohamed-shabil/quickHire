@@ -1,11 +1,11 @@
 "use client";
 import {
     Bookmark,
-    CalendarIcon,
     Flag,
     Heart,
     MessageCircleMore,
-    MoreVertical,
+    MoreVerticalIcon,
+    Option,
 } from "lucide-react";
 import { PostType } from "@/constants/constants";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -19,10 +19,16 @@ import axios from "axios";
 import { Separator } from "./ui/separator";
 import { CommentBox } from "./commentBox";
 import { useRouter } from "next/navigation";
-import {} from "lucide-react";
 import Link from "next/link";
 
 import PostReportModal from "./Modals/PostReportModal";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 const PostCard = ({ post }: { post: PostType }) => {
     const dispatch = useDispatch();
     const router = useRouter();
@@ -33,7 +39,7 @@ const PostCard = ({ post }: { post: PostType }) => {
     const [likeCount, setLikeCount] = useState(post.totalLikes);
     const [comment, setComment] = useState(false);
     const [isFollowing, setIsFollowing] = useState<boolean>(post.isFollowing);
-
+    const [isOpen, setIsOpen] = useState<boolean>(false);
     const user = useSelector((state: RootState) => state.user.userData);
 
     const likePost = async (postId: string) => {
@@ -120,7 +126,16 @@ const PostCard = ({ post }: { post: PostType }) => {
                             >
                                 {isFollowing ? "Following" : "Follow"}
                             </Button>
-                            <PostReportModal postId={post._id} />
+                            <DropdownMenu>
+                                <DropdownMenuTrigger>
+                                    <MoreVerticalIcon />
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent>
+                                    <DropdownMenuItem className="flex">
+                                        <PostReportModal postId={post._id} />
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         </div>
                     ) : (
                         <Link href={`posts/editPost/${post._id}`}>
