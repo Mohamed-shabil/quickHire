@@ -41,12 +41,10 @@ router.post(
             data = req.body.object;
             eventType = req.body.type;
         }
-        // console.log("Data is here -----", data);
         if (eventType === "checkout.session.completed") {
             const customer = (await stripe.customers.retrieve(
                 data.customer
             )) as Stripe.Response<Stripe.Customer>;
-            // console.log("Customer  is here =====", customer);
 
             const user = await User.findOne({ _id: customer.metadata.userId });
 

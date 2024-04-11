@@ -33,13 +33,13 @@ import {
     SelectValue,
 } from "../ui/select";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { Pencil, Plus } from "lucide-react";
 import { Subscription } from "@/constants/constants";
 import { title } from "process";
 import { toast } from "../ui/use-toast";
 
-export default function subscriptionModal({
+export default function SubscriptionModal({
     subscription,
 }: {
     subscription?: Subscription;
@@ -103,7 +103,7 @@ export default function subscriptionModal({
                 })
                 .finally(() => {
                     onClose();
-                    router.refresh();
+                    router.reload();
                 });
         } else {
             axios
@@ -119,7 +119,7 @@ export default function subscriptionModal({
                 .then((res) => {
                     console.log(res.data);
                     onClose();
-                    router.refresh();
+                    router.reload();
                 })
                 .catch((err) => {
                     console.log(err);
@@ -150,8 +150,9 @@ export default function subscriptionModal({
                 <DialogHeader>
                     <DialogTitle>Create Subscription</DialogTitle>
                     <DialogDescription>
-                        Make changes to your profile here. Click save when
-                        you're done.
+                        {
+                            "Make changes to your profile here. Click save when you're done."
+                        }
                     </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>

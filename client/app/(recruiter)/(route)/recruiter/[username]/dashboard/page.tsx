@@ -57,7 +57,10 @@ const Recruiter = async ({ params }: { params: { username: string } }) => {
                 <section className="flex items-start flex-wrap">
                     {jobs && jobs.length ? (
                         jobs.map((job) => (
-                            <div className="border rounded-md shadow-sm p-4 ">
+                            <div
+                                className="border rounded-md shadow-sm p-4 "
+                                key={job._id}
+                            >
                                 <div className="w-full flex flex-row items-center justify-between mb-2">
                                     <div className="max-w-min flex gap-2">
                                         <Link

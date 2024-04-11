@@ -74,7 +74,7 @@ const UsersList = async ({ role }: { role: string }) => {
                     </TableHeader>
                     <TableBody>
                         {users.map((user) => (
-                            <TableRow>
+                            <TableRow key={user._id}>
                                 <TableCell className="hidden sm:table-cell">
                                     <Image
                                         alt="Product image"

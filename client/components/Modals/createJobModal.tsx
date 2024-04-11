@@ -216,6 +216,7 @@ export function CreateJobModal({ jobsCount }: { jobsCount: number }) {
             setInputValue("");
         }
     };
+    console.log(subscription);
     const isModalOpen = open && type === "createJob";
 
     return (
@@ -227,27 +228,16 @@ export function CreateJobModal({ jobsCount }: { jobsCount: number }) {
             </DialogTrigger>
 
             <DialogContent className="sm:max-w-[600px] min-h-max">
-                {subscription?.postLimit &&
-                subscription.postLimit <= jobsCount ? (
-                    <DialogHeader>
-                        <DialogTitle>Limit Reached</DialogTitle>
-                        <DialogDescription className="py-5">
-                            You have already Reached your job posting limit to
-                            continue upgrade your plan
-                        </DialogDescription>
-                        <div>
-                            <Link href="/subscription">
-                                <Button>Upgrade Subscription</Button>
-                            </Link>
-                        </div>
-                    </DialogHeader>
-                ) : (
+                {subscription &&
+                subscription?.postLimit &&
+                subscription.postLimit >= jobsCount ? (
                     <div>
                         <DialogHeader>
                             <DialogTitle>Post a Job</DialogTitle>
                             <DialogDescription>
-                                Fill all the forms and Click save when you're
-                                done.
+                                {
+                                    "Fill all the forms and Click save when you're done."
+                                }
                             </DialogDescription>
                         </DialogHeader>
                         <Form {...form}>
@@ -411,11 +401,16 @@ export function CreateJobModal({ jobsCount }: { jobsCount: number }) {
                                                         Enter each skills and
                                                         click the add button
                                                     </FormDescription>
-                                                    {skills.map((skill) => (
-                                                        <span className="whitespace-nowrap rounded-full capitalize bg-blue-100 px-2.5 py-0.5 text-sm text-blue-700 mx-1">
-                                                            {skill}
-                                                        </span>
-                                                    ))}
+                                                    {skills.map(
+                                                        (skill, index) => (
+                                                            <span
+                                                                key={index}
+                                                                className="whitespace-nowrap rounded-full capitalize bg-blue-100 px-2.5 py-0.5 text-sm text-blue-700 mx-1"
+                                                            >
+                                                                {skill}
+                                                            </span>
+                                                        )
+                                                    )}
                                                     <FormControl>
                                                         <div className="relative">
                                                             <Input
@@ -795,6 +790,19 @@ export function CreateJobModal({ jobsCount }: { jobsCount: number }) {
                             </form>
                         </Form>
                     </div>
+                ) : (
+                    <DialogHeader>
+                        <DialogTitle>Limit Reached</DialogTitle>
+                        <DialogDescription className="py-5">
+                            You have already Reached your job posting limit to
+                            continue upgrade your plan
+                        </DialogDescription>
+                        <div>
+                            <Link href="/subscription">
+                                <Button>Upgrade Subscription</Button>
+                            </Link>
+                        </div>
+                    </DialogHeader>
                 )}
             </DialogContent>
         </Dialog>

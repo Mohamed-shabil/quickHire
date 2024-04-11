@@ -12,7 +12,7 @@ import { Subscription } from "../model/SubscriptionModel";
 const router = express.Router();
 
 router.get(
-    "/api/payments/subscriptions/my-subscriptions",
+    "/api/payments/subscriptions/current-subscription",
     requireAuth,
     isRecruiter,
     catchAsync(async (req: Request, res: Response) => {
@@ -27,7 +27,7 @@ router.get(
         });
 
         if (!subscriber) {
-            throw new NotFoundError("No Subscrition found for the user ID");
+            throw new NotFoundError("No Subscribtion found for the user ID");
         }
 
         const subscription = await Subscription.findById({
@@ -41,4 +41,4 @@ router.get(
     })
 );
 
-export { router as mySubscriptionRoute };
+export { router as currentSubscriptionRoute };

@@ -49,7 +49,10 @@ const SubscriptionPage = () => {
             <div className="flex items-center justify-around flex-wrap gap-4">
                 {subscriptions?.length &&
                     subscriptions.map((subscription) => (
-                        <div className="-mx-4 flex flex-wrap justify-center">
+                        <div
+                            className="-mx-4 flex flex-wrap justify-center"
+                            key={subscription._id}
+                        >
                             <div className="-mx-4 flex flex-wrap">
                                 <PricingPlan plan={subscription} />
                             </div>

@@ -5,19 +5,14 @@ import axios from "axios";
 export const fetchSubscription = createAsyncThunk(
     "fetchSubscription",
     async () => {
-        try {
-            const response = await axios.get(
-                "http://localhost:3007/api/payments/subscriptions/my-subscriptions",
-                {
-                    withCredentials: true,
-                }
-            );
-            console.log("thunk subscription ----", response.data);
-            return response.data.subscription;
-        } catch (error) {
-            console.log(error);
-            return null;
-        }
+        const response = await axios.get(
+            "http://localhost:3007/api/payments/subscriptions/current-subscription",
+            {
+                withCredentials: true,
+            }
+        );
+        console.log("thunk subscription ----", response.data);
+        return response.data.subscription;
     }
 );
 

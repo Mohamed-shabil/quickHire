@@ -1,4 +1,5 @@
 import {
+    KafkaProducer,
     catchAsync,
     isAdmin,
     requireAuth,
@@ -7,6 +8,7 @@ import {
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
 import { Subscription } from "../model/SubscriptionModel";
+import { kafkaClient } from "../events/kafkaClient";
 
 const router = express.Router();
 
@@ -35,6 +37,11 @@ router.post(
             { _id: subscriptionId },
             { planName, postLimit, price, billingPeriod, description },
             { new: true }
+        );
+
+        await new KafkaProducer(kafkaClient).produce(
+            "subscription-updated",
+            subscriptionId
         );
 
         res.status(200).json({

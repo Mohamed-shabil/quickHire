@@ -3,11 +3,15 @@ import { app } from "./app";
 import { kafkaClient } from "./events/kafkaClient";
 import { createUser } from "./events/consumer/userCreated";
 import { UpdatedUser } from "./events/consumer/updateUser";
+import {} from "./events/consumer/delete-subscription";
+
 import "./config/config";
 import "./model/Relations";
 
 import { kafkaConsumer } from "@quickhire/common";
 import { createSubscription } from "./events/consumer/create-subscription";
+import { deleteSubscription } from "./events/consumer/delete-subscription";
+import { updateSubscription } from "./events/consumer/update-subscription";
 
 const start = async () => {
     if (!process.env.JWT_KEY) {
@@ -28,6 +32,14 @@ const start = async () => {
         new kafkaConsumer(kafkaClient, "job-group-3").consume(
             "subscription-created",
             createSubscription
+        );
+        new kafkaConsumer(kafkaClient, "job-group-4").consume(
+            "subscription-updated",
+            updateSubscription
+        );
+        new kafkaConsumer(kafkaClient, "job-group-5").consume(
+            "subscription-deleted",
+            deleteSubscription
         );
     } catch (err) {
         console.error(err);

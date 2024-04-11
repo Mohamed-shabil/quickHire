@@ -141,7 +141,9 @@ export function CommentBox({ postId }: { postId: string }) {
                         <Loader2 className="animate-spin text-blue-500" />
                     </span>
                 ) : comments?.length ? (
-                    comments.map((comment) => <Comment comment={comment} />)
+                    comments.map((comment, index) => (
+                        <Comment comment={comment} key={index} />
+                    ))
                 ) : (
                     <></>
                 )}

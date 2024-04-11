@@ -5,8 +5,7 @@ export const Subscription: ModelDefined<any, any> = sequelize.define(
     "Subscription",
     {
         _id: {
-            type: DataTypes.UUID,
-            defaultValue: DataTypes.UUIDV4,
+            type: DataTypes.STRING,
             primaryKey: true,
         },
 

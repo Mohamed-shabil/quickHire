@@ -14,7 +14,7 @@ import { SubscribeRoute } from "./routes/subscribe";
 import { stripeWebhookRoute } from "./routes/webhook";
 import { transationsRoute } from "./routes/get-transaction";
 import { analyticsDataRoute } from "./routes/analytics";
-import { mySubscriptionRoute } from "./routes/my-subscription";
+import { currentSubscriptionRoute } from "./routes/current-subscription";
 
 export const app = express();
 
@@ -60,7 +60,7 @@ app.use(createSubscriptionRoute);
 app.use(subscriptionsRoute);
 app.use(editSubscriptionRoute);
 app.use(deleteSubscriptionRoute);
-app.use(mySubscriptionRoute);
+app.use(currentSubscriptionRoute);
 
 // app.use(subscriptionRoute)
 

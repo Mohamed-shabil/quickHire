@@ -127,7 +127,7 @@ export type UserType = "seeker" | "admin" | "recruiter";
 
 export type ContentType = "text" | "video" | "image";
 
-export type Chats = {
+export type IChats = {
     content: string;
     contentType: ContentType;
     reciever: string;
@@ -142,7 +142,7 @@ export interface ChatUser {
     fullName: string;
     headline: string;
     name: string;
-    message: Chats;
+    message: IChats;
 }
 
 type workPlace = "Hybrid" | "Onsite" | "Remote";

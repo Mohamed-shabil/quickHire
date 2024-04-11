@@ -81,7 +81,7 @@ const TransactionList = async () => {
                     <TableBody>
                         {transactions.length &&
                             transactions.map((transaction) => (
-                                <TableRow>
+                                <TableRow key={transaction._id}>
                                     <TableCell>
                                         <div className="font-medium">
                                             {transaction.userId.fullName ||

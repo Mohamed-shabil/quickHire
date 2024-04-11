@@ -105,7 +105,7 @@ export default async function Component() {
                     </TableHeader>
                     <TableBody>
                         {posts.map((post) => (
-                            <TableRow>
+                            <TableRow key={post._id}>
                                 <TableCell className="hidden sm:table-cell">
                                     <Image
                                         alt="Product image"

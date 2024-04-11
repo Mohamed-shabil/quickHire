@@ -47,7 +47,7 @@ const PostReports = async () => {
     return (
         <Accordion type="single" collapsible className="w-full">
             {posts.map((post) => (
-                <AccordionItem value="item-1">
+                <AccordionItem value="item-1" key={post._id}>
                     <AccordionTrigger className="flex justify-between pb-2">
                         <div className="w-full flex flex-row justify-between items-center">
                             <div className="flex items-center gap-2">

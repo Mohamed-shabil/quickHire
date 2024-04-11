@@ -2,7 +2,6 @@ import { Subscription } from "@/constants/constants";
 import axios from "axios";
 import { cookies } from "next/headers";
 import React, { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 import SubscriptionModal from "@/components/Modals/subscriptionModal";
 import PricingPlan from "@/components/PricingPlan";
 import {
@@ -10,8 +9,8 @@ import {
     HoverCardContent,
     HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { Trash2 } from "lucide-react";
-import { toast } from "@/components/ui/use-toast";
+
+import SubscriptionDelete from "@/components/Admin/SubscriptionDelete";
 
 const getSubscriptionPlan = async (token: string) => {
     const response = await axios.get(
@@ -25,29 +24,6 @@ const getSubscriptionPlan = async (token: string) => {
     return response.data.subscriptions as Subscription[];
 };
 
-const deleteSubscription = async (token: string, subscriptionId: string) => {
-    axios
-        .delete(
-            `http://localhost:3007/api/payments/subscription/remove/${subscriptionId}`,
-            {
-                headers: {
-                    cookie: `jwt=${token}`,
-                },
-            }
-        )
-        .catch((res) => {
-            console.log(res);
-            toast({
-                title: "Subscription plan deleted Successfully",
-            });
-        })
-        .catch((err) => {
-            console.log(err);
-            toast({
-                title: "Something went wrong please try again",
-            });
-        });
-};
 const page = async () => {
     const token = cookies().get("jwt")?.value as string;
     const subscriptions = await getSubscriptionPlan(token);
@@ -60,7 +36,7 @@ const page = async () => {
             <div className="w-full h-[75vh] flex items-center ">
                 {subscriptions &&
                     subscriptions.map((subscription) => (
-                        <HoverCard>
+                        <HoverCard key={subscription._id}>
                             <HoverCardTrigger>
                                 <PricingPlan plan={subscription} />
                             </HoverCardTrigger>
@@ -73,9 +49,9 @@ const page = async () => {
                                 <SubscriptionModal
                                     subscription={subscription}
                                 />
-                                <Button variant={"outline"}>
-                                    <Trash2 className="text-rose-500" />
-                                </Button>
+                                <SubscriptionDelete
+                                    subscriptionId={subscription._id}
+                                />
                             </HoverCardContent>
                         </HoverCard>
                     ))}

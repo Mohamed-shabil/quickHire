@@ -182,8 +182,8 @@ const handleAddSkill = () => {
                       <FormItem>
                           <FormLabel>Skills</FormLabel>
                           <FormDescription>Enter each skills and click the add button</FormDescription>
-                          {skills.map((skill)=>(
-                            <span className="whitespace-nowrap rounded-full capitalize bg-blue-100 px-2.5 py-0.5 text-sm text-blue-700 mx-1">
+                          {skills.map((skill,index)=>(
+                            <span className="whitespace-nowrap rounded-full capitalize bg-blue-100 px-2.5 py-0.5 text-sm text-blue-700 mx-1" key={index}>
                               {skill}
                             </span>
                           ))}
