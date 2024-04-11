@@ -34,9 +34,16 @@ import {
 } from "../ui/select";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { Plus } from "lucide-react";
+import { Pencil, Plus } from "lucide-react";
+import { Subscription } from "@/constants/constants";
+import { title } from "process";
+import { toast } from "../ui/use-toast";
 
-export default function subscriptionModal() {
+export default function subscriptionModal({
+    subscription,
+}: {
+    subscription?: Subscription;
+}) {
     const [open, setOpen] = useState(false);
     const router = useRouter();
     const formSchema = z.object({
@@ -60,32 +67,64 @@ export default function subscriptionModal() {
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            planName: "",
-            postLimit: "",
-            price: "",
-            description: "",
-            billingPeriod: "",
+            planName: subscription?.planName || "",
+            postLimit: subscription?.postLimit + "" || "",
+            price: subscription?.price + "" || "",
+            description: subscription?.description || "",
+            billingPeriod: subscription?.billingPeriod || "",
         },
         mode: "onTouched",
     });
 
     const onSubmit = (values: z.infer<typeof formSchema>) => {
         console.log(values);
-        axios
-            .post(
-                "http://localhost:3007/api/payments/subscription/new",
-                {
-                    ...values,
-                },
-                {
-                    withCredentials: true,
-                }
-            )
-            .then((res) => {
-                console.log(res.data);
-                onClose();
-                router.refresh();
-            });
+        if (subscription) {
+            axios
+                .post(
+                    `http://localhost:3007/api/payments/subscription/edit/${subscription._id}`,
+                    {
+                        ...values,
+                    },
+                    {
+                        withCredentials: true,
+                    }
+                )
+                .then((res) => {
+                    toast({
+                        title: "Subscription Edited successfully",
+                    });
+                    console.log(res.data);
+                })
+                .catch((err) => {
+                    toast({
+                        title: "Subscription Edited successfully",
+                        description: err.response.errors[0].message,
+                    });
+                })
+                .finally(() => {
+                    onClose();
+                    router.refresh();
+                });
+        } else {
+            axios
+                .post(
+                    "http://localhost:3007/api/payments/subscription/new",
+                    {
+                        ...values,
+                    },
+                    {
+                        withCredentials: true,
+                    }
+                )
+                .then((res) => {
+                    console.log(res.data);
+                    onClose();
+                    router.refresh();
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
     };
 
     const onClose = () => {
@@ -104,7 +143,7 @@ export default function subscriptionModal() {
         >
             <DialogTrigger asChild>
                 <Button variant="outline" className="">
-                    <Plus />
+                    {subscription ? <Pencil /> : <Plus />}
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[650px]">
