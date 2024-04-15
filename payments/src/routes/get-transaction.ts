@@ -13,6 +13,8 @@ router.get(
         const transactions = await Subscribers.find()
             .populate(["userId", "subscription"])
             .sort("-1");
+
+        console.log(transactions);
         res.status(200).json({
             status: "success",
             transactions,

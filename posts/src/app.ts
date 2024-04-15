@@ -15,6 +15,8 @@ import { commentRouter } from "./routes/comments";
 import { reportRoute } from "./routes/report-post";
 import { trendingPostRoute } from "./routes/trending-posts";
 import { reportedPostsRoute } from "./routes/get-reports";
+import { deletePostRouter } from "./routes/deletePost";
+import { deletepostAdmin } from "./routes/delete-post-admin";
 
 dotenv.config();
 
@@ -63,6 +65,8 @@ app.use(likePostRouter);
 app.use(getAllComments);
 app.use(commentRouter);
 app.use(reportRoute);
+app.use(deletePostRouter);
+app.use(deletepostAdmin);
 app.use(trendingPostRoute);
 
 app.use(errorHandler);

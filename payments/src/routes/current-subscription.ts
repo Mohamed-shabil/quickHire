@@ -13,11 +13,8 @@ const router = express.Router();
 
 router.get(
     "/api/payments/subscriptions/current-subscription",
-    requireAuth,
-    isRecruiter,
     catchAsync(async (req: Request, res: Response) => {
         const currentUser = req.currentUser;
-
         if (!currentUser) {
             throw new NotAutherizedError();
         }

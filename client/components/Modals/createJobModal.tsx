@@ -157,7 +157,7 @@ export function CreateJobModal({ jobsCount }: { jobsCount: number }) {
         skills.forEach((item) => {
             data.append("skills[]", item);
         });
-
+        axios.defaults.withCredentials = true;
         axios
             .post("http://localhost:3005/api/jobs/createJobs", data, {
                 headers: {
@@ -177,7 +177,6 @@ export function CreateJobModal({ jobsCount }: { jobsCount: number }) {
                 });
                 console.log(res.data);
                 form.reset();
-
                 onClose();
                 router.refresh();
             })

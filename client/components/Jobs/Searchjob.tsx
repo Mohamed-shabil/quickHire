@@ -53,7 +53,9 @@ export const Searchjob = () => {
             queryParams.experience = values.experience;
         }
 
-        const url = `jobs${queryParams ? `?${queryParams}` : ""}`;
+        const url = `jobs${
+            queryParams ? `?${new URLSearchParams(queryParams)}` : ""
+        }`;
         router.push(url);
     };
 
@@ -107,19 +109,19 @@ export const Searchjob = () => {
                                             <SelectLabel>
                                                 Select Experience
                                             </SelectLabel>
-                                            <SelectItem value="Intern">
+                                            <SelectItem value="intern">
                                                 Intern
                                             </SelectItem>
-                                            <SelectItem value="Fresher">
+                                            <SelectItem value="fresher">
                                                 Fresher
                                             </SelectItem>
-                                            <SelectItem value="Associate">
+                                            <SelectItem value="associate">
                                                 Associate
                                             </SelectItem>
-                                            <SelectItem value="Mid-Level">
+                                            <SelectItem value="mid-level">
                                                 Mid Level
                                             </SelectItem>
-                                            <SelectItem value="Senior">
+                                            <SelectItem value="senior">
                                                 Senior
                                             </SelectItem>
                                         </SelectGroup>

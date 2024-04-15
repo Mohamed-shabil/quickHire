@@ -17,6 +17,7 @@ import {
     FolderUp,
     Loader2,
     Upload,
+    X,
     Zap,
 } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -38,6 +39,7 @@ import { Label } from "../ui/label";
 import { toast } from "../ui/use-toast";
 import { Resume } from "@/constants/constants";
 import moment from "moment";
+import Recruiter from "@/app/(recruiter)/(route)/recruiter/[username]/dashboard/page";
 
 type FieldValues = {
     email: string;
@@ -100,7 +102,7 @@ export default function ApplyJobModal({ job }: { job: Jobs }) {
     });
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        console.log(values);
+        console.log(values, job.recruiter);
         axios
             .post(
                 `http://localhost:3005/api/jobs/apply-job/${job._id}`,
@@ -128,7 +130,13 @@ export default function ApplyJobModal({ job }: { job: Jobs }) {
                 console.log(err);
                 toast({
                     title: "Something went wrong!😢",
-                    description: err.response.data,
+                    description:
+                        err.response.errors[0].message || "Please try again",
+                    action: (
+                        <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
+                            <X />
+                        </div>
+                    ),
                 });
             });
     };

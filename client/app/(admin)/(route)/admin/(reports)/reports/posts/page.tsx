@@ -12,6 +12,9 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { Report, Media } from "@/constants/constants";
+import { Button } from "@/components/ui/button";
+import { Trash } from "lucide-react";
+import DeletePost from "@/components/Admin/DeletePost";
 
 type Post = {
     _id: string;
@@ -44,6 +47,9 @@ const PostReports = async () => {
 
     const posts = await getReportedPosts(token);
     console.log(posts);
+    if (!posts.length) {
+        return <h1>No Complaints about posts</h1>;
+    }
     return (
         <Accordion type="single" collapsible className="w-full">
             {posts.map((post) => (
@@ -82,6 +88,7 @@ const PostReports = async () => {
                                 </li>
                             ))}
                         </ul>
+                        <DeletePost postId={post._id} />
                     </AccordionContent>
                 </AccordionItem>
             ))}

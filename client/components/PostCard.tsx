@@ -94,7 +94,7 @@ const PostCard = ({ post }: { post: PostType }) => {
 
     return (
         <div className="w-full flex flex-col items-center justify-center my-3">
-            <span className="w-full max-w-lg block rounded-lg p-3 shadow-sm border">
+            <div className="w-full max-w-lg block rounded-lg p-3 shadow-sm border">
                 <div className="flex h-full itmes-center">
                     <Link
                         href={`/profile/${post.creator[0].name || ""}`}
@@ -126,16 +126,17 @@ const PostCard = ({ post }: { post: PostType }) => {
                             >
                                 {isFollowing ? "Following" : "Follow"}
                             </Button>
-                            <DropdownMenu>
+                            <PostReportModal postId={post._id} />
+                            {/* <DropdownMenu>
                                 <DropdownMenuTrigger>
                                     <MoreVerticalIcon />
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent>
                                     <DropdownMenuItem className="flex">
-                                        <PostReportModal postId={post._id} />
+                                        
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
-                            </DropdownMenu>
+                            </DropdownMenu> */}
                         </div>
                     ) : (
                         <Link href={`posts/editPost/${post._id}`}>
@@ -231,7 +232,7 @@ const PostCard = ({ post }: { post: PostType }) => {
                     </div>
                     {comment ? <CommentBox postId={post._id} /> : ""}
                 </div>
-            </span>
+            </div>
         </div>
     );
 };

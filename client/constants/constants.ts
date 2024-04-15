@@ -68,6 +68,7 @@ export type Profile = {
     };
     location?: string;
     profileType?: "seeker" | "recruiter" | "admin";
+    name: string;
     username: string;
     phone?: string;
     coverImage?: string;

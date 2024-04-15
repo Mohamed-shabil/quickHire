@@ -16,15 +16,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ArrowDownToLine } from "lucide-react";
 import Link from "next/link";
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
+
 import ApplicationStatus from "@/components/Recruiter/ApplicationStatus";
 const getApplicant = async (token: string, jobId: string) => {
     try {
@@ -56,7 +48,7 @@ async function Applicants({ params }: { params: { jobId: string } }) {
     return (
         <section className="container">
             <Table className="border rounded-lg">
-                <TableCaption>A list of your recent invoices.</TableCaption>
+                {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
                 <TableHeader>
                     <TableRow>
                         <TableHead>No</TableHead>

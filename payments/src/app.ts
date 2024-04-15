@@ -53,6 +53,7 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use(currentSubscriptionRoute);
 app.use(analyticsDataRoute);
 app.use(transationsRoute);
 app.use(SubscribeRoute);
@@ -60,7 +61,6 @@ app.use(createSubscriptionRoute);
 app.use(subscriptionsRoute);
 app.use(editSubscriptionRoute);
 app.use(deleteSubscriptionRoute);
-app.use(currentSubscriptionRoute);
 
 // app.use(subscriptionRoute)
 

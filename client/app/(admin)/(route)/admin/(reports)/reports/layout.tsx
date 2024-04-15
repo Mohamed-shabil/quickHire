@@ -9,14 +9,6 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
             <div className="mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr]">
                 <nav className="grid gap-4 text-sm text-muted-foreground">
                     <Link href="reports/posts">Posts</Link>
-                    <Link
-                        href="report/account"
-                        className="font-semibold text-primary"
-                    >
-                        Account
-                    </Link>
-                    <Link href="#">Commands</Link>
-                    <Link href="#">Jobs</Link>
                 </nav>
                 <div className="grid gap-6">{children}</div>
             </div>

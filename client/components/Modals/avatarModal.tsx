@@ -41,7 +41,7 @@ export function AvatarModal() {
         if (image) {
             data.append("profile", image);
         }
-
+        axios.defaults.withCredentials = true;
         axios
             .patch("http://localhost:3003/api/profile/avatar", data)
             .then((res) => {
@@ -119,7 +119,7 @@ export function AvatarModal() {
                         </Label>
                     </div>
                     <DialogFooter>
-                        <Button disabled={loading} type="submit">
+                        <Button disabled={!preview || loading} type="submit">
                             {loading ? (
                                 <Loader2 className="animate-spin" />
                             ) : (

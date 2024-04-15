@@ -5,7 +5,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "../ui/dialog";
-import { Check, Flag } from "lucide-react";
+import { Check, Flag, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
     Form,
@@ -21,8 +21,10 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import { useState } from "react";
 
 function PostReportModal({ postId }: { postId: string }) {
+    const [open, setOpen] = useState<boolean>(false);
     const FormSchema = z.object({
         report: z.enum(
             [
@@ -45,9 +47,9 @@ function PostReportModal({ postId }: { postId: string }) {
         resolver: zodResolver(FormSchema),
     });
 
-    const onSubmit = (value: z.infer<typeof FormSchema>) => {
+    const onSubmit = async (value: z.infer<typeof FormSchema>) => {
         console.log(value);
-        axios
+        await axios
             .patch(
                 `http://localhost:3004/api/posts/${postId}/report`,
                 {
@@ -67,13 +69,40 @@ function PostReportModal({ postId }: { postId: string }) {
                         </div>
                     ),
                 });
+                onClose();
+            })
+            .catch((err) => {
+                toast({
+                    title: "Something went wrong",
+                    description:
+                        err.response.errors[0].message ||
+                        "Please Try again later !",
+                    action: (
+                        <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
+                            <X />
+                        </div>
+                    ),
+                });
             });
     };
 
+    const onClose = () => {
+        form.reset();
+        setOpen(false);
+    };
+
     return (
-        <Dialog>
-            <DialogTrigger className="flex items-center" asChild>
-                <Flag className="mr-2 h-4 w-4" /> Report
+        <Dialog
+            open={open}
+            onOpenChange={(e) => {
+                setOpen(e);
+            }}
+        >
+            <DialogTrigger
+                className="flex items-center"
+                onClick={() => setOpen(true)}
+            >
+                <Flag className="mr-2 h-4 w-4" />
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>

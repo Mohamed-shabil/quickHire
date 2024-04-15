@@ -21,16 +21,18 @@ const JobsCard = ({ job }: { job: Jobs }) => {
                         />
                     </div>
                     <div className="flex flex-1 flex-col">
-                        <h3 className="font-normal text-xs leading-3 text-slate-700-600">
+                        <h3 className="font-normal text-xs leading-3 text-slate-700-600 capitalize">
                             {job.company}
                         </h3>
-                        <h2 className="font-bold text-sm py-1">{job.title}</h2>
-                        <p className="font-normal text-xs flex gap-1">
+                        <h2 className="font-bold text-sm py-1 capitalize">
+                            {job.title}
+                        </h2>
+                        <p className="font-normal text-xs flex gap-1 capitalize">
                             <LocationIcon size={"1em"} /> {job.location}
                             •
                             <JobTypeIcon size={"1em"} /> {job.workPlace}
                         </p>
-                        <div className="flex space-x-2 mt-1">
+                        <div className="flex space-x-2 mt-1 capitalize">
                             {job.skills.map(
                                 (skill, index) =>
                                     index < 3 && (

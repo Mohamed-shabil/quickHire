@@ -76,19 +76,19 @@ router.post(
 
         const newJob = await Jobs.create({
             recruiterId: currentUser._id,
-            recruiterName: currentUser.name,
-            title,
-            company,
-            workPlace: workplace,
-            employmentType,
-            requirements,
-            jobDescription,
+            recruiterName: currentUser.name.toLowerCase(),
+            title: title.toLowerCase(),
+            company: title.toLowerCase(),
+            workPlace: workplace.toLowerCase(),
+            employmentType: employmentType.toLowerCase(),
+            requirements: requirements.toLowerCase(),
+            jobDescription: jobDescription.toLowerCase(),
             skills,
             minSalary,
             maxSalary,
             companyImage: file?.location,
-            experience: experience,
-            location,
+            experience: experience.toLowerCase(),
+            location: location.toLowerCase(),
             openings,
         });
 

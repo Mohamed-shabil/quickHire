@@ -14,12 +14,12 @@ import { deleteSubscription } from "./events/consumer/delete-subscription";
 import { updateSubscription } from "./events/consumer/update-subscription";
 
 const start = async () => {
-    if (!process.env.JWT_KEY) {
-        throw new Error("jwt Key is not defined");
-    }
     try {
-        if (!process.env.MONGO_URI) {
-            throw new Error("Mongo Uri is not defined");
+        if (!process.env.JWT_KEY) {
+            throw new Error("jwt Key is not defined");
+        }
+        if (!process.env.SEQUELISE_URL) {
+            throw new Error("Sequelise Url is missing...");
         }
         new kafkaConsumer(kafkaClient, "job-group-1").consume(
             "user-created",

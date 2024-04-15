@@ -9,6 +9,8 @@ import { redirect } from "next/navigation";
 import { JobPreview } from "@/components/Jobs/JobPreview";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Router } from "lucide-react";
 
 interface IFilter {
     title: string | null;
@@ -20,8 +22,9 @@ const getJobs = async (token: string, filter: IFilter) => {
     axios.defaults.withCredentials = true;
     const res = await axios.get(`http://localhost:3005/api/jobs/search-job?`, {
         params: {
-            experience: filter.experience,
-            location: filter.location,
+            ...(filter.experience && { experience: filter.experience }),
+            ...(filter.title && { title: filter.title }),
+            ...(filter.location && { location: filter.location }),
         },
         headers: {
             Cookie: `jwt=${token}`,
@@ -40,7 +43,7 @@ export default async function page({
     const currentJob = searchParams?.currentJob || "";
     const filter = {
         location: searchParams?.location || "",
-        title: searchParams?.location || "",
+        title: searchParams?.title || "",
         experience: searchParams?.experience || "",
     };
 
@@ -53,18 +56,31 @@ export default async function page({
     }
     const jobs: Jobs[] = await getJobs(token, filter);
     console.log("here is the jobs.....", jobs);
+
+    if (!jobs.length) {
+        return (
+            <section className="h-[60vh]">
+                <div className="flex items-center h-full w-full justify-center">
+                    <h3 className="font-semibold text-sm">No data found</h3>
+                </div>
+            </section>
+        );
+    }
+
     return (
         <section className="flex w-full h-screen">
-            <ScrollArea className="w-full max-w-lg border-r p-2 h-screen">
-                {jobs.map((job) => (
-                    <Link href={`jobs?currentJob=${job._id}`} key={job._id}>
-                        <JobsCard job={job} />
-                    </Link>
-                ))}
-            </ScrollArea>
-            <section className="w-full">
-                <JobPreview currentJob={currentJob} />
-            </section>
+            <>
+                <ScrollArea className="w-full max-w-lg border-r p-2 h-screen">
+                    {jobs.map((job) => (
+                        <Link href={`jobs?currentJob=${job._id}`} key={job._id}>
+                            <JobsCard job={job} />
+                        </Link>
+                    ))}
+                </ScrollArea>
+                <section className="w-full">
+                    <JobPreview currentJob={currentJob} />
+                </section>
+            </>
         </section>
     );
 }
