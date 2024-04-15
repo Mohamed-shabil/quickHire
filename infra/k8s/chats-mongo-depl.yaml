@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: chats-mongo-depl
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: chats-mongo
+    template:
+        metadata:
+            labels:
+                app: chats-mongo
+        spec:
+            containers:
+                - name: chats-mongo
+                  image: mongo
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: chats-mongo-srv
+spec:
+    selector:
+        app: chats-mongo
+    ports:
+        - name: db
+          protocol: TCP
+          port: 27017
+          targetPort: 27017
