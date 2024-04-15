@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: jobs-postgres-depl
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: jobs-postgres
+    template:
+        metadata:
+            labels:
+                app: jobs-postgres
+        spec:
+            containers:
+                - name: jobs-postgres
+                  image: postgres
+                  env:
+                      - name: POSTGRES_USER
+                        value: "user"
+                      - name: POSTGRES_PASSWORD
+                        value: "pass"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: jobs-postgres-srv
+spec:
+    selector:
+        app: jobs-postgres
+    ports:
+        - name: db
+          protocol: TCP
+          port: 5432
+          targetPort: 5432
