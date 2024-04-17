@@ -1,20 +1,38 @@
 name: deploy-auth
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'auth/**'
+    push:
+        branches:
+            - main
+        paths:
+            - "auth/**"
 
 jobs:
-  build: 
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - run: cd auth && docker build -t shabil/auth .
-      - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      - run: docker push shabil/auth
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: build and push to push docker hub
+            - uses: actions/checkout@v2
+            - run: cd auth && docker build -t shabil/auth .
+            - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+              env:
+                  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+                  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+            - run: docker push shabil/auth
+
+    deploy:
+        needs: build
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: checkout code
+              uses: actions/checkout@v2
+            - name: login to azure
+              uses: azure/login@v1
+              with:
+                  creds: ${{ secrets.AZURE_CREDENTIALS }}
+            - name: set kubectl context
+              run: az aks get-credentials --resourse-group ${{secrets.AZURE_RESOURCE_GROUP}} --name ${{secrets.AZURE_CLUSTER_NAME}}
+
+            - name: deploy to AKS
+              run: kubectl rollout restart deployment auth-depl
