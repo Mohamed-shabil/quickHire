@@ -1,7 +1,5 @@
-import React from "react";
+import PostsList from "@/components/Admin/PostsList";
 
-const Posts = () => {
-    return <section>hello wolrd</section>;
-};
-
-export default Posts;
+export default function Component() {
+    return <PostsList />;
+}

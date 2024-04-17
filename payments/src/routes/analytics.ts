@@ -39,11 +39,6 @@ router.get(
             currentDate.getMonth(),
             1
         );
-        const lastDayOfMonth = new Date(
-            currentDate.getFullYear(),
-            currentDate.getMonth() + 1,
-            0
-        );
 
         const monthlyRevenue = await Subscribers.aggregate([
             {
@@ -144,16 +139,14 @@ router.get(
                 },
             },
         ]);
-        console.log(
-            usersCount,
-            lifeTimeRevenue[0].totalLifetimeRevenue,
-            monthlyRevenue[0].monthlyRevenue
-        );
+        console.log(usersCount, lifeTimeRevenue, monthlyRevenue);
+
         res.status(200).json({
             status: "success",
             analytics: {
-                lifeTimeRevenue: lifeTimeRevenue[0].totalLifetimeRevenue,
-                monthlyRevenue: monthlyRevenue[0].monthlyRevenue,
+                lifeTimeRevenue:
+                    lifeTimeRevenue[0]?.totalLifetimeRevenue || "0",
+                monthlyRevenue: monthlyRevenue[0]?.monthlyRevenue || "0",
                 users: usersCount[0],
             },
         });

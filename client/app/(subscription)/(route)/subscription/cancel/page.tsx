@@ -6,7 +6,7 @@ import React from "react";
 const page = () => {
     return (
         <section className="container w-full h-[90vh]">
-            <div className="h-full flex items-center justify-center">
+            <div className="h-full flex items-center justify-center flex-col">
                 <div className="max-w-md grid grid-cols-6 border p-2 rounded-md space-x-2 shadow-md">
                     <div className="flex items-center justify-center ">
                         <div className="bg-rose-500 rounded-md p-4">

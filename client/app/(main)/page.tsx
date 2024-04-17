@@ -26,7 +26,7 @@ export default async function Home() {
     const posts = await getAllposts(token);
     console.log(posts);
     return (
-        <section className="container w-full flex flex-col justify-center">
+        <section className="w-full flex flex-col justify-center">
             <CreatePostButton />
             {posts.map((post: PostType) => (
                 <PostCard key={post._id} post={post} />

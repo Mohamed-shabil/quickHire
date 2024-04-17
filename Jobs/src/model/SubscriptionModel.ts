@@ -1,38 +1,41 @@
-import { DataTypes, ModelDefined } from 'sequelize';
-import { sequelize } from '../config/config';
+import { DataTypes, ModelDefined } from "sequelize";
+import { sequelize } from "../config/config";
 
-export const Subscription: ModelDefined<any, any> = sequelize.define('Subscription', {
-    _id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
-        primaryKey: true
+export const Subscription: ModelDefined<any, any> = sequelize.define(
+    "Subscription",
+    {
+        _id: {
+            type: DataTypes.STRING,
+            primaryKey: true,
+        },
+
+        planName: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        postLimit: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+        description: {
+            type: DataTypes.TEXT,
+            allowNull: false,
+        },
+        startDate: {
+            type: DataTypes.DATE,
+            allowNull: false,
+        },
+        endDate: {
+            type: DataTypes.DATE,
+            allowNull: false,
+        },
+        billingPeriod: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
     },
-    recruiterId: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-        references: {
-            model: 'Users',
-            key: '_id'
-        }
-    },
-    subscriptionName:{
-        type:DataTypes.STRING,
-    },
-    postLimit:{
-        type:DataTypes.INTEGER
-    },
-    postCount:{
-        type:DataTypes.INTEGER
-    },
-    subscriptionStartDate: {
-        type: DataTypes.DATE,
-        allowNull: false
-    },
-    subscriptionEndDate: {
-        type: DataTypes.DATE,
-        allowNull: false
+    {
+        timestamps: true,
+        paranoid: true,
     }
-}, {
-    timestamps: true,
-    paranoid: true
-});
+);

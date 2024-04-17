@@ -1,32 +1,57 @@
-import mongoose from 'mongoose';
-import {app} from './app'
-import { kafkaClient } from './events/kafkaClient';
-import { kafkaConsumer } from '@quickhire/common';
-import { createProfile } from './events/consumer/consumeCallback';
+import mongoose from "mongoose";
+import { app } from "./app";
+import { kafkaClient } from "./events/kafkaClient";
+import { kafkaConsumer } from "@quickhire/common";
+import { createProfile } from "./events/consumer/consumeCallback";
 
-const start = async() =>{
-    if(!process.env.JWT_KEY){
-        throw new Error('jwt Key is not defined')
-    }
-    try{
-        if(!process.env.MONGO_URI){
-            throw new Error('Mongo Uri is not defined')
+const consumer = new kafkaConsumer(kafkaClient, "profile-group");
+
+const start = async () => {
+    try {
+        if (!process.env.JWT_KEY) {
+            throw new Error("JWT Key is not defined");
         }
-        console.log(process.env.MONGO_URI)
-        await mongoose.connect(process.env.MONGO_URI)
+        if (!process.env.MONGO_URI) {
+            throw new Error("Mongo Uri is not defined");
+        }
 
-        console.log("[Profile DB] Database Connected Successfully!")
-    
-        new kafkaConsumer(kafkaClient,'profile-group').consume('user-created',createProfile)
+        await mongoose.connect(process.env.MONGO_URI);
 
-    }catch(err){
+        console.log("[Profile DB] Database Connected Successfully!");
 
+        consumer.consume("user-created", createProfile);
+    } catch (err) {
         console.error(err);
-
     }
-    app.listen(3003,()=>{
-        console.log('[PROFILE SERVICE] Listening on port 3003!');
-    })
-}
+    app.listen(3003, () => {
+        console.log("[PROFILE SERVICE] Listening on port 3003!");
+    });
+};
 
-start(); 
+start();
+
+const errorTypes = ["unhandledRejection", "uncaughtException"];
+const signalTraps = ["SIGTERM", "SIGINT", "SIGUSR2"];
+
+errorTypes.forEach((type) => {
+    process.on(type, async (e) => {
+        try {
+            console.log(`process.on ${type}`);
+            console.log(e);
+            await consumer.disconnect();
+            process.exit(0);
+        } catch (error) {
+            process.exit(1);
+        }
+    });
+});
+
+signalTraps.forEach((type) => {
+    process.once(type, async () => {
+        try {
+            await consumer.disconnect();
+        } catch (error) {
+            process.kill(process.pid, type);
+        }
+    });
+});

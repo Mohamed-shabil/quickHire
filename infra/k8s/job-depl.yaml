@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: jobs-depl
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: jobs
+    template:
+        metadata:
+            labels:
+                app: jobs
+        spec:
+            containers:
+                - name: jobs
+                  image: shabil/jobs
+                  env:
+                      - name: POSTGRES_URI
+                        value: postgres://user:pass@jobs-postgres-srv:5432/jobs
+                      - name: JWT_KEY
+                        value: test1234
+                      - name: DIALECT
+                        value: postgres
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: jobs-srv
+spec:
+    selector:
+        app: jobs
+    ports:
+        - name: jobs
+          protocol: TCP
+          port: 3000
+          targetPort: 3000

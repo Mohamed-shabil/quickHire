@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, TramFront } from "lucide-react";
 import {
     Table,
     TableBody,
@@ -32,7 +32,7 @@ const getTransactions = async (token: string): Promise<Transaction[]> => {
             },
         }
     );
-
+    console.log(response);
     return response.data.transactions;
 };
 
@@ -42,6 +42,9 @@ const TransactionList = async () => {
         return redirect("/admin/login");
     }
     const transactions = await getTransactions(token);
+    if (!transactions) {
+        console.log(transactions);
+    }
     return (
         <Card className="xl:col-span-2">
             <CardHeader className="flex flex-row items-center">
@@ -78,7 +81,7 @@ const TransactionList = async () => {
                     <TableBody>
                         {transactions.length &&
                             transactions.map((transaction) => (
-                                <TableRow>
+                                <TableRow key={transaction._id}>
                                     <TableCell>
                                         <div className="font-medium">
                                             {transaction.userId.fullName ||

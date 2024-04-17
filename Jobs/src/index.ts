@@ -1,29 +1,63 @@
-import mongoose from 'mongoose';
-import {app} from './app'
-import { kafkaClient } from './events/kafkaClient';
-import { createUser } from './events/consumer/userCreated'
-import { UpdatedUser } from './events/consumer/updateUser'
-import './config/config'
-import './model/Relations'
+import { kafkaConsumer } from "@quickhire/common";
+import { app } from "./app";
+import { kafkaClient } from "./events/kafkaClient";
+import { createUser } from "./events/consumer/userCreated";
+import { UpdatedUser } from "./events/consumer/updateUser";
+import { createSubscription } from "./events/consumer/create-subscription";
+import { deleteSubscription } from "./events/consumer/delete-subscription";
+import { updateSubscription } from "./events/consumer/update-subscription";
 
-import {kafkaConsumer} from '@quickhire/common'
+import "./config/config";
+import "./model/Relations";
 
-const start = async() =>{
-    if(!process.env.JWT_KEY){
-        throw new Error('jwt Key is not defined')
-    }
-    try{
-        if(!process.env.MONGO_URI){
-            throw new Error('Mongo Uri is not defined')
+const consumer = new kafkaConsumer(kafkaClient, "job-group");
+
+const start = async () => {
+    try {
+        if (!process.env.JWT_KEY) {
+            throw new Error("jwt Key is not defined");
         }
-        new kafkaConsumer(kafkaClient,'job-group-1').consume('user-created',createUser)
-        new kafkaConsumer(kafkaClient,'job-group-2').consume('avatar-updated',UpdatedUser);
-    }catch(err){
+        if (!process.env.POSTGRES_URI) {
+            throw new Error("Sequelise Url is missing...");
+        }
+
+        consumer.consume("user-created", createUser);
+        consumer.consume("avatar-updated", UpdatedUser);
+        consumer.consume("subscription-created", createSubscription);
+        consumer.consume("subscription-updated", updateSubscription);
+        consumer.consume("subscription-deleted", deleteSubscription);
+    } catch (err) {
         console.error(err);
     }
-    app.listen(3005,()=>{ 
-        console.log('[JOBS SERVICE] Listening on port 3005!');
-    })
-}
+    app.listen(3005, () => {
+        console.log("[JOBS SERVICE] Listening on port 3005!");
+    });
+};
 
-start(); 
+start();
+
+const errorTypes = ["unhandledRejection", "uncaughtException"];
+const signalTraps = ["SIGTERM", "SIGINT", "SIGUSR2"];
+
+errorTypes.forEach((type) => {
+    process.on(type, async (e) => {
+        try {
+            console.log(`process.on ${type}`);
+            console.log(e);
+            await consumer.disconnect();
+            process.exit(0);
+        } catch (error) {
+            process.exit(1);
+        }
+    });
+});
+
+signalTraps.forEach((type) => {
+    process.once(type, async () => {
+        try {
+            await consumer.disconnect();
+        } catch (error) {
+            process.kill(process.pid, type);
+        }
+    });
+});

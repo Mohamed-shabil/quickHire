@@ -1,16 +1,24 @@
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Plus as FollowIcon, Ghost, Key, MoveUpRight as LinkIcon, MoreVertical, Pencil, PlusCircle } from "lucide-react";
+import {
+    Plus as FollowIcon,
+    Ghost,
+    Key,
+    MoveUpRight as LinkIcon,
+    MoreVertical,
+    Pencil,
+    PlusCircle,
+} from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import LinkCard from "@/components/Profile/LinkCard";
-import { cookies } from 'next/headers'
+import { cookies } from "next/headers";
 import { ExperienceCard } from "@/components/Profile/ExperienceCard";
 import { Heading } from "@/components/Heading";
 import { Container } from "@/components/Container";
 import { redirect } from "next/navigation";
-import { EducationCard } from '@/components/Profile/EducationCard'
+import { EducationCard } from "@/components/Profile/EducationCard";
 
-import {Profile,Education,Project,Experience} from '@/constants/constants'
+import { Profile, Education, Project, Experience } from "@/constants/constants";
 import axios from "axios";
 import { ProfileUpload } from "@/components/Profile/profileUpload";
 import { ProfileOptions } from "@/components/Profile/ProfileOption";
@@ -18,44 +26,74 @@ import { ProjectCard } from "@/components/Profile/ProjectCart";
 import Link from "next/link";
 import { FollowerListModal } from "@/components/Modals/FollowersListModal";
 
-const getProfile = async (token:string,username:string):Promise<{profile:Profile,followers:number,followings:number}>=>{
-    console.log('here is the token',token)
+const getProfile = async (
+    token: string,
+    username: string
+): Promise<{ profile: Profile; followers: number; followings: number }> => {
+    console.log("here is the token", token);
     axios.defaults.withCredentials = true;
-    const res = await axios.get(`http://localhost:3003/api/profile/my-profile/${username}`,{
-        headers: {
-            Cookie: `jwt=${token}`
+    const res = await axios.get(
+        `http://localhost:3003/api/profile/my-profile/${username}`,
+        {
+            headers: {
+                Cookie: `jwt=${token}`,
+            },
         }
-    });
+    );
     return res.data.data;
-}
+};
 
 interface Link {
-    title:string;
-    content:string;
-    url:string;
+    title: string;
+    content: string;
+    url: string;
 }
 
-export default async function MyProfile({params}:{params:{username:string}}) {
-    const token = cookies().get('jwt')?.value;
+export default async function MyProfile({
+    params,
+}: {
+    params: { username: string };
+}) {
+    const token = cookies().get("jwt")?.value;
     const username = params.username;
-    if(!token){
-        return redirect('/signup'); 
+    if (!token) {
+        return redirect("/signup");
     }
-    const {profile,followers,followings} = await getProfile(token,username);
+    const { profile, followers, followings } = await getProfile(
+        token,
+        username
+    );
 
-    console.log({profile})
+    console.log({ profile });
 
-    const links= [
+    const links = [
         {
             title: "Email",
             content: profile.email,
             url: "#",
         },
-        ...(profile.location ? [{title:"Location",content:profile.location,url:'#'}]:[]),
-        ...(profile.portfolio ? [{title:"Portfolio",content:profile.portfolio,url:profile.portfolio}]:[]),
-        ...(profile.portfolio ? [{title:profile.customUrl?.urlName,content:profile.customUrl?.url,url:profile.customUrl?.url}]:[])
-    ]
-    
+        ...(profile.location
+            ? [{ title: "Location", content: profile.location, url: "#" }]
+            : []),
+        ...(profile.portfolio
+            ? [
+                  {
+                      title: "Portfolio",
+                      content: profile.portfolio,
+                      url: profile.portfolio,
+                  },
+              ]
+            : []),
+        ...(profile.portfolio
+            ? [
+                  {
+                      title: profile.customUrl?.urlName,
+                      content: profile.customUrl?.url,
+                      url: profile.customUrl?.url,
+                  },
+              ]
+            : []),
+    ];
 
     console.log(links);
     return (
@@ -71,101 +109,115 @@ export default async function MyProfile({params}:{params:{username:string}}) {
                 <section className="flex gap-4 align-middle flex-col md:flex-row">
                     <span className="relative">
                         <Avatar className="w-36 h-36 border-4 shadow-xl border-white">
-                            <AvatarImage src={profile.avatar} className="object-cover"/>
+                            <AvatarImage
+                                src={profile.avatar}
+                                className="object-cover"
+                            />
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
-                        <ProfileUpload/>
+                        <ProfileUpload />
                     </span>
                     <div className="mt-8">
-                        <p className="font-bold text-2xl">{profile.fullName || profile.username}</p>
-                        <p className="text-slate-400">{profile.headline || profile.email}</p>
-                        <Button variant={'link'} className="p-0">
+                        <p className="font-bold text-2xl">
+                            {profile.fullName || profile.username}
+                        </p>
+                        <p className="text-slate-400">
+                            {profile.headline || profile.email}
+                        </p>
+                        <Button variant={"link"} className="p-0">
                             Resume
                         </Button>
                     </div>
                 </section>
-                <section className="mt-10">
-                    <div className="flex items-center justify-center">
-                        <div className="text-center border-r border-gray-500 p-4">
-                            <FollowerListModal userId={profile._id}/>
-                            <p className="font-bold text-2xl">{followers}</p>
-                            <p className="text-slate-400">Followers</p>
-                        </div>
-                        <div className="text-center p-4">
-                            <p className="font-bold text-2xl">{followers}</p>
-                            <p className="text-slate-400">Followings</p>
-                        </div>
-                    </div>
-                </section>
                 <section className="flex gap-4 my-auto">
-                    <ProfileOptions/>
+                    <ProfileOptions />
                 </section>
             </Container>
             <Separator className="container my-8" />
-            {profile.bio? 
-            <Container className="relative">
-                <Heading variant="profile-side">About Me</Heading>
-                <section className="flex-grow space-y-6">
-                    <section>
-                        <p className="mb-2 text-sm">{profile.bio}</p>
-                        <small className="text-primary font-bold text">
-                            Read more
-                        </small>
+            {profile.bio ? (
+                <Container className="relative">
+                    <Heading variant="profile-side">About Me</Heading>
+                    <section className="flex-grow space-y-6">
+                        <section>
+                            <p className="mb-2 text-sm">{profile.bio}</p>
+                            <small className="text-primary font-bold text">
+                                Read more
+                            </small>
+                        </section>
+
+                        <section className="flex md:bg-accent md:p-4 p-0 justify-between rounded text-primary flex-col gap-4 lg:flex-row">
+                            {links.map((link, i) => (
+                                // @ts-ignore
+                                <LinkCard key={i} link={link} />
+                            ))}
+                        </section>
                     </section>
-                
-                    <section className="flex md:bg-accent md:p-4 p-0 justify-between rounded text-primary flex-col gap-4 lg:flex-row">
-                        {links.map((link,i)=>(
-                            // @ts-ignore
-                            <LinkCard key={i} link={link}/>
-                        ))}
-                    </section>
-                </section>
-                <Link href={`/${username}/editProfile`}>
-                    <Button variant={'fade'} size={'mini'} className="absolute right-10 -top-7 p-2">
-                        <Pencil className="w-4 h-4"/>
-                    </Button>
-                </Link>
-            </Container> : <></>
-            }
+                    <Link href={`/${username}/editProfile`}>
+                        <Button
+                            variant={"fade"}
+                            size={"mini"}
+                            className="absolute right-10 -top-7 p-2"
+                        >
+                            <Pencil className="w-4 h-4" />
+                        </Button>
+                    </Link>
+                </Container>
+            ) : (
+                <></>
+            )}
 
             <Separator className="container my-8" />
-            {profile.experience?.length ? 
+            {profile.experience?.length ? (
                 <Container>
                     <Heading variant="profile-side">Experience</Heading>
                     <section className="relative flex-grow grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        {profile.experience.map((experience:Experience,index:number) => (
-                            <ExperienceCard key={index} experience={experience} userId={profile._id}/>
-                        ))}
+                        {profile.experience.map(
+                            (experience: Experience, index: number) => (
+                                <ExperienceCard
+                                    key={index}
+                                    experience={experience}
+                                    userId={profile._id}
+                                />
+                            )
+                        )}
                     </section>
-                </Container> :
-                <></>         
-            }
+                </Container>
+            ) : (
+                <></>
+            )}
             <Separator className="container my-8 " />
-            {profile.projects?.length ? 
+            {profile.projects?.length ? (
                 <Container>
                     <Heading variant="profile-side">Projects</Heading>
                     <section className="flex-grow grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        {profile.projects?.map((project:Project,index:number) => (
-                            <ProjectCard key={index} project={project}/>
-                        ))}
+                        {profile.projects?.map(
+                            (project: Project, index: number) => (
+                                <ProjectCard key={index} project={project} />
+                            )
+                        )}
                     </section>
-                </Container> :
-                <></>         
-            }
+                </Container>
+            ) : (
+                <></>
+            )}
             <Separator className="container my-8 " />
-            {profile.education?.length ? 
+            {profile.education?.length ? (
                 <Container>
                     <Heading variant="profile-side">Education</Heading>
                     <section className="flex-grow grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        {profile.education.map((education:Education,index:number) => (
-                            <EducationCard key={index} education={education} />
-                        ))}
+                        {profile.education.map(
+                            (education: Education, index: number) => (
+                                <EducationCard
+                                    key={index}
+                                    education={education}
+                                />
+                            )
+                        )}
                     </section>
-                </Container> :
-                <></>         
-            }
+                </Container>
+            ) : (
+                <></>
+            )}
         </main>
     );
 }
-
-

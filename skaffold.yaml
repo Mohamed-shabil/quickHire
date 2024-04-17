@@ -1,34 +1,72 @@
 apiVersion: skaffold/v2beta19
 kind: Config
 deploy:
-  kubectl:
-    manifests:
-      - ./infra/k8s/*.yaml
+    kubectl:
+        manifests:
+            - ./infra/k8s/*.yaml
 build:
-  googleCloudBuild:
-    projectId: quickhire-dev-412913
-  artifacts:
-    - image: us.gcr.io/quickhire-dev-412913/profile
-      context: profile
-      docker:
-        dockerfile: Dockerfile
-      sync:
-        manual:
-          - src: "src/**/*.ts"
-            dest: .
-    - image: us.gcr.io/quickhire-dev-412913/auth
-      context: auth
-      docker:
-        dockerfile: Dockerfile
-      sync:
-        manual:
-          - src: "src/**/*.ts"
-            dest: .
-    - image: us.gcr.io/quickhire-dev-412913/client
-      context: client
-      docker:
-        dockerfile: Dockerfile
-      sync:
-        manual:
-          - src: "**/*.ts"
-            dest: .
+    local:
+        push: false
+    artifacts:
+        - image: shabil/auth
+          context: auth
+          docker:
+              dockerfile: Dockerfile
+          sync:
+              manual:
+                  - src: "src/**/*.ts"
+                    dest: .
+
+        - image: shabil/chats
+          context: chats
+          docker:
+              dockerfile: Dockerfile
+          sync:
+              manual:
+                  - src: "src/**/*.ts"
+                    dest: .
+
+        - image: shabil/client
+          context: client
+          docker:
+              dockerfile: Dockerfile
+          sync:
+              manual:
+                  - src: "**/*.ts"
+                    dest: .
+
+        - image: shabil/jobs
+          context: jobs
+          docker:
+              dockerfile: Dockerfile
+          sync:
+              manual:
+                  - src: "src/**/*.ts"
+                    dest: .
+
+        - image: shabil/payments
+          context: payments
+          docker:
+              dockerfile: Dockerfile
+          sync:
+              manual:
+                  - src: "src/**/*.ts"
+                    dest: .
+
+        - image: shabil/posts
+          context: posts
+          docker:
+              dockerfile: Dockerfile
+          sync:
+              manual:
+                  - src: "src/**/*.ts"
+                    dest: .
+
+        - image: shabil/profile
+          context: profile
+          docker:
+              dockerfile: Dockerfile
+          sync:
+              manual:
+                  - src: "src/**/*.ts"
+                    dest: .

@@ -1,8 +1,7 @@
 import React from "react";
 import { Searchjob } from "@/components/Jobs/Searchjob";
 
-const JobsLayout = async ({children,searchParams, params}:{children:React.ReactNode,params: any,searchParams?: { [key: string]: string | string[] | undefined }}) => {
-
+const JobsLayout = async ({ children }: { children: React.ReactNode }) => {
     return (
         <main className="w-full container">
             <section
@@ -14,6 +13,6 @@ const JobsLayout = async ({children,searchParams, params}:{children:React.ReactN
             </section>
             {children}
         </main>
-    )
-}
+    );
+};
 export default JobsLayout;

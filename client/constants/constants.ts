@@ -68,14 +68,13 @@ export type Profile = {
     };
     location?: string;
     profileType?: "seeker" | "recruiter" | "admin";
+    name: string;
     username: string;
     phone?: string;
     coverImage?: string;
     experience?: Experience[];
     education?: Education[];
     projects?: Project[];
-    followers?: string[];
-    following?: string[];
 };
 
 // posts type
@@ -95,8 +94,9 @@ interface Comment {
     createdAt?: Date;
 }
 
-interface Report {
+export interface Report {
     userId?: string;
+    reason: string;
     createdAt?: Date;
 }
 
@@ -120,7 +120,7 @@ export type PostType = {
     isLikedByCurrentUser: boolean;
     isFollowing: boolean;
     totalLikes: number;
-    report?: Report[];
+    report: Report[];
     createdAt: Date;
 };
 
@@ -128,7 +128,7 @@ export type UserType = "seeker" | "admin" | "recruiter";
 
 export type ContentType = "text" | "video" | "image";
 
-export type Chats = {
+export type IChats = {
     content: string;
     contentType: ContentType;
     reciever: string;
@@ -143,7 +143,7 @@ export interface ChatUser {
     fullName: string;
     headline: string;
     name: string;
-    message: Chats;
+    message: IChats;
 }
 
 type workPlace = "Hybrid" | "Onsite" | "Remote";

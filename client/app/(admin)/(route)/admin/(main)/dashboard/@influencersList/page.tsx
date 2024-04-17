@@ -37,7 +37,10 @@ const InfluencerList = async () => {
             </CardHeader>
             <CardContent className="grid gap-8">
                 {users.map((user) => (
-                    <div className="flex items-center gap-4">
+                    <div
+                        className="flex items-center gap-4"
+                        key={user.profile._id}
+                    >
                         <Avatar className="hidden h-9 w-9 sm:flex">
                             <AvatarImage
                                 src={user.profile.avatar}

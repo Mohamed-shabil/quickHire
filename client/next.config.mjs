@@ -1,12 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    images:{
-        domains:[
+    experimental: {
+        missingSuspenseWithCSRBailout: false,
+    },
+    images: {
+        domains: [
             "images.unsplash.com",
             "quickhire-21.s3.ap-south-1.amazonaws.com",
-            "utfs.io"
-        ]
-    }
+            "utfs.io",
+        ],
+    },
 };
 
 export default nextConfig;
