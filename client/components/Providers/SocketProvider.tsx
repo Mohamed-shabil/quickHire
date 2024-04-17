@@ -1,21 +1,16 @@
 "use client";
 import { IChats } from "@/constants/constants";
 import React, { RefObject, useRef } from "react";
-import {
-    createContext,
-    useContext,
-    useEffect,
-    useState,
-    useCallback,
-} from "react";
+import { useContext, useEffect, useState, useCallback } from "react";
 import { io, Socket } from "socket.io-client";
 import { toast } from "../ui/use-toast";
-import { Check } from "lucide-react";
-import Link from "next/link";
 import { Button } from "../ui/button";
 import { Stream } from "stream";
 import Peer, { Instance } from "simple-peer";
 import { redirect } from "next/navigation";
+import { UseSelector, useSelector } from "react-redux";
+import { RootState } from "@/store/reducers";
+import Image from "next/image";
 
 interface SocketProviderProps {
     children?: React.ReactNode;
@@ -25,6 +20,8 @@ interface Call {
     isReceivingCall: boolean;
     from: string;
     signal: any;
+    avatar?: "";
+    name: string;
 }
 
 interface ISocketContext {
@@ -63,9 +60,10 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
     const [callAccepted, setCallAccepted] = useState(Boolean);
     const [callEnded, setCallEnded] = useState(Boolean);
     const [stream, setStream] = useState<MediaStream>();
-    const [name, setName] = useState("");
     const [call, setCall] = useState<Call>();
     const [me, setMe] = useState("");
+
+    const user = useSelector((state: RootState) => state.user.userData);
 
     const onMessageRec = useCallback((msg: IChats) => {
         console.log("On Message REc", msg);
@@ -89,15 +87,8 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
             });
 
         socket?.on("me", (id) => setMe(id));
-        socket?.on("callUser", ({ from, signal }) => {
-            setCall({ isReceivingCall: true, from, signal });
-            toast({
-                title: "Somebody is calling you",
-                description: "Welcome to QuickHire",
-                action: (
-                    <Button onClick={() => answerCall()}>Answer Call</Button>
-                ),
-            });
+        socket?.on("callUser", ({ from, signal, name, avatar }) => {
+            setCall({ isReceivingCall: true, from, signal, name, avatar });
         });
     };
 
@@ -134,7 +125,8 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
                 userToCall: id,
                 signalData: data,
                 from: me,
-                name,
+                name: user?.name,
+                avatar: user?.avatar || "",
             });
         });
 

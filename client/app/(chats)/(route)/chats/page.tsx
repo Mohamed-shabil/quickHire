@@ -51,8 +51,9 @@ function Chats() {
     }, [user]);
 
     useEffect(() => {
+        axios.defaults.withCredentials = true;
         axios
-            .get("http://localhost:3006/api/chats/getAll")
+            .get("http://localhost:3006/api/chats/get-chats")
             .then((res) => {
                 console.log("chatsuser -----", res.data.chats);
                 setChatUsers(res.data.chats);
@@ -61,25 +62,14 @@ function Chats() {
                 console.log(err);
             });
         console.log("Im working....");
-        axios
-            .get("http://localhost:3006/api/chats/searchProfile", {
-                params: {
-                    name: chatUser,
-                },
-            })
-            .then((res) => {
-                console.log(res.data.users);
-                setChatUsers(res.data.users);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
     }, []);
+
+    useEffect(() => {}, [chatUser]);
 
     const onSearch = async (value: string) => {
         axios.defaults.withCredentials = true;
         axios
-            .get("http://localhost:3006/api/chats/searchProfile", {
+            .get("http://localhost:3006/api/chats/search", {
                 params: {
                     name: value,
                 },
@@ -177,7 +167,11 @@ function Chats() {
                                         </>
                                     ))
                                 ) : (
-                                    <></>
+                                    <div className="w-full flex h-28 items-center justify-center">
+                                        <h2 className="text-sm font-semibold">
+                                            You don't have any chats
+                                        </h2>
+                                    </div>
                                 )}
                                 <ScrollBar orientation="horizontal" />
                             </ScrollArea>

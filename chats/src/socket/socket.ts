@@ -63,17 +63,23 @@ class SocketService {
                 socket.broadcast.emit("callEndeded");
             });
 
-            socket.on("calluser", ({ userToCall, signalData, from }) => {
-                const recipientSocketId = this.userSocketMap.get(userToCall);
-                console.log("CallUser", recipientSocketId);
-                if (recipientSocketId) {
-                    console.log(from);
-                    io.to(recipientSocketId).emit("calluser", {
-                        signal: signalData,
-                        from,
-                    });
+            socket.on(
+                "calluser",
+                ({ userToCall, signalData, from, name, avatar }) => {
+                    const recipientSocketId =
+                        this.userSocketMap.get(userToCall);
+                    console.log("CallUser", recipientSocketId);
+                    if (recipientSocketId) {
+                        console.log(from);
+                        io.to(recipientSocketId).emit("calluser", {
+                            signal: signalData,
+                            from,
+                            name,
+                            avatar,
+                        });
+                    }
                 }
-            });
+            );
 
             socket.on("answercall", (data) => {
                 console.log("answerCall... callaccepted...");

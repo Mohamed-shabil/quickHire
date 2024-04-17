@@ -1,5 +1,6 @@
 "use client"; // Error components must be Client Components
 
+import { Button } from "@/components/ui/button";
 import { AxiosError } from "axios";
 import { useEffect } from "react";
 
@@ -11,20 +12,15 @@ export default function Error({
     reset: () => void;
 }) {
     useEffect(() => {
-        console.log("Erorr-------------");
+        console.log("Erorr-------------", error);
     }, [error]);
 
     return (
-        <div>
+        <div className="flex items-center justify-center">
             <h2>{error.message}</h2>
-            <button
-                onClick={
-                    // Attempt to recover by trying to re-render the segment
-                    () => reset()
-                }
-            >
+            <Button variant={"link"} onClick={() => reset()}>
                 Try again
-            </button>
+            </Button>
         </div>
     );
 }

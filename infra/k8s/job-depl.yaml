@@ -17,9 +17,11 @@ spec:
                   image: shabil/jobs
                   env:
                       - name: POSTGRES_URI
-                        value: "postgres://user:pass@jobs-postgres-srv:5432/jobs"
+                        value: postgres://user:pass@jobs-postgres-srv:5432/jobs
                       - name: JWT_KEY
                         value: test1234
+                      - name: DIALECT
+                        value: postgres
 ---
 apiVersion: v1
 kind: Service

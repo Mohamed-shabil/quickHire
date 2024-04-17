@@ -96,7 +96,7 @@ const ChatSection = ({ user }: { user: ChatUser }) => {
             data.append("contentType", contentType);
 
             const response = await axios.post(
-                "http://localhost:3006/api/chats/saveChat",
+                "http://localhost:3006/api/chats/save-chat",
                 data
             );
             console.log("Saved Chat", response);

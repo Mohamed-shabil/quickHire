@@ -1,12 +1,5 @@
 "use client";
-import { useSocket } from "@/components/Providers/SocketProvider";
-import React, {
-    Suspense,
-    useCallback,
-    useContext,
-    useEffect,
-    useState,
-} from "react";
+import React, { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 import { redirect, useSearchParams } from "next/navigation";
 import { usePeer } from "@/components/Providers/PeerProvider";
@@ -21,9 +14,7 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-    AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Http2ServerRequest } from "http2";
 
 const VideoCall = () => {
     const searchParams = useSearchParams();
@@ -49,14 +40,14 @@ const VideoCall = () => {
     const [answer, setAnswer] = useState<boolean>(false);
 
     useEffect(() => {
-        if (!!initiator) {
+        getMedia();
+        if (initiator) {
             setOpen(true);
         }
         if (call?.isReceivingCall && !callAccepted) {
             setAnswer(true);
         }
-        getMedia();
-    }, [initiator, call?.isReceivingCall, !callAccepted]);
+    }, []);
 
     return (
         <div>

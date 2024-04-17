@@ -15,6 +15,20 @@ spec:
             containers:
                 - name: auth
                   image: shabil/auth
+                  readinessProbe:
+                      exec:
+                          command:
+                              - /bin/sh
+                              - -c
+                              - |
+                                  # Check if Kafka is reachable
+                                  if nc -z kafka-service 9092; then
+                                    exit 0
+                                  else
+                                    exit 1
+                                  fi
+                      initialDelaySeconds: 5
+                      periodSeconds: 2
                   env:
                       - name: MONGO_URI
                         value: "mongodb://auth-mongo-srv:27017/auth"

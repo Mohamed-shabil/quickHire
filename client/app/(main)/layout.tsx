@@ -9,9 +9,9 @@ const mainLayout = async ({ children }: { children: React.ReactNode }) => {
             <ModalProvider />
             <Navbar />
             <SideBar>
-                <div className="w-full flex items-start relative">
+                <div className="w-full flex flex-row justify-between relative">
                     <div className="container">{children}</div>
-                    <div className="w-full max-w-sm">
+                    <div className="w-full max-w-sm flex">
                         <ProfileCard />
                     </div>
                 </div>
