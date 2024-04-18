@@ -29,5 +29,7 @@ jobs:
                   creds: ${{ secrets.AZURE_CREDENTIALS }}
             - name: set kubectl context
               run: az aks get-credentials --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --name ${{ secrets.AZURE_CLUSTER_NAME }}
+            - name: config current context
+              run: kubectl config current-context
             - name: deploy to AKS
               run: kubectl rollout restart deployment posts-depl
