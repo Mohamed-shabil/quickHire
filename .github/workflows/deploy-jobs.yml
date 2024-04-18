@@ -1,4 +1,4 @@
-name: deploy-auth
+name: deploy-jobs
 
 on:
     push:
