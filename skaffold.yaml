@@ -17,14 +17,14 @@ build:
                   - src: "src/**/*.ts"
                     dest: .
 
-        - image: shabil/chats
-          context: chats
-          docker:
-              dockerfile: Dockerfile
-          sync:
-              manual:
-                  - src: "src/**/*.ts"
-                    dest: .
+        # - image: shabil/chats
+        #   context: chats
+        #   docker:
+        #       dockerfile: Dockerfile
+        #   sync:
+        #       manual:
+        #           - src: "src/**/*.ts"
+        #             dest: .
 
         - image: shabil/client
           context: client
@@ -35,38 +35,38 @@ build:
                   - src: "**/*.ts"
                     dest: .
 
-        - image: shabil/jobs
-          context: jobs
-          docker:
-              dockerfile: Dockerfile
-          sync:
-              manual:
-                  - src: "src/**/*.ts"
-                    dest: .
+        # - image: shabil/jobs
+        #   context: jobs
+        #   docker:
+        #       dockerfile: Dockerfile
+        #   sync:
+        #       manual:
+        #           - src: "src/**/*.ts"
+        #             dest: .
 
-        - image: shabil/payments
-          context: payments
-          docker:
-              dockerfile: Dockerfile
-          sync:
-              manual:
-                  - src: "src/**/*.ts"
-                    dest: .
+        # - image: shabil/payments
+        #   context: payments
+        #   docker:
+        #       dockerfile: Dockerfile
+        #   sync:
+        #       manual:
+        #           - src: "src/**/*.ts"
+        #             dest: .
 
-        - image: shabil/posts
-          context: posts
-          docker:
-              dockerfile: Dockerfile
-          sync:
-              manual:
-                  - src: "src/**/*.ts"
-                    dest: .
+        # - image: shabil/posts
+        #   context: posts
+        #   docker:
+        #       dockerfile: Dockerfile
+        #   sync:
+        #       manual:
+        #           - src: "src/**/*.ts"
+        #             dest: .
 
-        - image: shabil/profile
-          context: profile
-          docker:
-              dockerfile: Dockerfile
-          sync:
-              manual:
-                  - src: "src/**/*.ts"
-                    dest: .
+        # - image: shabil/profile
+        #   context: profile
+        #   docker:
+        #       dockerfile: Dockerfile
+        #   sync:
+        #       manual:
+        #           - src: "src/**/*.ts"
+        #             dest: .
