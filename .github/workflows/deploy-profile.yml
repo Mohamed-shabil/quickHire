@@ -4,19 +4,18 @@ on:
     push:
         branches:
             - main
-
 jobs:
     build:
         runs-on: ubuntu-latest
         steps:
             - name: build and push to push docker hub
               uses: actions/checkout@v2
-            - run: cd client && docker build -t shabil/client .
+            - run: cd profile && docker build -t shabil/profile .
             - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
               env:
                   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
                   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-            - run: docker push shabil/client
+            - run: docker push shabil/profile
 
     deploy:
         needs: build
@@ -31,4 +30,4 @@ jobs:
             - name: set kubectl context
               run: az aks get-credentials --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --name ${{ secrets.AZURE_CLUSTER_NAME }}
             - name: deploy to AKS
-              run: kubectl rollout restart deployment client-depl
+              run: kubectl rollout restart deployment profile-depl
