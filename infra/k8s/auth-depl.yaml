@@ -28,7 +28,7 @@ spec:
                                     exit 1
                                   fi
                       initialDelaySeconds: 5
-                      periodSeconds: 2
+                      periodSeconds: 1
                   env:
                       - name: MONGO_URI
                         value: "mongodb://auth-mongo-srv:27017/auth"
