@@ -8,17 +8,10 @@ on:
 jobs:
     deploy:
         runs-on: ubuntu-latest
-
         steps:
-            - name: checkout code
-              uses: actions/checkout@v2
-            - name: login to azure
-              uses: azure/login@v1
+            - uses: actions/checkout@v2
+            - uses: digitalocean/action-doctl@v2
               with:
-                  creds: ${{ secrets.AZURE_CREDENTIALS }}
-            - name: set kubectl context
-              run: az aks get-credentials --resource-group ${{secrets.AZURE_RESOURCE_GROUP}} --name ${{secrets.AZURE_CLUSTER_NAME}}
-            - name: config current context
-              run: kubectl config current-context
-            - name: deploy to AKS
-              run: kubectl apply -f infra/k8s
+                  token: ${{ secrets.DIGITAL_OCEAN_ACCESS_TOKEN }}
+            - run: doctl kubernetes cluster kubeconfig save
+            - run: kubectl apply -f infra/k8s

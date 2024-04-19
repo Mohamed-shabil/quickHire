@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { RootState } from "@/store/reducers";
 import { current } from "@reduxjs/toolkit";
 import axios, { AxiosResponse } from "axios";
+import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -37,9 +38,12 @@ function ProfileCard({ className }: { className?: String }) {
     return (
         <div className={cn("fixed w-full max-w-sm", className)}>
             <div className="flex flex-col items-center pb-10">
-                <img
+                <Image
+                    width={100}
+                    height={100}
                     className="w-24 h-24 mb-3 rounded-full shadow-lg object-cover ring-primary right-2 ring-offset-2"
                     src={profile?.avatar || "/user.png"}
+                    alt={""}
                 />
                 <h5 className="mb-1 text-xl font-medium capitalize">
                     {profile?.fullName || profile?.name}

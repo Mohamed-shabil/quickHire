@@ -7,7 +7,7 @@ metadata:
         nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
     rules:
-        - host: quick-hire.online
+        - host: www.quick-hire.online
           http:
               paths:
                   - path: /api/users/?(.*)
@@ -22,6 +22,34 @@ spec:
                     backend:
                         service:
                             name: profile-srv
+                            port:
+                                number: 3000
+                  - path: /api/posts/?(.*)
+                    pathType: Prefix
+                    backend:
+                        service:
+                            name: posts-srv
+                            port:
+                                number: 3000
+                  - path: /api/chats/?(.*)
+                    pathType: Prefix
+                    backend:
+                        service:
+                            name: chats-srv
+                            port:
+                                number: 3000
+                  - path: /api/jobs/?(.*)
+                    pathType: Prefix
+                    backend:
+                        service:
+                            name: jobs-srv
+                            port:
+                                number: 3000
+                  - path: /api/payments/?(.*)
+                    pathType: Prefix
+                    backend:
+                        service:
+                            name: payments-srv
                             port:
                                 number: 3000
                   - path: /?(.*)

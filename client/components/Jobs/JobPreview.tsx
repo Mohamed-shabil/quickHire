@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { toast } from "@/components/ui/use-toast";
 import { Jobs } from "@/constants/constants";
-import ApplyJobModal from "../Modals/applyJobModal";
+import ApplyJobModal from "@/components/Modals/ApplyJobModal";
 import Image from "next/image";
 import { AlertCircle } from "lucide-react";
 import DOMPurify from "dompurify";

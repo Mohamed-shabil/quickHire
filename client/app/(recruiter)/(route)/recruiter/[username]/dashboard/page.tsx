@@ -12,7 +12,7 @@ import CreateJobTrigger from "@/components/Recruiter/CreateJobTrigger";
 import DeleteJobTrigger from "@/components/Recruiter/DeleteJobTrigger";
 import axios from "axios";
 import Link from "next/link";
-import { CreateJobModal } from "@/components/Modals/createJobModal";
+import { CreateJobModal } from "@/components/Modals/CreateJobModal";
 import { Josefin_Sans } from "next/font/google";
 
 const getMyJob = async (token: string, recruiter: string) => {

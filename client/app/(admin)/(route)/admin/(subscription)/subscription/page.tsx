@@ -2,7 +2,7 @@ import { Subscription } from "@/constants/constants";
 import axios from "axios";
 import { cookies } from "next/headers";
 import React, { useEffect, useState } from "react";
-import SubscriptionModal from "@/components/Modals/subscriptionModal";
+import SubscriptionModal from "@/components/Modals/SubscriptionModal";
 import PricingPlan from "@/components/PricingPlan";
 import {
     HoverCard,

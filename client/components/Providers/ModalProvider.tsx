@@ -1,13 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
 import { AboutFormModal } from "@/components/Modals/AboutFormModal";
-import { EducationFormModal } from "@/components/Modals/educationFormModal";
-import { ExperienceFormModal } from "@/components/Modals/experienceModal";
+import { EducationFormModal } from "@/components/Modals/EducationFormModal";
+import { ExperienceFormModal } from "@/components/Modals/ExperienceModal";
 import { LinkFormModal } from "@/components/Modals/LinksFormModal";
-import { AvatarModal } from "@/components/Modals/avatarModal";
-import { CreatePostModal } from "../Modals/createPostModal";
-import { CreateJobModal } from "../Modals/createJobModal";
-import { ProjectFormModal } from "../Modals/projectModal";
+import { AvatarModal } from "@/components/Modals/AvatarModal";
+import { CreatePostModal } from "../Modals/CreatePostModal";
+import { CreateJobModal } from "../Modals/CreateJobModal";
+import { ProjectFormModal } from "../Modals/ProjectModal";
 const ModalProvider = () => {
     const [isMounted, setIsMouted] = useState(false);
     useEffect(() => {
