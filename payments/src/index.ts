@@ -14,7 +14,13 @@ const start = async () => {
         }
 
         if (!process.env.JWT_KEY) {
-            throw new Error("jwt Key is not defined");
+            throw new Error("JWT_KEY is not defined");
+        }
+        if (!process.env.STRIPE_PRIVATE_KEY) {
+            throw new Error("STRIPE_PRIVATE_KEY is not defined");
+        }
+        if (!process.env.END_POINT_SECRET) {
+            throw new Error("END_POINT_SECRET is not defined");
         }
 
         console.log(process.env.MONGO_URI);

@@ -17,8 +17,22 @@ const start = async () => {
         if (!process.env.JWT_KEY) {
             throw new Error("jwt Key is not defined");
         }
+
         if (!process.env.POSTGRES_URI) {
-            throw new Error("Sequelise Url is missing...");
+            throw new Error("POSTGRES_URI is missing...");
+        }
+
+        if (!process.env.AWS_BUCKET_NAME) {
+            throw new Error("AWS_BUCKET_NAME is missing...");
+        }
+        if (!process.env.AWS_BUCKET_REGION) {
+            throw new Error("AWS_BUCKET_REGION is missing...");
+        }
+        if (!process.env.AWS_S3_ACCESSKEY) {
+            throw new Error("AWS_S3_ACCESSKEY is missing...");
+        }
+        if (!process.env.AWS_S3_SECRETKEY) {
+            throw new Error("AWS_S3_SECRETKEY is missing...");
         }
 
         consumer.consume("user-created", createUser);

@@ -14,6 +14,18 @@ const start = async () => {
         if (!process.env.MONGO_URI) {
             throw new Error("Mongo Uri is not defined");
         }
+        if (!process.env.AWS_BUCKET_NAME) {
+            throw new Error("AWS_BUCKET_NAME is not defined");
+        }
+        if (!process.env.AWS_BUCKET_REGION) {
+            throw new Error("AWS_BUCKET_REGION is not defined");
+        }
+        if (!process.env.AWS_S3_ACCESSKEY) {
+            throw new Error("AWS_S3_ACCESSKEY is not defined");
+        }
+        if (!process.env.AWS_S3_SECRETKEY) {
+            throw new Error("AWS_S3_SECRETKEY is not defined");
+        }
 
         await mongoose.connect(process.env.MONGO_URI);
 

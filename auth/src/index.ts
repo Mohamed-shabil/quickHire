@@ -8,10 +8,22 @@ import { UpdatedUser } from "./events/consumer/updatedUser";
 const start = async () => {
     try {
         if (!process.env.JWT_KEY) {
-            throw new Error("jwt Key is not defined");
+            throw new Error("JWT_KEY is not defined");
         }
         if (!process.env.MONGO_URI) {
-            throw new Error("Mongo Uri is not defined");
+            throw new Error("MONGO_URI is not defined");
+        }
+        if (!process.env.JWT_ACCESSTOKEN_EXPIRESIN) {
+            throw new Error("JWT_ACCESSTOKEN_EXPIRESIN is not defined");
+        }
+        if (!process.env.MAIL_PASS) {
+            throw new Error("MAIL_PASS is not defined");
+        }
+        if (!process.env.MAIL) {
+            throw new Error("MAIL is not defined");
+        }
+        if (!process.env.RESET_LINK) {
+            throw new Error("RESET_LINK is not defined");
         }
         console.log(process.env.MONGO_URI);
         await mongoose.connect(process.env.MONGO_URI);
