@@ -18,7 +18,9 @@ router.get(
         if (!user) {
             throw new NotAutherizedError();
         }
-        const currentUser = await User.findById({ _id: user._id });
+        const currentUser = await User.findById({ _id: user._id }).select(
+            "-password"
+        );
 
         if (!currentUser) {
             throw new NotAutherizedError();

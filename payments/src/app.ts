@@ -18,6 +18,8 @@ import { currentSubscriptionRoute } from "./routes/current-subscription";
 
 export const app = express();
 
+app.set("trust proxy", true);
+
 app.use(
     cors({
         origin: process.env.CORS_ORIGIN!,
@@ -33,8 +35,6 @@ app.options(
         credentials: true,
     })
 );
-
-app.set("trust proxy", true);
 
 app.use(stripeWebhookRoute);
 
@@ -61,8 +61,6 @@ app.use(createSubscriptionRoute);
 app.use(subscriptionsRoute);
 app.use(editSubscriptionRoute);
 app.use(deleteSubscriptionRoute);
-
-// app.use(subscriptionRoute)
 
 app.all("*", () => {
     console.log("route not found 404");
