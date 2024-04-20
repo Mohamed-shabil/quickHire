@@ -3,7 +3,7 @@ import { Check, X } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
-const page = () => {
+const SubscriptionCancel = () => {
     return (
         <section className="container w-full h-[90vh]">
             <div className="h-full flex items-center justify-center flex-col">
@@ -15,11 +15,12 @@ const page = () => {
                     </div>
                     <div className="col-span-5">
                         <h1 className="text-base font-medium ">
-                            Payment failed
+                            Payment Cancelled
                         </h1>
                         <p className="text-sm text-secondary-foreground">
-                            Lorem ipsum dolor sit amet consectetur adipisicing
-                            elit. Debitis, distinctio voluptate. Doloribus eaque
+                            {
+                                "We're sorry to see you go! If you have any questions, feel free to reach out. We hope to see you back soon!"
+                            }
                         </p>
                     </div>
                 </div>
@@ -31,4 +32,4 @@ const page = () => {
     );
 };
 
-export default page;
+export default SubscriptionCancel;

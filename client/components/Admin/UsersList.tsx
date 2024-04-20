@@ -19,20 +19,16 @@ import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import axios from "axios";
-import { User } from "@/constants/constants";
+import { axiosInstance } from "@/axios/axios";
+import { User } from "@/types/types";
 import { BlockSwitch } from "./BlockSwitch";
 
 const getAllUsers = async (token: string, role: string) => {
-    const response = await axios.get(
-        "http://localhost:3001/api/users/get-all",
-        {
-            params: {},
-            headers: {
-                Cookie: `jwt=${token}`,
-            },
-        }
-    );
+    const response = await axiosInstance.get("/api/auth/users/get-all", {
+        headers: {
+            Cookie: `jwt=${token}`,
+        },
+    });
 
     console.log(response.data);
 

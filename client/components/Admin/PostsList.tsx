@@ -25,7 +25,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import axios from "axios";
+import { axiosInstance } from "@/axios/axios";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import moment from "moment";
@@ -53,14 +53,11 @@ type TrendingPost = {
 };
 
 const getPosts = async (token: string): Promise<TrendingPost[]> => {
-    const response = await axios.get(
-        "http://localhost:3004/api/posts/trending-posts",
-        {
-            headers: {
-                Cookie: `jwt=${token}`,
-            },
-        }
-    );
+    const response = await axiosInstance.get("/api/posts/trending-posts", {
+        headers: {
+            Cookie: `jwt=${token}`,
+        },
+    });
 
     return response.data.posts;
 };

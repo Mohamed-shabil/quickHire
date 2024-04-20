@@ -5,7 +5,7 @@ import { User } from "../model/user";
 const router = expres.Router();
 
 router.get(
-    "/api/users/get-all",
+    "/api/auth/users/get-all",
     requireAuth,
     isAdmin,
     catchAsync(async (req: Request, res: Response) => {

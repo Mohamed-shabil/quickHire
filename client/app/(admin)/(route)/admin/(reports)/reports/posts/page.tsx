@@ -5,16 +5,15 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import axios from "axios";
+
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { Report, Media } from "@/constants/constants";
-import { Button } from "@/components/ui/button";
-import { Trash } from "lucide-react";
+import { Report, Media } from "@/types/types";
 import DeletePost from "@/components/Admin/DeletePost";
+import { axiosInstance } from "@/axios/axios";
 
 type Post = {
     _id: string;
@@ -32,7 +31,7 @@ type Post = {
 };
 
 const getReportedPosts = async (token: string): Promise<Post[]> => {
-    const response = await axios.get("http://localhost:3004/api/posts/report", {
+    const response = await axiosInstance.get("/api/posts/report", {
         headers: {
             Cookie: `jwt=${token}`,
         },

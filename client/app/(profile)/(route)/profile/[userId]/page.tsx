@@ -1,4 +1,3 @@
-import axios from "axios";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
@@ -10,10 +9,11 @@ import { ExperienceCard } from "@/components/Profile/ExperienceCard";
 import { Heading } from "@/components/Heading";
 import { Container } from "@/components/Container";
 import { EducationCard } from "@/components/Profile/EducationCard";
-import { Profile, Education, Project, Experience } from "@/constants/constants";
+import { Profile, Education, Project, Experience } from "@/types/types";
 import { ProjectCard } from "@/components/Profile/ProjectCart";
 import { Button } from "@/components/ui/button";
 import { MessageCircleMore } from "lucide-react";
+import { axiosInstance } from "@/axios/axios";
 
 interface Link {
     title: string;
@@ -25,10 +25,9 @@ const getProfile = async (
     token: string,
     userId: string
 ): Promise<{ profile: Profile; followers: number; followings: number }> => {
-    axios.defaults.withCredentials = true;
-    const res = await axios.get(`http://localhost:3003/api/profile/${userId}`, {
+    const res = await axiosInstance.get(`/api/profile/${userId}`, {
         headers: {
-            Cookie: `_accessToken=${token}`,
+            Cookie: `jwt=${token}`,
         },
     });
 

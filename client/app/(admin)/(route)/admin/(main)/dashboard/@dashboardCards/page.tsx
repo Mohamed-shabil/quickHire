@@ -1,20 +1,17 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DollarSign, User, UserRound, UserSearch } from "lucide-react";
-import axios from "axios";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { Analytics } from "@/constants/constants";
+import { Analytics } from "@/types/types";
+import { axiosInstance } from "@/axios/axios";
 
 const getDashBoardData = async (token: string): Promise<Analytics> => {
-    const response = await axios.get(
-        "http://localhost:3007/api/payments/dashboard-data",
-        {
-            headers: {
-                Cookie: `jwt=${token}`,
-            },
-        }
-    );
+    const response = await axiosInstance.get("/api/payments/dashboard-data", {
+        headers: {
+            Cookie: `jwt=${token}`,
+        },
+    });
     console.log(response.data.analyticsData);
     return response.data.analytics;
 };

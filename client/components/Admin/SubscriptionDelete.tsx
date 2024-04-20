@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import axios from "axios";
+import { axiosInstance } from "@/axios/axios";
 import { useRouter } from "next/router";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
@@ -10,11 +10,8 @@ function SubscriptionDelete({ subscriptionId }: { subscriptionId: string }) {
     const router = useRouter();
     const deleteSubscription = async (subscriptionId: string) => {
         console.log("delete Subscription");
-        axios.defaults.withCredentials = true;
-        axios
-            .delete(
-                `http://localhost:3007/api/payments/subscription/remove/${subscriptionId}`
-            )
+        axiosInstance
+            .delete(`/api/payments/subscription/remove/${subscriptionId}`)
             .then((res) => {
                 console.log(res);
                 toast({

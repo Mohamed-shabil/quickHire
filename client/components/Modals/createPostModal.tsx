@@ -20,7 +20,6 @@ import {
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import { toast } from "../ui/use-toast";
 import {
     Check,
@@ -38,7 +37,8 @@ import { useRouter } from "next/navigation";
 import { FormEvent, useRef, useState } from "react";
 import Image from "next/image";
 import { Label } from "../ui/label";
-import { EmojiPicker } from "../emojiPicker";
+import { EmojiPicker } from "../EmojiPicker";
+import { axiosInstance } from "@/axios/axios";
 
 export function CreatePostModal() {
     const dispatch = useDispatch();
@@ -83,9 +83,8 @@ export function CreatePostModal() {
         if (caption) {
             data.append("caption", caption);
         }
-        axios.defaults.withCredentials = true;
-        axios
-            .post("http://localhost:3004/api/posts/create", data)
+        axiosInstance
+            .post("/api/posts/create", data)
             .then((res) => {
                 console.log(res);
                 toast({

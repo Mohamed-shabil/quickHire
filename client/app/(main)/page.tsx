@@ -1,14 +1,13 @@
 import Image from "next/image";
 import PostCard from "@/components/PostCard";
-import axios from "axios";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import CreatePostButton from "@/components/CreatePostButton";
-import { PostType } from "@/constants/constants";
+import { PostType } from "@/types/types";
+import { axiosInstance } from "@/axios/axios";
 
 const getAllposts = async (token: string) => {
-    axios.defaults.withCredentials = true;
-    const res = await axios.get("http://localhost:3004/api/posts/show", {
+    const res = await axiosInstance.get("/api/posts/show", {
         headers: {
             Cookie: `jwt=${token}`,
         },

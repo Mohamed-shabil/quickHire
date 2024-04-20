@@ -5,8 +5,8 @@ import { Button } from "./ui/button";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { loadStripe } from "@stripe/stripe-js";
-import axios from "axios";
-import { Subscription } from "@/constants/constants";
+import { axiosInstance } from "@/axios/axios";
+import { Subscription } from "@/types/types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/reducers";
 
@@ -25,8 +25,8 @@ function PricingPlan({ plan }: { plan: Subscription }) {
                 process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!
             );
 
-            const response = await axios.post(
-                `http://localhost:3007/api/payments/subscribe/${subscription._id}`,
+            const response = await axiosInstance.post(
+                `/api/payments/subscribe/${subscription._id}`,
                 {},
                 {
                     withCredentials: true,

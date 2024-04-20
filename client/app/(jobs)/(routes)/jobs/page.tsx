@@ -1,16 +1,14 @@
 import React from "react";
-import axios from "axios";
 import JobsCard from "@/components/Jobs/JobsCard";
-
 import { toast } from "@/components/ui/use-toast";
-import { Jobs } from "@/constants/constants";
+import { Jobs } from "@/types/types";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { JobPreview } from "@/components/Jobs/JobPreview";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Router } from "lucide-react";
+
+import { axiosInstance } from "@/axios/axios";
 
 interface IFilter {
     title: string | null;
@@ -19,8 +17,7 @@ interface IFilter {
 }
 
 const getJobs = async (token: string, filter: IFilter) => {
-    axios.defaults.withCredentials = true;
-    const res = await axios.get(`http://localhost:3005/api/jobs/search-job?`, {
+    const res = await axiosInstance.get(`/api/jobs/search-job?`, {
         params: {
             ...(filter.experience && { experience: filter.experience }),
             ...(filter.title && { title: filter.title }),

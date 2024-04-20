@@ -14,7 +14,7 @@ interface JwtPayload{
     phone?:string;
 }
 
-router.post('/api/users/gAuth',[
+router.post('/api/auth/users/gAuth',[
     body('name')
         .notEmpty()
         .withMessage("name can't be empty"),

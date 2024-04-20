@@ -1,5 +1,5 @@
-import axios from "axios";
-import { Comment } from "./comment";
+import { axiosInstance } from "@/axios/axios";
+import { Comment } from "./Comment";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Input } from "./ui/input";
 import { useEffect, useState } from "react";
@@ -39,8 +39,8 @@ export function CommentBox({ postId }: { postId: string }) {
     const [commentsData, setCommentsData] = useState<commentData>();
 
     const refetch = async () => {
-        axios
-            .get(`http://localhost:3004/api/posts/comments/${postId}`)
+        axiosInstance
+            .get(`/api/posts/comments/${postId}`)
             .then((res) => {
                 console.log(res);
                 setComments(res.data.comment);
@@ -73,9 +73,8 @@ export function CommentBox({ postId }: { postId: string }) {
     console.log({ comments });
 
     const onSubmit = (values: z.infer<typeof formSchema>) => {
-        axios.defaults.withCredentials = true;
-        axios
-            .patch("http://localhost:3004/api/posts/comments", {
+        axiosInstance
+            .patch("/api/posts/comments", {
                 comment: values.comment,
                 postId,
             })
@@ -89,7 +88,6 @@ export function CommentBox({ postId }: { postId: string }) {
             });
     };
 
-    console.log(comments);
     return (
         <div className={cn("mt-4")}>
             <div className="flex flex-row gap-2">

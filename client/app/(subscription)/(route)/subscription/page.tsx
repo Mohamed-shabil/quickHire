@@ -1,32 +1,18 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
-import { redirect, useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-
-import {
-    Card,
-    CardContent,
-    CardFooter,
-    CardHeader,
-} from "@/components/ui/card";
-import { Subscription } from "@/constants/constants";
-import { Loader2 } from "lucide-react";
+import { Subscription } from "@/types/types";
 import PricingPlan from "@/components/PricingPlan";
+import { useRouter } from "next/navigation";
 
 const SubscriptionPage = () => {
     const [subscriptions, setSubscriptions] = useState<Subscription[]>();
     const [loading, setLoading] = useState<boolean>(false);
     const router = useRouter();
     useEffect(() => {
-        axios
-            .get("http://localhost:3007/api/payments/subscription", {
-                withCredentials: true,
-            })
-            .then((res) => {
-                setSubscriptions(res.data.subscriptions);
-            });
+        axios.get(`/api/payments/subscription`).then((res) => {
+            setSubscriptions(res.data.subscriptions);
+        });
     }, []);
 
     return (

@@ -1,4 +1,4 @@
-import { Subscription } from "@/constants/constants";
+import { Subscription } from "@/types/types";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -6,7 +6,7 @@ export const fetchSubscription = createAsyncThunk(
     "fetchSubscription",
     async () => {
         const response = await axios.get(
-            "http://localhost:3007/api/payments/subscriptions/current-subscription",
+            `${process.env.NEXT_PUBLIC_BASE_URL}/api/payments/subscriptions/current-subscription`,
             {
                 withCredentials: true,
             }

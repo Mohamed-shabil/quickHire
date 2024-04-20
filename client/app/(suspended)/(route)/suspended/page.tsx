@@ -1,7 +1,7 @@
 import { Ban } from "lucide-react";
 import React from "react";
 
-function page() {
+function Suspended() {
     return (
         <section className="h-screen w-full flex item-center justify-center ">
             <div className="flex items-center justify-center flex-col">
@@ -22,4 +22,4 @@ function page() {
     );
 }
 
-export default page;
+export default Suspended;

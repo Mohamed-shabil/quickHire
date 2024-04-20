@@ -14,8 +14,8 @@ import { ScrollArea } from "./ui/scroll-area";
 import moment from "moment";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useSocket } from "./Providers/SocketProvider";
-import { ChatUser, IChats, ContentType } from "@/constants/constants";
-import axios from "axios";
+import { ChatUser, IChats, ContentType } from "@/types/types";
+import { axiosInstance } from "@/axios/axios";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import {
@@ -48,8 +48,8 @@ const ChatSection = ({ user }: { user: ChatUser }) => {
 
     useEffect(() => {
         if (!currentUser) return;
-        axios
-            .get(`http://localhost:3006/api/chats/history/${user?._id}`)
+        axiosInstance
+            .get(`/api/chats/history/${user?._id}`)
             .then((res) => {
                 console.log(res);
                 setChats(res.data.chats);
@@ -95,8 +95,8 @@ const ChatSection = ({ user }: { user: ChatUser }) => {
             data.append("content", content);
             data.append("contentType", contentType);
 
-            const response = await axios.post(
-                "http://localhost:3006/api/chats/save-chat",
+            const response = await axiosInstance.post(
+                "/api/chats/save-chat",
                 data
             );
             console.log("Saved Chat", response);

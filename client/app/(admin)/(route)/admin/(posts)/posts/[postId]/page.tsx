@@ -1,19 +1,16 @@
+import { axiosInstance } from "@/axios/axios";
 import PostCard from "@/components/PostCard";
-import { PostType } from "@/constants/constants";
-import axios from "axios";
+import { PostType } from "@/types/types";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import React from "react";
 
 const getPost = async (token: string, postId: string): Promise<PostType> => {
-    const response = await axios.get(
-        `http://localhost:3004/api/posts/getOne/${postId}`,
-        {
-            headers: {
-                Cookie: `jwt=${token}`,
-            },
-        }
-    );
+    const response = await axiosInstance.get(`/api/posts/getOne/${postId}`, {
+        headers: {
+            Cookie: `jwt=${token}`,
+        },
+    });
     return response.data.post;
 };
 async function Post({ params }: { params: { postId: string } }) {

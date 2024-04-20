@@ -19,25 +19,25 @@ spec:
                       - name: MONGO_URI
                         value: "mongodb://payments-mongo-srv:27017/payments"
                       - name: JWT_KEY
-                          valueFrom:
+                        valueFrom:
                             secretKeyRef:
-                              name: jwt-secret
-                              key: JWT_KEY
+                                name: jwt-secret
+                                key: JWT_KEY
                       - name: STRIPE_PRIVATE_KEY
-                          valueFrom:
+                        valueFrom:
                             secretKeyRef:
-                              name: stripe-private-key
-                              key: STRIPE_PRIVATE_KEY
+                                name: stripe-private-key
+                                key: STRIPE_PRIVATE_KEY
                       - name: END_POINT_SECRET
-                          valueFrom:
+                        valueFrom:
                             secretKeyRef:
-                              name: end-point-secret
-                              key: END_POINT_SECRET
+                                name: end-point-secret
+                                key: END_POINT_SECRET
                       - name: CORS_ORIGIN
-                          valueFrom:
+                        valueFrom:
                             secretKeyRef:
-                              name: cors-origin
-                              key: CORS_ORIGIN
+                                name: cors-origin
+                                key: CORS_ORIGIN
 ---
 apiVersion: v1
 kind: Service

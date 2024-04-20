@@ -1,9 +1,10 @@
 "use client";
-import { Profile, UserType, follower } from "@/constants/constants";
+import { Profile, UserType, follower } from "@/types/types";
 import { cn } from "@/lib/utils";
 import { RootState } from "@/store/reducers";
 import { current } from "@reduxjs/toolkit";
-import axios, { AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
+import { axiosInstance } from "@/axios/axios";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -26,9 +27,8 @@ interface currentUser {
 function ProfileCard({ className }: { className?: String }) {
     const [profile, setProfile] = useState<currentUser>();
     useEffect(() => {
-        axios.defaults.withCredentials = true;
-        axios
-            .get("http://localhost:3003/api/profile/currentUser")
+        axiosInstance
+            .get("/api/profile/currentUser")
             .then((res: AxiosResponse<{ currentUser: currentUser }>) => {
                 console.log(res.data.currentUser);
                 setProfile(res.data.currentUser);

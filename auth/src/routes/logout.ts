@@ -3,7 +3,7 @@ import express from "express";
 const router = express.Router();
 
 router.get(
-    "/api/users/signout",
+    "/api/auth/users/signout",
     catchAsync(async (req, res) => {
         res.status(200).clearCookie("jwt").json({
             status: "success",

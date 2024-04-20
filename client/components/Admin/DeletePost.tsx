@@ -2,14 +2,15 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
-import axios from "axios";
+import { axiosInstance } from "@/axios/axios";
 import { toast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
+
 function DeletePost({ postId }: { postId: string }) {
     const router = useRouter();
     const DeletePost = () => {
-        axios
-            .delete(`http://localhost:3004/api/posts/delete/${postId}/admin`)
+        axiosInstance
+            .delete(`/api/posts/delete/${postId}/admin`)
             .then((res) => {
                 console.log(res);
 

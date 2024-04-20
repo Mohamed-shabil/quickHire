@@ -1,10 +1,7 @@
 import React from "react";
-import { ScrollArea } from "../ui/scroll-area";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Badge } from "../ui/badge";
-import { Jobs } from "@/constants/constants";
+import { Jobs } from "@/types/types";
 import Image from "next/image";
-import Link from "next/link";
 import { MapPin as LocationIcon, Briefcase as JobTypeIcon } from "lucide-react";
 
 const JobsCard = ({ job }: { job: Jobs }) => {

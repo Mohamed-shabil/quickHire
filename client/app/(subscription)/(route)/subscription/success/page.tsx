@@ -19,8 +19,8 @@ const SubscriptionSuccess = () => {
                             Payment Successfull
                         </h1>
                         <p className="text-sm text-secondary-foreground">
-                            Lorem ipsum dolor sit amet consectetur adipisicing
-                            elit. Debitis, distinctio voluptate. Doloribus eaque
+                            Congratulations your purchase is successfull ! Start
+                            maximizing your recruitment efforts today!
                         </p>
                     </div>
                 </div>

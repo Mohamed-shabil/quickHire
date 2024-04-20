@@ -10,7 +10,7 @@ import catchAsync from "../utils/catchAsync";
 const router = express.Router();
 
 router.post(
-    "/api/users/forgotPassword",
+    "/api/auth/users/forgotPassword",
     [
         body("email")
             .isEmail()

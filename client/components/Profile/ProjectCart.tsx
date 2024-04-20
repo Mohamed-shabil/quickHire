@@ -1,9 +1,14 @@
-import { Project } from "@/constants/constants";
-import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
-import { Separator } from "../ui/separator";
+import { Project } from "@/types/types";
+import {
+    Card,
+    CardContent,
+    CardFooter,
+    CardHeader,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { FolderKanban, School, Link as Url } from "lucide-react";
 import Link from "next/link";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogContent,
@@ -12,7 +17,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "../ui/dialog";
+} from "@/components/ui/dialog";
 
 export function ProjectCard({ project }: { project: Project }) {
     const startDate = new Date(project.startDate);

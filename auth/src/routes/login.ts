@@ -8,7 +8,7 @@ import { createAccessToken } from '../utils/Token';
 
 const router = express.Router();
 
-router.post('/api/users/signin',
+router.post('/api/auth/users/signin',
 [
     body('email')
         .isEmail()

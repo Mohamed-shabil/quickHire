@@ -1,8 +1,8 @@
 "use client";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { User } from "@/constants/constants";
-import axios from "axios";
+import { User } from "@/types/types";
+import { axiosInstance } from "@/axios/axios";
 import { useState } from "react";
 import { toast } from "../ui/use-toast";
 import { Check, X } from "lucide-react";
@@ -13,12 +13,10 @@ export function BlockSwitch({ user }: { user: User }) {
         console.log("current Block", blocked);
         setBlocked(!blocked);
         console.log("set Block", blocked);
-        axios.defaults.withCredentials = true;
+
         if (blocked) {
-            axios
-                .patch(
-                    `http://localhost:3001/api/auth/users/unblock/${user._id}`
-                )
+            axiosInstance
+                .patch(`/api/auth/users/unblock/${user._id}`)
                 .then((res) => {
                     console.log(res.data);
                     toast({
@@ -42,7 +40,7 @@ export function BlockSwitch({ user }: { user: User }) {
                     });
                 });
         } else {
-            axios
+            axiosInstance
                 .patch(`http://localhost:3001/api/auth/users/block/${user._id}`)
                 .then((res) => {
                     toast({

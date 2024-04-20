@@ -1,27 +1,36 @@
-'use client'
-import React from 'react'
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
-import axios from 'axios';
-import {Application} from '@/constants/constants'
-function ApplicationStatus({application}:{application:Application}) {
-    const changeStatus = (value:string)=>{
+"use client";
+import React from "react";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { axiosInstance } from "@/axios/axios";
+import { Application } from "@/types/types";
+function ApplicationStatus({ application }: { application: Application }) {
+    const changeStatus = (value: string) => {
         console.log(value);
-        axios.patch('http://localhost:3005/api/jobs/application/change-status',{
-            jobId:application.jobId,
-            status:value
-        },{
-            withCredentials:true
-        })
-        .then((res)=>{
-            console.log(res.data);
-        })
-        .catch(err=>{
-            console.log(err);
-        })
-    }
+        axiosInstance
+            .patch("/api/jobs/application/change-status", {
+                jobId: application.jobId,
+                status: value,
+            })
+            .then((res) => {
+                console.log(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
     return (
         <>
-            <Select defaultValue={application.status} onValueChange={changeStatus}>
+            <Select
+                defaultValue={application.status}
+                onValueChange={changeStatus}
+            >
                 <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="Select a fruit" />
                 </SelectTrigger>
@@ -36,7 +45,7 @@ function ApplicationStatus({application}:{application:Application}) {
                 </SelectContent>
             </Select>
         </>
-    )
+    );
 }
 
-export default ApplicationStatus
+export default ApplicationStatus;

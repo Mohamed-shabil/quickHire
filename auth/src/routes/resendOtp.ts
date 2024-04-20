@@ -15,7 +15,7 @@ import nodemailer from "nodemailer";
 const router = express.Router();
 
 router.post(
-    "/api/users/sendOtp",
+    "/api/auth/users/sendOtp",
     requireAuth,
     catchAsync(async (req: Request, res: Response) => {
         const error = validationResult(req);

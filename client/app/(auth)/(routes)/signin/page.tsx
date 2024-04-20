@@ -14,7 +14,7 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import axios from "axios";
+import { axiosInstance } from "@/axios/axios";
 import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/use-toast";
 import { Check, Eye, EyeOff } from "lucide-react";
@@ -48,9 +48,8 @@ export default function Signin() {
     const router = useRouter();
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         console.log(values);
-        axios.defaults.withCredentials = true;
-        axios
-            .post("http://localhost:3001/api/users/signin", values)
+        axiosInstance
+            .post("/api/auth/users/signin", values)
             .then((res) => {
                 console.log(res);
                 dispatch(setUserData(res.data.user));

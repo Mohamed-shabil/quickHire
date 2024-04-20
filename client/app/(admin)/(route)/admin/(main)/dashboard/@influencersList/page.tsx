@@ -1,23 +1,21 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import axios from "axios";
+import { axiosInstance } from "@/axios/axios";
+
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { User } from "@/constants/constants";
+import { User } from "@/types/types";
 import { Button } from "@/components/ui/button";
 
 const getMostFollowedUsers = async (
     token: string
 ): Promise<{ count: number; profile: User }[]> => {
-    const response = await axios.get(
-        "http://localhost:3003/api/profile/most-followed",
-        {
-            headers: {
-                Cookie: `jwt=${token}`,
-            },
-        }
-    );
+    const response = await axiosInstance.get("/api/profile/most-followed", {
+        headers: {
+            Cookie: `jwt=${token}`,
+        },
+    });
     return response.data.users;
 };
 

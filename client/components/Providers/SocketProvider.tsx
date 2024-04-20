@@ -1,10 +1,10 @@
 "use client";
-import { IChats } from "@/constants/constants";
+import { IChats } from "@/types/types";
 import React, { RefObject, useRef } from "react";
 import { useContext, useEffect, useState, useCallback } from "react";
 import { io, Socket } from "socket.io-client";
-import { toast } from "../ui/use-toast";
-import { Button } from "../ui/button";
+import { toast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
 import { Stream } from "stream";
 import Peer, { Instance } from "simple-peer";
 import { redirect } from "next/navigation";

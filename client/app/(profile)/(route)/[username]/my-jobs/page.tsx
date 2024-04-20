@@ -1,24 +1,21 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import {} from "@/components/Jobs/JobsCard";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import axios from "axios";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/reducers";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import JobsCard from "@/components/Jobs/JobsCard";
-import { Application, Jobs } from "@/constants/constants";
+import { Application, Jobs } from "@/types/types";
+import { axiosInstance } from "@/axios/axios";
 
 export default function MyJobs() {
     const user = useSelector((state: RootState) => state.user.userData);
     const [applications, setApplications] = useState<Application[]>([]);
 
     useEffect(() => {
-        axios
-            .get(`http://localhost:3005/api/jobs/applied-jobs`, {
-                withCredentials: true,
-            })
+        axiosInstance
+            .get(`/api/jobs/applied-jobs`)
             .then((res) => {
                 setApplications(res.data.applications);
                 console.log(res);

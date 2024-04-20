@@ -7,21 +7,21 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import axios from "axios";
 import React from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { Application } from "@/constants/constants";
+import { Application } from "@/types/types";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ArrowDownToLine } from "lucide-react";
 import Link from "next/link";
 
 import ApplicationStatus from "@/components/Recruiter/ApplicationStatus";
+import { axiosInstance } from "@/axios/axios";
 const getApplicant = async (token: string, jobId: string) => {
     try {
-        const response = await axios.get(
-            `http://localhost:3005/api/jobs/${jobId}/get-applicants`,
+        const response = await axiosInstance.get(
+            `/api/jobs/${jobId}/get-applicants`,
             {
                 headers: {
                     Cookie: `jwt=${token}`,
@@ -48,7 +48,6 @@ async function Applicants({ params }: { params: { jobId: string } }) {
     return (
         <section className="container">
             <Table className="border rounded-lg">
-                {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
                 <TableHeader>
                     <TableRow>
                         <TableHead>No</TableHead>

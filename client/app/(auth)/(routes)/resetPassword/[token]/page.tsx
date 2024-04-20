@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
+import { axiosInstance } from "@/axios/axios";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Check, Loader2, X } from "lucide-react";
@@ -45,11 +45,8 @@ const ResetPassword = () => {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         console.log(values);
-        axios
-            .post(
-                `http://localhost:3001/api/users/resetPassword/${params.token}`,
-                values
-            )
+        axiosInstance
+            .post(`/api/auth/users/resetPassword/${params.token}`, values)
             .then((res) => {
                 console.log(res);
                 toast({

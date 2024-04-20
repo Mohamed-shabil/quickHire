@@ -1,5 +1,5 @@
 import React from "react";
-import Navbar from "@/components/navbar";
+import Navbar from "@/components/Navbar";
 import ModalProvider from "@/components/Providers/ModalProvider";
 import SideBar from "@/components/Sidebar";
 const mainLayout = async ({ children }: { children: React.ReactNode }) => {

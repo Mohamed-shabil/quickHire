@@ -6,13 +6,9 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
+import { axiosInstance } from "@/axios/axios";
 import { toast } from "../ui/use-toast";
 import { Check, Loader2, Router } from "lucide-react";
 import { Textarea } from "../ui/textarea";
@@ -41,9 +37,8 @@ export function AvatarModal() {
         if (image) {
             data.append("profile", image);
         }
-        axios.defaults.withCredentials = true;
-        axios
-            .patch("http://localhost:3003/api/profile/avatar", data)
+        axiosInstance
+            .patch("/api/profile/avatar", data)
             .then((res) => {
                 console.log(res);
                 setLoading(false);

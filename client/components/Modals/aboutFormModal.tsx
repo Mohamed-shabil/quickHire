@@ -20,7 +20,7 @@ import {
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
+import { axiosInstance } from "@/axios/axios";
 import { toast } from "../ui/use-toast";
 import { Check, Router } from "lucide-react";
 import { Textarea } from "../ui/textarea";
@@ -55,19 +55,8 @@ export function AboutFormModal() {
     });
 
     const onSubmit = (values: z.infer<typeof formSchema>) => {
-        //   console.log(values);
-        //   axios.defaults.withCredentials = true;
-        //   const {} = useQuery(
-        //     "POST",
-        //     "http://localhost:3002/api/profile/about",
-        //     values,
-        //       onSuccess:()=>{
-
-        //     }
-        //   )
-
-        axios
-            .post("http://localhost:3003/api/profile/about", values)
+        axiosInstance
+            .post("/api/profile/about", values)
             .then((res) => {
                 toast({
                     title: "Profile About Updated Successfully",

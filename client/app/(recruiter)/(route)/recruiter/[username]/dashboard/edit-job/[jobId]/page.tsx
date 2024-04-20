@@ -18,9 +18,8 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { toast } from "@/components/ui/use-toast";
-import { Jobs } from "@/constants/constants";
+import { Jobs } from "@/types/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import { Check, Plus, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -30,6 +29,7 @@ import ReactQuill from "react-quill";
 import { z } from "zod";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/reducers";
+import { axiosInstance } from "@/axios/axios";
 
 const EditJob = ({ params }: { params: { jobId: string } }) => {
     const { jobId } = params;
@@ -38,9 +38,8 @@ const EditJob = ({ params }: { params: { jobId: string } }) => {
     const user = useSelector((state: RootState) => state.user.userData);
 
     useEffect(() => {
-        axios.defaults.withCredentials = true;
-        axios
-            .get(`http://localhost:3005/api/jobs/${jobId}`)
+        axiosInstance
+            .get(`/api/jobs/${jobId}`)
             .then((res) => {
                 console.log(res.data.job);
                 setJob(res.data.job);
@@ -89,10 +88,7 @@ const EditJob = ({ params }: { params: { jobId: string } }) => {
         resolver: zodResolver(formSchema),
         defaultValues: async () => {
             try {
-                axios.defaults.withCredentials = true;
-                const response = await axios.get(
-                    `http://localhost:3005/api/jobs/${jobId}`
-                );
+                const response = await axiosInstance.get(`/api/jobs/${jobId}`);
                 setSkills(response.data.job.skills);
                 setPreview(response.data.job.companyImage);
                 return response.data.job;
@@ -132,8 +128,8 @@ const EditJob = ({ params }: { params: { jobId: string } }) => {
             data.append("skills[]", item);
         });
 
-        axios
-            .patch(`http://localhost:3005/api/jobs/edit-job/${jobId}`, data, {
+        axiosInstance
+            .patch(`/api/jobs/edit-job/${jobId}`, data, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },

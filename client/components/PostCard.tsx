@@ -7,7 +7,7 @@ import {
     MoreVerticalIcon,
     Option,
 } from "lucide-react";
-import { PostType } from "@/constants/constants";
+import { PostType } from "@/types/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -15,20 +15,14 @@ import Image from "next/image";
 import { Button } from "./ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/reducers";
-import axios from "axios";
+import { axiosInstance } from "@/axios/axios";
 import { Separator } from "./ui/separator";
-import { CommentBox } from "./commentBox";
+import { CommentBox } from "./CommentBox";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import PostReportModal from "./Modals/PostReportModal";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
+
 const PostCard = ({ post }: { post: PostType }) => {
     const dispatch = useDispatch();
     const router = useRouter();
@@ -49,8 +43,8 @@ const PostCard = ({ post }: { post: PostType }) => {
         } else {
             setLikeCount(likeCount + 1);
         }
-        axios
-            .post("http://localhost:3004/api/posts/likePost", { postId })
+        axiosInstance
+            .post("/api/posts/likePost", { postId })
             .then((res) => {
                 console.log(res);
             })
@@ -62,19 +56,15 @@ const PostCard = ({ post }: { post: PostType }) => {
     const handleFollow = async () => {
         if (isFollowing) {
             setIsFollowing(!isFollowing);
-            axios
-                .delete(
-                    `http://localhost:3003/api/profile/followers/unfollow/${post.creatorId}`
-                )
+            axiosInstance
+                .delete(`/api/profile/followers/unfollow/${post.creatorId}`)
                 .then((res) => {
                     console.log(res);
                 });
         } else {
             setIsFollowing(!isFollowing);
-            axios
-                .post(
-                    `http://localhost:3003/api/profile/followers/follow/${post.creatorId}`
-                )
+            axiosInstance
+                .post(`/api/profile/followers/follow/${post.creatorId}`)
                 .then((res) => {
                     console.log(res);
                 });

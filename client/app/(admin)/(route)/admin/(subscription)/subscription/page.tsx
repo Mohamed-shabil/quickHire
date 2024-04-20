@@ -1,7 +1,6 @@
-import { Subscription } from "@/constants/constants";
-import axios from "axios";
+import { Subscription } from "@/types/types";
 import { cookies } from "next/headers";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import SubscriptionModal from "@/components/Modals/SubscriptionModal";
 import PricingPlan from "@/components/PricingPlan";
 import {
@@ -9,18 +8,15 @@ import {
     HoverCardContent,
     HoverCardTrigger,
 } from "@/components/ui/hover-card";
-
 import SubscriptionDelete from "@/components/Admin/SubscriptionDelete";
+import { axiosInstance } from "@/axios/axios";
 
 const getSubscriptionPlan = async (token: string) => {
-    const response = await axios.get(
-        "http://localhost:3007/api/payments/subscription",
-        {
-            headers: {
-                cookie: `jwt=${token}`,
-            },
-        }
-    );
+    const response = await axiosInstance.get("/api/payments/subscription", {
+        headers: {
+            cookie: `jwt=${token}`,
+        },
+    });
     return response.data.subscriptions as Subscription[];
 };
 

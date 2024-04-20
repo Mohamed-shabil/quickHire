@@ -11,6 +11,7 @@ const router = express.Router();
 
 router.get(
     "/api/auth/users/currentuser",
+    requireAuth,
     catchAsync(async (req: Request, res: Response) => {
         const user = req.currentUser;
         console.log("user is still here ", user);

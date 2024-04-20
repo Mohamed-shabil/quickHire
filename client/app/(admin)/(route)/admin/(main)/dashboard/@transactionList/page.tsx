@@ -18,20 +18,17 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import axios from "axios";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { Transaction } from "@/constants/constants";
+import { Transaction } from "@/types/types";
+import { axiosInstance } from "@/axios/axios";
 
 const getTransactions = async (token: string): Promise<Transaction[]> => {
-    const response = await axios.get(
-        "http://localhost:3007/api/payments/transactions",
-        {
-            headers: {
-                Cookie: `jwt=${token}`,
-            },
-        }
-    );
+    const response = await axiosInstance.get("/api/payments/transactions", {
+        headers: {
+            Cookie: `jwt=${token}`,
+        },
+    });
     console.log(response);
     return response.data.transactions;
 };

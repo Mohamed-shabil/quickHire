@@ -1,24 +1,21 @@
-import React, { useState } from "react";
-import Sidebar from "@/components/Recruiter/Sidebar";
-import { Jobs } from "@/constants/constants";
+import React from "react";
+import { Jobs } from "@/types/types";
 import JobsCard from "@/components/Jobs/JobsCard";
 import { Button } from "@/components/ui/button";
-import { Check, Pencil, Plus, Trash2, X } from "lucide-react";
+import { Pencil } from "lucide-react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { toast } from "@/components/ui/use-toast";
 import DeactivateJob from "@/components/Recruiter/DeactivateJob";
-import CreateJobTrigger from "@/components/Recruiter/CreateJobTrigger";
 import DeleteJobTrigger from "@/components/Recruiter/DeleteJobTrigger";
-import axios from "axios";
 import Link from "next/link";
 import { CreateJobModal } from "@/components/Modals/CreateJobModal";
-import { Josefin_Sans } from "next/font/google";
+import { axiosInstance } from "@/axios/axios";
 
 const getMyJob = async (token: string, recruiter: string) => {
     try {
-        const response = await axios.get(
-            `http://localhost:3005/api/jobs/${recruiter}/get-jobs`,
+        const response = await axiosInstance.get(
+            `/api/jobs/${recruiter}/get-jobs`,
             {
                 headers: {
                     Cookie: `jwt=${token}`,

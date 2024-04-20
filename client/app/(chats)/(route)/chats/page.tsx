@@ -5,9 +5,9 @@ import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useSocket } from "@/components/Providers/SocketProvider";
 import { useEffect, useState, Suspense } from "react";
-import axios from "axios";
+import { axiosInstance } from "@/axios/axios";
 import Image from "next/image";
-import { IChats } from "@/constants/constants";
+import { IChats } from "@/types/types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/reducers";
 import { redirect, useParams, useSearchParams } from "next/navigation";
@@ -38,8 +38,8 @@ function Chats() {
 
     useEffect(() => {
         if (user) {
-            axios
-                .get(`http://localhost:3006/api/chats/history/${user?._id}`)
+            axiosInstance
+                .get(`/api/chats/history/${user?._id}`)
                 .then((res) => {
                     console.log(res);
                     setChats(res.data.chats);
@@ -51,9 +51,8 @@ function Chats() {
     }, [user]);
 
     useEffect(() => {
-        axios.defaults.withCredentials = true;
-        axios
-            .get("http://localhost:3006/api/chats/get-chats")
+        axiosInstance
+            .get("/api/chats/get-chats")
             .then((res) => {
                 console.log("chatsuser -----", res.data.chats);
                 setChatUsers(res.data.chats);
@@ -67,9 +66,8 @@ function Chats() {
     useEffect(() => {}, [chatUser]);
 
     const onSearch = async (value: string) => {
-        axios.defaults.withCredentials = true;
-        axios
-            .get("http://localhost:3006/api/chats/search", {
+        axiosInstance
+            .get("/api/chats/search", {
                 params: {
                     name: value,
                 },

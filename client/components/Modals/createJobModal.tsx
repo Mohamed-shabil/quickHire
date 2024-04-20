@@ -21,7 +21,6 @@ import {
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/reducers";
 import { setClose } from "@/store/slices/modalSlice";
@@ -33,7 +32,7 @@ import {
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "../ui/select";
+} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import ReactQuill from "react-quill";
@@ -41,6 +40,7 @@ import "react-quill/dist/quill.snow.css";
 import Image from "next/image";
 import { toast } from "../ui/use-toast";
 import Link from "next/link";
+import { axiosInstance } from "@/axios/axios";
 
 interface JobFormData {
     title: string;
@@ -157,44 +157,41 @@ export function CreateJobModal({ jobsCount }: { jobsCount: number }) {
         skills.forEach((item) => {
             data.append("skills[]", item);
         });
-        axios.defaults.withCredentials = true;
-        axios
-            .post("http://localhost:3005/api/jobs/createJobs", data, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-                withCredentials: true,
-            })
-            .then((res) => {
-                toast({
-                    title: "Congratulations! 🥳",
-                    description: "Job Posted Successfully!",
-                    action: (
-                        <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
-                            <Check />
-                        </div>
-                    ),
-                });
-                console.log(res.data);
-                form.reset();
-                onClose();
-                router.refresh();
-            })
-            .catch((err) => {
-                console.error("Error:", err);
-                toast({
-                    title: "Something went Wrong",
-                    description: err.response.data.errors[0].message || "",
-                    action: (
-                        <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
-                            <X />
-                        </div>
-                    ),
-                });
-            })
-            .finally(() => {
-                setLoading(false);
+        axiosInstance.post("/api/jobs/createJobs", data,{
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        })
+        .then((res) => {
+            toast({
+                title: "Congratulations! 🥳",
+                description: "Job Posted Successfully!",
+                action: (
+                    <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
+                        <Check />
+                    </div>
+                ),
             });
+            console.log(res.data);
+            form.reset();
+            onClose();
+            router.refresh();
+        })
+        .catch((err) => {
+            console.error("Error:", err);
+            toast({
+                title: "Something went Wrong",
+                description: err.response.data.errors[0].message || "",
+                action: (
+                    <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
+                        <X />
+                    </div>
+                ),
+            });
+        })
+        .finally(() => {
+            setLoading(false);
+        });
     };
 
     const onClose = () => {

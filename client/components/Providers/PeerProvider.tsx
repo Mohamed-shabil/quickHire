@@ -14,8 +14,8 @@ import { useSocket } from "./SocketProvider";
 import { redirect, useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/reducers";
-import { toast } from "../ui/use-toast";
-import { Button } from "../ui/button";
+import { toast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 interface Call {

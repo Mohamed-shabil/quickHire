@@ -4,7 +4,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "../ui/dialog";
+} from "@/components/ui/dialog";
 import { Check, Flag, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,7 +20,7 @@ import { toast } from "@/components/ui/use-toast";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
+import { axiosInstance } from "@/axios/axios";
 import { useState } from "react";
 
 function PostReportModal({ postId }: { postId: string }) {
@@ -49,16 +49,10 @@ function PostReportModal({ postId }: { postId: string }) {
 
     const onSubmit = async (value: z.infer<typeof FormSchema>) => {
         console.log(value);
-        await axios
-            .patch(
-                `http://localhost:3004/api/posts/${postId}/report`,
-                {
-                    reason: value.report,
-                },
-                {
-                    withCredentials: true,
-                }
-            )
+        await axiosInstance
+            .patch(`/api/posts/${postId}/report`, {
+                reason: value.report,
+            })
             .then((res) => {
                 console.log(res);
                 toast({

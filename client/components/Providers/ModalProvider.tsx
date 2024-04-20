@@ -5,9 +5,9 @@ import { EducationFormModal } from "@/components/Modals/EducationFormModal";
 import { ExperienceFormModal } from "@/components/Modals/ExperienceModal";
 import { LinkFormModal } from "@/components/Modals/LinksFormModal";
 import { AvatarModal } from "@/components/Modals/AvatarModal";
-import { CreatePostModal } from "../Modals/CreatePostModal";
-import { CreateJobModal } from "../Modals/CreateJobModal";
-import { ProjectFormModal } from "../Modals/ProjectModal";
+import { CreatePostModal } from "@/components/Modals/CreatePostModal";
+import { CreateJobModal } from "@/components/Modals/CreateJobModal";
+import { ProjectFormModal } from "@/components/Modals/ProjectModal";
 const ModalProvider = () => {
     const [isMounted, setIsMouted] = useState(false);
     useEffect(() => {
@@ -21,7 +21,6 @@ const ModalProvider = () => {
     return (
         <>
             <ProjectFormModal />
-            {/* <CreateJobModal/> */}
             <CreatePostModal />
             <AvatarModal />
             <LinkFormModal />

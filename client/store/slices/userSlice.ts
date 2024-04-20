@@ -1,4 +1,4 @@
-import { UserType } from "@/constants/constants";
+import { UserType } from "@/types/types";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -23,7 +23,7 @@ const initialState: UserState = {
 
 export const fetchUser = createAsyncThunk("fetchTodos", async () => {
     const response = await axios.get(
-        "http://localhost:3001/api/auth/users/currentuser",
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/users/currentuser`,
         {
             withCredentials: true,
         }

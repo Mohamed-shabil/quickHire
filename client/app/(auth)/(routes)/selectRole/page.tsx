@@ -11,14 +11,8 @@ import {
 import { Form, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-    Select,
-    SelectContent,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
+import { axiosInstance } from "@/axios/axios";
 import { CircleUserRound, UserRoundSearch } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -38,9 +32,8 @@ export default function Signin() {
         mode: "onTouched",
     });
     const onSubmit = (values: z.infer<typeof formSchema>) => {
-        axios.defaults.withCredentials = true;
-        axios
-            .patch("http://localhost:3001/api/auth/users/selectRole", values)
+        axiosInstance
+            .patch("/api/auth/users/selectRole", values)
             .then((res) => {
                 console.log(res);
                 router.push("/");

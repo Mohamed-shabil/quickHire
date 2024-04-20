@@ -23,8 +23,8 @@ import {
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
-import { Jobs } from "@/constants/constants";
+import { axiosInstance } from "@/axios/axios";
+import { Jobs } from "@/types/types";
 import {
     Form,
     FormControl,
@@ -32,14 +32,13 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { Label } from "../ui/label";
-import { toast } from "../ui/use-toast";
-import { Resume } from "@/constants/constants";
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { toast } from "@/components/ui/use-toast";
+import { Resume } from "@/types/types";
 import moment from "moment";
-import Recruiter from "@/app/(recruiter)/(route)/recruiter/[username]/dashboard/page";
 
 type FieldValues = {
     email: string;
@@ -80,14 +79,10 @@ export default function ApplyJobModal({ job }: { job: Jobs }) {
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: async (): Promise<FieldValues> => {
-            const response = await axios.get(
-                "http://localhost:3005/api/jobs/applicant-info",
-                {
-                    withCredentials: true,
-                }
+            const response = await axiosInstance.get(
+                "/api/jobs/applicant-info"
             );
-            console.log(response);
-            console.log(response.data.user);
+
             if (response.data.user.resume) {
                 setResumes(response.data.user.resume);
             }
@@ -103,17 +98,11 @@ export default function ApplyJobModal({ job }: { job: Jobs }) {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         console.log(values, job.recruiter);
-        axios
-            .post(
-                `http://localhost:3005/api/jobs/apply-job/${job._id}`,
-                {
-                    ...values,
-                    recruiter: job.recruiter,
-                },
-                {
-                    withCredentials: true,
-                }
-            )
+        axiosInstance
+            .post(`http://localhost:3005/api/jobs/apply-job/${job._id}`, {
+                ...values,
+                recruiter: job.recruiter,
+            })
             .then((res) => {
                 console.log(res);
                 toast({
@@ -149,12 +138,9 @@ export default function ApplyJobModal({ job }: { job: Jobs }) {
             if (resume) {
                 data.append("resume", resume);
             }
-            const response = await axios.post(
-                "http://localhost:3005/api/jobs/upload-resume",
-                data,
-                {
-                    withCredentials: true,
-                }
+            const response = await axiosInstance.post(
+                "/api/jobs/upload-resume",
+                data
             );
             console.log(response.data);
             if (response.data.user.resume) {

@@ -7,7 +7,7 @@ import { AppDispatch, RootState } from "@/store/reducers";
 
 import { useSocket } from "./Providers/SocketProvider";
 import { redirect, useRouter } from "next/navigation";
-import axios from "axios";
+import { axiosInstance } from "@/axios/axios";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -31,7 +31,7 @@ import {
     Gem,
 } from "lucide-react";
 import { Button } from "./ui/button";
-import { ModeToggle } from "./mode-toggle";
+import { ModeToggle } from "./Mode-toggle";
 import {
     Accordion,
     AccordionContent,
@@ -60,7 +60,7 @@ function SideBar({ children }: { children: React.ReactNode }) {
     }
 
     const logout = async () => {
-        await axios.get("http://localhost:3001/api/users/signout");
+        await axiosInstance.get("/api/auth/users/signout");
         router.push("/signin");
     };
     return (

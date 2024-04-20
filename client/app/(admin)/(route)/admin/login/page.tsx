@@ -20,19 +20,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import { Check, Eye, EyeOff, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
+import { axiosInstance } from "@/axios/axios";
 
 export default function LoginForm() {
     const [show, setShow] = useState<boolean>(false);
     const router = useRouter();
     const formSchema = z.object({
-        username: z.string(),
+        name: z.string(),
         password: z.string().min(4, {
             message: "Password must be 4 characters long",
         }),
@@ -41,25 +41,15 @@ export default function LoginForm() {
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            username: "",
+            name: "",
             password: "",
         },
         mode: "onTouched",
     });
 
     const onSubmit = (values: z.infer<typeof formSchema>) => {
-        console.log(values);
-        axios
-            .post(
-                "http://localhost:3001/api/auth/admin/login",
-                {
-                    name: values.username,
-                    password: values.password,
-                },
-                {
-                    withCredentials: true,
-                }
-            )
+        axiosInstance
+            .post("/api/auth/admin/login", values)
             .then((res) => {
                 console.log(res.data);
                 toast({
@@ -103,7 +93,7 @@ export default function LoginForm() {
                         >
                             <div className="col-span-6">
                                 <FormField
-                                    name="username"
+                                    name="name"
                                     disabled={isLoading}
                                     control={form.control}
                                     render={({ field }) => (
@@ -166,9 +156,9 @@ export default function LoginForm() {
                                     type="submit"
                                     disabled={isLoading}
                                     className="inline-block shrink-0 rounded-md border border-blue-600
-                        bg-blue-600 px-12 py-3 w-full text-sm font-medium text-white transition 
-                        hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring
-                        active:text-blue-500"
+                              bg-blue-600 px-12 py-3 w-full text-sm font-medium text-white transition 
+                                hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring
+                              active:text-blue-500"
                                 >
                                     Create an account
                                 </Button>

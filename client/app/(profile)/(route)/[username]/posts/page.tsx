@@ -1,12 +1,11 @@
-import axios from "axios";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { PostType } from "@/constants/constants";
+import { PostType } from "@/types/types";
 import PostCard from "@/components/PostCard";
+import { axiosInstance } from "@/axios/axios";
 
 const getMyPosts = async (token: string) => {
-    axios.defaults.withCredentials = true;
-    const res = await axios.get("http://localhost:3004/api/posts/myPosts", {
+    const res = await axiosInstance.get(`/api/posts/myPosts`, {
         headers: {
             Cookie: `jwt=${token}`,
         },

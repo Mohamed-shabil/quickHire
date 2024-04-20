@@ -11,7 +11,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "../ui/dialog";
+} from "@/components/ui/dialog";
 import {
     Form,
     FormControl,
@@ -20,10 +20,10 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
-import { Button } from "../ui/button";
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 
 import {
     Select,
@@ -31,13 +31,13 @@ import {
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "../ui/select";
-import axios from "axios";
+} from "@/components/ui/select";
+import { axiosInstance } from "@/axios/axios";
 import { useRouter } from "next/router";
 import { Pencil, Plus } from "lucide-react";
-import { Subscription } from "@/constants/constants";
+import { Subscription } from "@/types/types";
 import { title } from "process";
-import { toast } from "../ui/use-toast";
+import { toast } from "@/components/ui/use-toast";
 
 export default function SubscriptionModal({
     subscription,
@@ -79,15 +79,10 @@ export default function SubscriptionModal({
     const onSubmit = (values: z.infer<typeof formSchema>) => {
         console.log(values);
         if (subscription) {
-            axios
+            axiosInstance
                 .post(
-                    `http://localhost:3007/api/payments/subscription/edit/${subscription._id}`,
-                    {
-                        ...values,
-                    },
-                    {
-                        withCredentials: true,
-                    }
+                    `/api/payments/subscription/edit/${subscription._id}`,
+                    values
                 )
                 .then((res) => {
                     toast({
@@ -106,16 +101,8 @@ export default function SubscriptionModal({
                     router.reload();
                 });
         } else {
-            axios
-                .post(
-                    "http://localhost:3007/api/payments/subscription/new",
-                    {
-                        ...values,
-                    },
-                    {
-                        withCredentials: true,
-                    }
-                )
+            axiosInstance
+                .post("/api/payments/subscription/new", values)
                 .then((res) => {
                     console.log(res.data);
                     onClose();

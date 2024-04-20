@@ -1,10 +1,10 @@
 "use client";
 import React from "react";
-import { Button } from "../ui/button";
-import axios from "axios";
-import { toast } from "../ui/use-toast";
+import { Button } from "@/components/ui/button";
+import { axiosInstance } from "@/axios/axios";
+import { toast } from "@/components/ui/use-toast";
 import { Check, Trash2, X } from "lucide-react";
-import { Jobs } from "@/constants/constants";
+import { Jobs } from "@/types/types";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -15,15 +15,14 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "../ui/alert-dialog";
+} from "@/components/ui/alert-dialog";
 import { useRouter } from "next/navigation";
 
 function DeleteJobTrigger({ job }: { job: Jobs }) {
     const router = useRouter();
     const deleteJob = (jobId: string) => {
-        axios.defaults.withCredentials = true;
-        axios
-            .delete(`http://localhost:3005/api/jobs/${jobId}/delete-job`)
+        axiosInstance
+            .delete(`/api/jobs/${jobId}/delete-job`)
             .then((res) => {
                 toast({
                     title: "Job Deleted Successfully",

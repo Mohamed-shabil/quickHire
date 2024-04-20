@@ -7,22 +7,18 @@ import {
 } from "@/components/ui/accordion";
 import { EducationCard } from "@/components/Profile/EducationCard";
 import { ExperienceCard } from "@/components/Profile/ExperienceCard";
-import axios from "axios";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { Profile } from "@/constants/constants";
+import { Profile } from "@/types/types";
+import { axiosInstance } from "@/axios/axios";
 
 const getProfile = async (token: string, username: string) => {
     console.log("here is the token", token);
-    axios.defaults.withCredentials = true;
-    const res = await axios.get(
-        `http://localhost:3003/api/profile/${username}`,
-        {
-            headers: {
-                Cookie: `jwt=${token}`,
-            },
-        }
-    );
+    const res = await axiosInstance.get(`/api/profile/${username}`, {
+        headers: {
+            Cookie: `jwt=${token}`,
+        },
+    });
     return res.data.profile;
 };
 

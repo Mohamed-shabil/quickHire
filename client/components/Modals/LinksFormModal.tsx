@@ -16,11 +16,11 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "../ui/form";
+} from "@/components/ui/form";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
+import { axiosInstance } from "@/axios/axios";
 import { toast } from "../ui/use-toast";
 import { Check, Loader2, Router, X } from "lucide-react";
 import { Textarea } from "../ui/textarea";
@@ -76,9 +76,8 @@ export function LinkFormModal() {
     });
 
     const onSubmit = (values: z.infer<typeof formSchema>) => {
-        axios.defaults.withCredentials = true;
-        axios
-            .patch("http://localhost:3003/api/profile/links", values)
+        axiosInstance
+            .patch("/api/profile/links", values)
             .then((res) => {
                 toast({
                     title: "Profile Section Updated Successfully",

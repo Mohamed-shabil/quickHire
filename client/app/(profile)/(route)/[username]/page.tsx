@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Link from "next/link";
 import {
     Plus as FollowIcon,
     Ghost,
@@ -17,13 +18,11 @@ import { Heading } from "@/components/Heading";
 import { Container } from "@/components/Container";
 import { redirect } from "next/navigation";
 import { EducationCard } from "@/components/Profile/EducationCard";
-
-import { Profile, Education, Project, Experience } from "@/constants/constants";
-import axios from "axios";
+import { Profile, Education, Project, Experience } from "@/types/types";
 import { ProfileUpload } from "@/components/Profile/profileUpload";
 import { ProfileOptions } from "@/components/Profile/ProfileOption";
 import { ProjectCard } from "@/components/Profile/ProjectCart";
-import Link from "next/link";
+import { axiosInstance } from "@/axios/axios";
 import { FollowerListModal } from "@/components/Modals/FollowersListModal";
 
 const getProfile = async (
@@ -31,15 +30,11 @@ const getProfile = async (
     username: string
 ): Promise<{ profile: Profile; followers: number; followings: number }> => {
     console.log("here is the token", token);
-    axios.defaults.withCredentials = true;
-    const res = await axios.get(
-        `http://localhost:3003/api/profile/my-profile/${username}`,
-        {
-            headers: {
-                Cookie: `jwt=${token}`,
-            },
-        }
-    );
+    const res = await axiosInstance.get(`/api/profile/my-profile/${username}`, {
+        headers: {
+            Cookie: `jwt=${token}`,
+        },
+    });
     return res.data.data;
 };
 

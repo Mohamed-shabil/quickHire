@@ -1,8 +1,8 @@
 "use client";
 import Link from "next/link";
-import { ModeToggle } from "./mode-toggle";
+import { ModeToggle } from "./Mode-toggle";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
+import { axiosInstance } from "@/axios/axios";
 import { redirect, useRouter } from "next/navigation";
 import { AppDispatch, RootState } from "@/store/reducers";
 import { Button } from "./ui/button";
@@ -42,7 +42,7 @@ const Navbar = () => {
     }
 
     const logout = async () => {
-        await axios.get("http://localhost:3001/api/users/signout");
+        await axiosInstance.get("/api/auth/users/signout");
         router.push("/signin");
     };
     return (

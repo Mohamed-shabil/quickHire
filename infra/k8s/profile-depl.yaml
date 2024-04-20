@@ -19,35 +19,35 @@ spec:
                       - name: MONGO_URI
                         value: "mongodb://profile-mongo-srv:27017/profile"
                       - name: JWT_KEY
-                          valueFrom:
+                        valueFrom:
                             secretKeyRef:
-                              name: jwt-secret
-                              key: JWT_KEY
+                                name: jwt-secret
+                                key: JWT_KEY
                       - name: AWS_BUCKET_NAME
-                          valueFrom:
+                        valueFrom:
                             secretKeyRef:
-                              name: bucket-name
-                              key: AWS_BUCKET_NAME
+                                name: bucket-name
+                                key: AWS_BUCKET_NAME
                       - name: AWS_BUCKET_REGION
-                          valueFrom:
+                        valueFrom:
                             secretKeyRef:
-                              name: bucket-region
-                              key: AWS_BUCKET_REGION
+                                name: bucket-region
+                                key: AWS_BUCKET_REGION
                       - name: AWS_S3_ACCESSKEY
-                          valueFrom:
+                        valueFrom:
                             secretKeyRef:
-                              name: s3-access-key
-                              key: AWS_S3_ACCESSKEY
+                                name: s3-access-key
+                                key: AWS_S3_ACCESSKEY
                       - name: AWS_S3_SECRETKEY
-                          valueFrom:
+                        valueFrom:
                             secretKeyRef:
-                              name: s3-secret-key
-                              key: AWS_S3_SECRETKEY
+                                name: s3-secret-key
+                                key: AWS_S3_SECRETKEY
                       - name: CORS_ORIGIN
-                          valueFrom:
+                        valueFrom:
                             secretKeyRef:
-                              name: cors-origin
-                              key: CORS_ORIGIN
+                                name: cors-origin
+                                key: CORS_ORIGIN
 ---
 apiVersion: v1
 kind: Service

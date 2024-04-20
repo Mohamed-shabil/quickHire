@@ -1,10 +1,10 @@
 import React from "react";
-import axios from "axios";
+import { axiosInstance } from "@/axios/axios";
 import { Badge } from "@/components/ui/badge";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { toast } from "@/components/ui/use-toast";
-import { Jobs } from "@/constants/constants";
+import { Jobs } from "@/types/types";
 import ApplyJobModal from "@/components/Modals/ApplyJobModal";
 import Image from "next/image";
 import { AlertCircle } from "lucide-react";
@@ -20,20 +20,16 @@ import {
     Zap,
     Terminal,
 } from "lucide-react";
-import { Separator } from "../ui/separator";
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { Separator } from "@/components/ui/separator";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const getJob = async (token: string, currentJob: string) => {
     try {
-        axios.defaults.withCredentials = true;
-        const res = await axios.get(
-            `http://localhost:3005/api/jobs/${currentJob}`,
-            {
-                headers: {
-                    Cookie: `jwt=${token}`,
-                },
-            }
-        );
+        const res = await axiosInstance.get(`/api/jobs/${currentJob}`, {
+            headers: {
+                Cookie: `jwt=${token}`,
+            },
+        });
 
         return res.data.job;
     } catch (error) {

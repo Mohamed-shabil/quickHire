@@ -9,19 +9,17 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import axios from "axios";
+import { axiosInstance } from "@/axios/axios";
 import { useEffect, useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { follower } from "@/constants/constants";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { follower } from "@/types/types";
+import { Input } from "@/components/ui/input";
 
 export function FollowerListModal({ userId }: { userId: string }) {
     const [users, setUsers] = useState<follower[]>([]);
     useEffect(() => {
-        axios.defaults.withCredentials = true;
-        axios
-            .get(`http://localhost:3003/api/profile/followers/${userId}`)
+        axiosInstance
+            .get(`/api/profile/followers/${userId}`)
             .then((res) => {
                 console.log("followers", res.data.followers);
                 setUsers(res.data.followers);
