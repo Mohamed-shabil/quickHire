@@ -5,7 +5,7 @@ on:
         branches:
             - main
         paths:
-            - profile
+            - "profile/**"
 jobs:
     build:
         runs-on: ubuntu-latest
