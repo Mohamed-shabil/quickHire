@@ -19,7 +19,36 @@ spec:
                       - name: MONGO_URI
                         value: "mongodb://chats-mongo-srv:27017/chats"
                       - name: JWT_KEY
-                        value: test1234
+                          valueFrom:
+                            secretKeyRef:
+                              name: jwt-secret
+                              key: JWT_KEY
+                      - name: AWS_BUCKET_NAME
+                          valueFrom:
+                            secretKeyRef:
+                              name: bucket-name
+                              key: AWS_BUCKET_NAME
+                      - name: AWS_BUCKET_REGION
+                          valueFrom:
+                            secretKeyRef:
+                              name: bucket-region
+                              key: AWS_BUCKET_REGION
+                      - name: AWS_S3_ACCESSKEY
+                          valueFrom:
+                            secretKeyRef:
+                              name: s3-access-key
+                              key: AWS_S3_ACCESSKEY
+                      - name: AWS_S3_SECRETKEY
+                          valueFrom:
+                            secretKeyRef:
+                              name: s3-secret-key
+                              key: AWS_S3_SECRETKEY
+                      - name: CORS_ORIGIN
+                          valueFrom:
+                            secretKeyRef:
+                              name: cors-origin
+                              key: CORS_ORIGIN
+                      
 ---
 apiVersion: v1
 kind: Service

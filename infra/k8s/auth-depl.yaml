@@ -33,7 +33,32 @@ spec:
                       - name: MONGO_URI
                         value: "mongodb://auth-mongo-srv:27017/auth"
                       - name: JWT_KEY
-                        value: test1234
+                          valueFrom:
+                            secretKeyRef:
+                              name: jwt-secret
+                              key: JWT_KEY
+                      - name: JWT_ACCESSTOKEN_EXPIRESIN
+                          value: 1d
+                      - name: MAIL_PASS
+                          valueFrom:
+                            secretKeyRef:
+                              name: mail-pass
+                              key: MAIL_PASS
+                      - name: MAIL
+                          valueFrom:
+                            secretKeyRef:
+                              name: mail
+                              key: MAIL
+                      - name: CLIENT_URI
+                          valueFrom:
+                            secretKeyRef:
+                              name: client-uri
+                              key: CLIENT_URI
+                      - name: CORS_ORIGIN
+                          valueFrom:
+                            secretKeyRef:
+                              name: cors-origin
+                              key: CORS_ORIGIN
 ---
 apiVersion: v1
 kind: Service
