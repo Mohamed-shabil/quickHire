@@ -13,14 +13,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { axiosInstance } from "@/axios/axios";
-import { CircleUserRound, UserRoundSearch } from "lucide-react";
+import { CircleUserRound, Loader2, UserRoundSearch } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "@/components/ui/use-toast";
 
 export default function Signin() {
     const router = useRouter();
-
+    const [isLoading, SetLoading] = useState<boolean>(false);
     const formSchema = z.object({
         role: z.string(),
     });
@@ -32,11 +34,21 @@ export default function Signin() {
         mode: "onTouched",
     });
     const onSubmit = (values: z.infer<typeof formSchema>) => {
+        SetLoading(true);
         axiosInstance
             .patch("/api/auth/users/selectRole", values)
             .then((res) => {
                 console.log(res);
                 router.push("/");
+            })
+            .catch((err) => {
+                toast({
+                    title: "Something went wrong",
+                    description: "Please refresh and try again",
+                });
+            })
+            .finally(() => {
+                SetLoading(false);
             });
     };
     return (
@@ -114,7 +126,13 @@ export default function Signin() {
                             />
 
                             <div className="w-full flex justify-end mt-3">
-                                <Button className="">Submit</Button>
+                                <Button className="" disabled={isLoading}>
+                                    {isLoading ? (
+                                        <Loader2 className="animate-spin" />
+                                    ) : (
+                                        "Submit"
+                                    )}
+                                </Button>
                             </div>
                         </form>
                     </Form>

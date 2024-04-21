@@ -28,6 +28,7 @@ import { useEffect, useState } from "react";
 
 export default function Signup() {
     const [show, setShow] = useState(false);
+    const [isLoading, setLoading] = useState<boolean>(false);
 
     // const [error,SetError] = useState([{}]);
     const { toast } = useToast();
@@ -92,6 +93,7 @@ export default function Signup() {
     const router = useRouter();
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         console.log(values);
+        setLoading(true);
         axiosInstance
             .post("/api/auth/users/signup", values)
             .then((res) => {
@@ -122,10 +124,11 @@ export default function Signup() {
                         </div>
                     ),
                 });
+            })
+            .finally(() => {
+                setLoading(false);
             });
     };
-
-    const isLoading = form.formState.isSubmitting;
 
     return (
         <section className="w-full">

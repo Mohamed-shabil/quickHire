@@ -26,6 +26,7 @@ import { setUserData } from "@/store/slices/userSlice";
 
 export default function Signin() {
     const [show, setShow] = useState(false);
+    const [isLoading, SetLoading] = useState<boolean>(false);
     const dispatch = useDispatch();
     const formSchema = z.object({
         email: z.string().email({
@@ -47,6 +48,7 @@ export default function Signin() {
 
     const router = useRouter();
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        SetLoading(true);
         console.log(values);
         axiosInstance
             .post("/api/auth/users/signin", values)
@@ -75,9 +77,11 @@ export default function Signin() {
                     ),
                 });
                 console.log(err);
+            })
+            .finally(() => {
+                SetLoading(false);
             });
     };
-    const isLoading = form.formState.isSubmitting;
 
     return (
         <section className="bg-white w-full">
