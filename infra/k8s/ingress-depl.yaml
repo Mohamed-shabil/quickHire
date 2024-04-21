@@ -7,7 +7,7 @@ metadata:
         nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
     rules:
-        - host: www.raazi.live
+        - host: quick-hire.live
           http:
               paths:
                   - path: /api/users/?(.*)

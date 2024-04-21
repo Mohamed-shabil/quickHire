@@ -113,7 +113,9 @@ export default function Signup() {
                 console.log(err);
                 toast({
                     title: "Something went Wrong",
-                    description: err.response.data.errors[0].message || "",
+                    description:
+                        err.response.data.errors[0].message ||
+                        "Please try again ",
                     action: (
                         <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
                             <X />
