@@ -46,7 +46,7 @@ const VerifyOtp = () => {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         console.log(values);
         axiosInstance
-            .post(`/api/atuh/users/verifyOtp`, values)
+            .post(`/api/auth/users/verifyOtp`, values)
             .then((res) => {
                 console.log(res);
                 toast({
