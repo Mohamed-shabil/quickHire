@@ -49,5 +49,5 @@ spec:
     ports:
         - name: payments
           protocol: TCP
-          port: 3000
-          targetPort: 3000
+          port: 3007
+          targetPort: 3007

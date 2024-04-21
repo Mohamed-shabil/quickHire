@@ -10,48 +10,48 @@ spec:
         - host: quick-hire.live
           http:
               paths:
-                  - path: /api/users/?(.*)
+                  - path: /api/auth/?(.*)
                     pathType: Prefix
                     backend:
                         service:
                             name: auth-srv
                             port:
-                                number: 3000
+                                number: 3001
                   - path: /api/profile/?(.*)
                     pathType: Prefix
                     backend:
                         service:
                             name: profile-srv
                             port:
-                                number: 3000
+                                number: 3003
                   - path: /api/posts/?(.*)
                     pathType: Prefix
                     backend:
                         service:
                             name: posts-srv
                             port:
-                                number: 3000
+                                number: 3004
                   - path: /api/chats/?(.*)
                     pathType: Prefix
                     backend:
                         service:
                             name: chats-srv
                             port:
-                                number: 3000
+                                number: 3006
                   - path: /api/jobs/?(.*)
                     pathType: Prefix
                     backend:
                         service:
                             name: jobs-srv
                             port:
-                                number: 3000
+                                number: 3005
                   - path: /api/payments/?(.*)
                     pathType: Prefix
                     backend:
                         service:
                             name: payments-srv
                             port:
-                                number: 3000
+                                number: 3007
                   - path: /?(.*)
                     pathType: Prefix
                     backend:

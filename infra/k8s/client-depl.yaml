@@ -15,6 +15,9 @@ spec:
             containers:
                 - name: client
                   image: shabil/client
+                  env:
+                      - name: NEXT_PUBLIC_BASE_URL
+                        value: https://quick-hire.live
 ---
 apiVersion: v1
 kind: Service
