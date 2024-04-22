@@ -1,28 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: chats-mongo-depl
+    name: profile-mongo-depl
 spec:
     replicas: 1
     selector:
         matchLabels:
-            app: chats-mongo
+            app: profile-mongo
     template:
         metadata:
             labels:
-                app: chats-mongo
+                app: profile-mongo
         spec:
             containers:
-                - name: chats-mongo
+                - name: profile-mongo
                   image: mongo
 ---
 apiVersion: v1
 kind: Service
 metadata:
-    name: chats-mongo-srv
+    name: profile-mongo-srv
 spec:
     selector:
-        app: chats-mongo
+        app: profile-mongo
     ports:
         - name: db
           protocol: TCP
