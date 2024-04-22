@@ -45,6 +45,7 @@ router.post(
             headline: userProfile.headline,
         };
         new KafkaProducer(kafkaClient).produce("headline-updated", payload);
+
         return res.status(200).json({
             status: "success",
             profile: userProfile,

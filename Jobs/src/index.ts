@@ -10,8 +10,6 @@ import { updateSubscription } from "./events/consumer/update-subscription";
 import "./config/config";
 import "./model/Relations";
 
-const consumer = new kafkaConsumer(kafkaClient, "job-group");
-
 const start = async () => {
     try {
         if (!process.env.JWT_KEY) {
@@ -34,12 +32,26 @@ const start = async () => {
         if (!process.env.AWS_S3_SECRETKEY) {
             throw new Error("AWS_S3_SECRETKEY is missing...");
         }
-
-        consumer.consume("user-created", createUser);
-        consumer.consume("avatar-updated", UpdatedUser);
-        consumer.consume("subscription-created", createSubscription);
-        consumer.consume("subscription-updated", updateSubscription);
-        consumer.consume("subscription-deleted", deleteSubscription);
+        new kafkaConsumer(kafkaClient, "job-group-1").consume(
+            "user-created",
+            createUser
+        );
+        new kafkaConsumer(kafkaClient, "job-group-2").consume(
+            "avatar-updated",
+            UpdatedUser
+        );
+        new kafkaConsumer(kafkaClient, "job-group-3").consume(
+            "subscription-created",
+            createSubscription
+        );
+        new kafkaConsumer(kafkaClient, "job-group-4").consume(
+            "subscription-updated",
+            updateSubscription
+        );
+        new kafkaConsumer(kafkaClient, "job-group-5").consume(
+            "subscription-deleted",
+            deleteSubscription
+        );
     } catch (err) {
         console.error(err);
     }
@@ -50,28 +62,28 @@ const start = async () => {
 
 start();
 
-const errorTypes = ["unhandledRejection", "uncaughtException"];
-const signalTraps = ["SIGTERM", "SIGINT", "SIGUSR2"];
+// const errorTypes = ["unhandledRejection", "uncaughtException"];
+// const signalTraps = ["SIGTERM", "SIGINT", "SIGUSR2"];
 
-errorTypes.forEach((type) => {
-    process.on(type, async (e) => {
-        try {
-            console.log(`process.on ${type}`);
-            console.log(e);
-            await consumer.disconnect();
-            process.exit(0);
-        } catch (error) {
-            process.exit(1);
-        }
-    });
-});
+// errorTypes.forEach((type) => {
+//     process.on(type, async (e) => {
+//         try {
+//             console.log(`process.on ${type}`);
+//             console.log(e);
+//             await consumer.disconnect();
+//             process.exit(0);
+//         } catch (error) {
+//             process.exit(1);
+//         }
+//     });
+// });
 
-signalTraps.forEach((type) => {
-    process.once(type, async () => {
-        try {
-            await consumer.disconnect();
-        } catch (error) {
-            process.kill(process.pid, type);
-        }
-    });
-});
+// signalTraps.forEach((type) => {
+//     process.once(type, async () => {
+//         try {
+//             await consumer.disconnect();
+//         } catch (error) {
+//             process.kill(process.pid, type);
+//         }
+//     });
+// });

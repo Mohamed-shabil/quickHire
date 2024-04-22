@@ -7,7 +7,7 @@ import { app } from "./app";
 import { userFollow } from "./events/consumer/userFollow";
 import { userUnfollow } from "./events/consumer/userUnfollow";
 
-const consumer = new kafkaConsumer(kafkaClient, "post-group");
+// const consumer = new kafkaConsumer(kafkaClient, "post-group");
 
 const start = async () => {
     try {
@@ -33,12 +33,26 @@ const start = async () => {
         await mongoose.connect(process.env.MONGO_URI);
 
         console.log("[POSTS DB] Database Connected Successfully!");
-
-        consumer.consume("user-created", createUser);
-        consumer.consume("avatar-updated", UpdatedUser);
-        consumer.consume("headline-updated", UpdatedUser);
-        consumer.consume("user-followed", userFollow);
-        consumer.consume("user-unFollowed", userUnfollow);
+        new kafkaConsumer(kafkaClient, "post-group-1").consume(
+            "user-created",
+            createUser
+        );
+        new kafkaConsumer(kafkaClient, "post-group-2").consume(
+            "avatar-updated",
+            UpdatedUser
+        );
+        new kafkaConsumer(kafkaClient, "post-group-3").consume(
+            "headline-updated",
+            UpdatedUser
+        );
+        new kafkaConsumer(kafkaClient, "post-group-4").consume(
+            "user-followed",
+            userFollow
+        );
+        new kafkaConsumer(kafkaClient, "post-group-5").consume(
+            "user-unFollowed",
+            userUnfollow
+        );
     } catch (err) {
         console.error(err);
     }
@@ -50,28 +64,28 @@ const start = async () => {
 
 start();
 
-const errorTypes = ["unhandledRejection", "uncaughtException"];
-const signalTraps = ["SIGTERM", "SIGINT", "SIGUSR2"];
+// const errorTypes = ["unhandledRejection", "uncaughtException"];
+// const signalTraps = ["SIGTERM", "SIGINT", "SIGUSR2"];
 
-errorTypes.forEach((type) => {
-    process.on(type, async (e) => {
-        try {
-            console.log(`process.on ${type}`);
-            console.log(e);
-            await consumer.disconnect();
-            process.exit(0);
-        } catch (error) {
-            process.exit(1);
-        }
-    });
-});
+// errorTypes.forEach((type) => {
+//     process.on(type, async (e) => {
+//         try {
+//             console.log(`process.on ${type}`);
+//             console.log(e);
+//             await consumer.disconnect();
+//             process.exit(0);
+//         } catch (error) {
+//             process.exit(1);
+//         }
+//     });
+// });
 
-signalTraps.forEach((type) => {
-    process.once(type, async () => {
-        try {
-            await consumer.disconnect();
-        } catch (error) {
-            process.kill(process.pid, type);
-        }
-    });
-});
+// signalTraps.forEach((type) => {
+//     process.once(type, async () => {
+//         try {
+//             await consumer.disconnect();
+//         } catch (error) {
+//             process.kill(process.pid, type);
+//         }
+//     });
+// });

@@ -31,7 +31,10 @@ const start = async () => {
 
         console.log("[Profile DB] Database Connected Successfully!");
 
-        consumer.consume("user-created", createProfile);
+        new kafkaConsumer(kafkaClient, "profile-group").consume(
+            "user-created",
+            createProfile
+        );
     } catch (err) {
         console.error(err);
     }
@@ -42,28 +45,28 @@ const start = async () => {
 
 start();
 
-const errorTypes = ["unhandledRejection", "uncaughtException"];
-const signalTraps = ["SIGTERM", "SIGINT", "SIGUSR2"];
+// const errorTypes = ["unhandledRejection", "uncaughtException"];
+// const signalTraps = ["SIGTERM", "SIGINT", "SIGUSR2"];
 
-errorTypes.forEach((type) => {
-    process.on(type, async (e) => {
-        try {
-            console.log(`process.on ${type}`);
-            console.log(e);
-            await consumer.disconnect();
-            process.exit(0);
-        } catch (error) {
-            process.exit(1);
-        }
-    });
-});
+// errorTypes.forEach((type) => {
+//     process.on(type, async (e) => {
+//         try {
+//             console.log(`process.on ${type}`);
+//             console.log(e);
+//             await consumer.disconnect();
+//             process.exit(0);
+//         } catch (error) {
+//             process.exit(1);
+//         }
+//     });
+// });
 
-signalTraps.forEach((type) => {
-    process.once(type, async () => {
-        try {
-            await consumer.disconnect();
-        } catch (error) {
-            process.kill(process.pid, type);
-        }
-    });
-});
+// signalTraps.forEach((type) => {
+//     process.once(type, async () => {
+//         try {
+//             await consumer.disconnect();
+//         } catch (error) {
+//             process.kill(process.pid, type);
+//         }
+//     });
+// });
