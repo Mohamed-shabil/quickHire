@@ -3,14 +3,10 @@ import { IChats } from "@/types/types";
 import React, { RefObject, useRef } from "react";
 import { useContext, useEffect, useState, useCallback } from "react";
 import { io, Socket } from "socket.io-client";
-import { toast } from "@/components/ui/use-toast";
-import { Button } from "@/components/ui/button";
-import { Stream } from "stream";
 import Peer, { Instance } from "simple-peer";
 import { redirect } from "next/navigation";
-import { UseSelector, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "@/store/reducers";
-import Image from "next/image";
 
 interface SocketProviderProps {
     children?: React.ReactNode;
@@ -155,9 +151,8 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
     };
 
     useEffect(() => {
-        const _socket = io("http://localhost:3006");
+        const _socket = io(process.env.NEXT_PUBLIC_STRIPE_SOCKET_URL!);
         _socket.on("message", onMessageRec);
-
         setSocket(_socket);
         return () => {
             _socket.off("message", onMessageRec);

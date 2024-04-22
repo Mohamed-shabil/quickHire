@@ -33,10 +33,9 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { axiosInstance } from "@/axios/axios";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { Pencil, Plus } from "lucide-react";
 import { Subscription } from "@/types/types";
-import { title } from "process";
 import { toast } from "@/components/ui/use-toast";
 
 export default function SubscriptionModal({
@@ -98,7 +97,7 @@ export default function SubscriptionModal({
                 })
                 .finally(() => {
                     onClose();
-                    router.reload();
+                    router.refresh();
                 });
         } else {
             axiosInstance
@@ -106,7 +105,7 @@ export default function SubscriptionModal({
                 .then((res) => {
                     console.log(res.data);
                     onClose();
-                    router.reload();
+                    router.refresh();
                 })
                 .catch((err) => {
                     console.log(err);

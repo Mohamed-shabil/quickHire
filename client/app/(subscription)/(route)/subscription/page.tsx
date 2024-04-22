@@ -3,12 +3,10 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Subscription } from "@/types/types";
 import PricingPlan from "@/components/PricingPlan";
-import { useRouter } from "next/navigation";
 
 const SubscriptionPage = () => {
     const [subscriptions, setSubscriptions] = useState<Subscription[]>();
     const [loading, setLoading] = useState<boolean>(false);
-    const router = useRouter();
     useEffect(() => {
         axios.get(`/api/payments/subscription`).then((res) => {
             setSubscriptions(res.data.subscriptions);
