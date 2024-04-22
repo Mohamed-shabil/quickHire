@@ -1,6 +1,6 @@
 import { kafkaConsumer } from "@quickhire/common";
 import mongoose from "mongoose";
-import { socketService, httpServer } from "./app";
+import { socketService, httpServer, app } from "./app";
 import { kafkaClient } from "./event/kafkaClient";
 import { createUser } from "./event/consumer/userCreated";
 import { UpdatedUser } from "./event/consumer/updateUser";
@@ -42,7 +42,7 @@ const start = async () => {
         console.log("[CHATS SERVICE] Listening on port 3006!");
     });
 
-    socketService.initListeners();
+    socketService.attachToRoute(app, "/api/chats/socket");
 };
 
 start();

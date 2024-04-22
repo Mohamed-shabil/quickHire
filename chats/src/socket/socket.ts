@@ -1,5 +1,7 @@
-import { Server, Socket } from "socket.io";
+import { Namespace, Server, Socket } from "socket.io";
 import Redis from "ioredis";
+import express from "express";
+import http from "http";
 
 type Chats = {
     content: string;
@@ -18,17 +20,17 @@ class SocketService {
         this._io = new Server({
             cors: {
                 allowedHeaders: ["*"],
-                origin: "http://localhost:3000",
+                origin: process.env.CORS_ORIGIN,
             },
         });
         this.userSocketMap = new Map();
     }
 
-    public initListeners() {
-        const io = this._io;
+    public initListeners(nsp: Namespace) {
+        // const io = this._io;
         console.log("Init Socket Listeners...");
 
-        io.on("connect", (socket: Socket) => {
+        nsp.on("connect", (socket: Socket) => {
             const socketId = socket.id;
 
             socket.on(
@@ -53,9 +55,10 @@ class SocketService {
                 );
                 if (recipientSocketId) {
                     console.log("Message:EMIT", message);
-                    io.to(recipientSocketId).emit("message", message);
+                    nsp.to(recipientSocketId).emit("message", message);
                 }
             });
+
             console.log("ME:JOINED");
             socket.emit("me:joined", socket.id);
 
@@ -71,7 +74,7 @@ class SocketService {
                     console.log("CallUser", recipientSocketId);
                     if (recipientSocketId) {
                         console.log(from);
-                        io.to(recipientSocketId).emit("calluser", {
+                        nsp.to(recipientSocketId).emit("calluser", {
                             signal: signalData,
                             from,
                             name,
@@ -85,10 +88,17 @@ class SocketService {
                 console.log("answerCall... callaccepted...");
                 const recipientSocketId = this.userSocketMap.get(data.to);
                 if (recipientSocketId) {
-                    io.to(recipientSocketId).emit("callaccepted", data.signal);
+                    nsp.to(recipientSocketId).emit("callaccepted", data.signal);
                 }
             });
         });
+    }
+
+    public attachToRoute(app: express.Application, route: string) {
+        const httpServer = http.createServer(app);
+        const namespace = this._io.of(route);
+        this.initListeners(namespace);
+        httpServer.listen(process.env.PORT || 3000);
     }
 
     get io() {

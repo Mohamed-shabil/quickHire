@@ -52,4 +52,4 @@ const httpServer = http.createServer(app);
 
 socketService.io.attach(httpServer);
 
-export { socketService, httpServer };
+export { socketService, httpServer, app };
