@@ -14,10 +14,13 @@ spec:
         spec:
             containers:
                 - name: client
-                  image: shabil/client
+                  image: shabil/client:latest
+                  imagePullPolicy: Always
                   env:
                       - name: NEXT_PUBLIC_BASE_URL
                         value: https://quick-hire.live
+                      - name: NEXT_PUBLIC_STRIPE_SOCKET_URL
+                        value: https://socket.quick-hire.live/api/chats/socket
 ---
 apiVersion: v1
 kind: Service
