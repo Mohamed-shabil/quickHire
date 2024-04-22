@@ -40,7 +40,7 @@ export default async function ProfilePage({
 }: {
     params: { userId: string };
 }) {
-    const token = cookies().get("_accessToken")?.value;
+    const token = cookies().get("jwt")?.value;
     const { userId } = params;
     if (!token) {
         return redirect("/signup");
