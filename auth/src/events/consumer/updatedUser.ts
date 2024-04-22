@@ -3,6 +3,7 @@ import { KafkaMessage } from "kafkajs";
 import { BadRequestError } from "@quickhire/common";
 
 export const UpdatedUser = async (message: KafkaMessage) => {
+    console.log("UPDATED USER");
     const userData = JSON.parse(message.value!.toString());
 
     const user = await User.findById({ _id: userData._id });
