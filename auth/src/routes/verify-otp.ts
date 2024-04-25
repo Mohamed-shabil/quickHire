@@ -7,7 +7,7 @@ import { User } from "../model/user";
 
 const router = express.Router();
 router.post(
-    "/api/auth/users/verifyOtp",
+    "/api/auth/users/verify-otp",
     [
         body("otp")
             .notEmpty()
@@ -29,7 +29,7 @@ router.post(
         await user.save();
         return res.status(200).json({
             status: "success",
-            message: "user verified Successfully",
+            message: "Verification Successfull",
         });
     })
 );

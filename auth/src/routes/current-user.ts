@@ -10,7 +10,7 @@ import { User } from "../model/user";
 const router = express.Router();
 
 router.get(
-    "/api/auth/users/currentuser",
+    "/api/auth/users/current-user",
     requireAuth,
     catchAsync(async (req: Request, res: Response) => {
         const user = req.currentUser;

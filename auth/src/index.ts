@@ -23,7 +23,10 @@ const start = async () => {
             throw new Error("MAIL is not defined");
         }
         if (!process.env.CORS_ORIGIN) {
-            throw new Error("RESET_LINK is not defined");
+            throw new Error("CORS ORIGIN is not defined");
+        }
+        if (!process.env.KAFKA_SERVICE) {
+            throw new Error("Kafka service is not defined");
         }
         console.log(process.env.MONGO_URI);
         await mongoose.connect(process.env.MONGO_URI);

@@ -7,7 +7,7 @@ import bcrypt from "bcryptjs";
 const router = express.Router();
 
 router.post(
-    "/api/auth/users/resetPassword/:token",
+    "/api/auth/users/reset-password/:token",
     catchAsync(async (req: Request, res: Response) => {
         const { token } = req.params;
         console.log(token);
