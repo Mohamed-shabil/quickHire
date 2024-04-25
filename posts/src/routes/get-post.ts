@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 const router = express.Router();
 
 router.get(
-    "/api/posts/getOne/:id",
+    "/api/posts/get-one/:id",
     requireAuth,
     catchAsync(async (req: Request, res: Response) => {
         console.log("reach8ing here ");

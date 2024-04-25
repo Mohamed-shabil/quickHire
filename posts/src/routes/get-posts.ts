@@ -13,9 +13,9 @@ const router = express.Router();
 
 router.get(
     "/api/posts/show",
+    requireAuth,
     catchAsync(async (req: Request, res: Response) => {
         const currentUser = req.currentUser?._id;
-
         const posts = await Posts.aggregate([
             {
                 $lookup: {
@@ -62,7 +62,10 @@ router.get(
             {
                 $addFields: {
                     isLikedByCurrentUser: {
-                        $in: [currentUser, "$likes.user"],
+                        $in: [
+                            new mongoose.Types.ObjectId(currentUser),
+                            "$likes.user",
+                        ],
                     },
                     isFollowing: {
                         $ne: [{ $size: "$currentUserFollowingCreator" }, 0],
@@ -81,6 +84,8 @@ router.get(
                 $sort: { createdAt: -1 },
             },
         ]);
+
+        console.log(posts);
 
         return res.status(200).json({
             status: "Success",

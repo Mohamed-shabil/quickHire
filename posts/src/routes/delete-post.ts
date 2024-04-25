@@ -13,6 +13,7 @@ const router = express.Router();
 
 router.delete(
     "/api/posts/delete/:id",
+    requireAuth,
     catchAsync(async (req: Request, res: Response) => {
         console.log(req.body.caption);
         const error = validationResult(req);
