@@ -25,9 +25,12 @@ const start = async () => {
         if (!process.env.AWS_S3_SECRETKEY) {
             throw new Error("AWS_S3_SECRETKEY is not defined");
         }
+        if (!process.env.KAFKA_SERVICE) {
+            throw new Error("kafka service is not defined");
+        }
         console.log(process.env.MONGO_URI);
         await mongoose.connect(process.env.MONGO_URI);
-        console.log("[AUTH DB] Database Connected Successfully!");
+        console.log("[CHATS DB] Database Connected Successfully!");
 
         new kafkaConsumer(kafkaClient, "chat-group-1").consume(
             "user-created",

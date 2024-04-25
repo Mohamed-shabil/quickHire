@@ -13,6 +13,8 @@ import morgan from "morgan";
 
 const app = express();
 
+app.set("trust proxy", true);
+
 app.use(
     cors({
         origin: process.env.CORS_ORIGIN,
@@ -28,8 +30,6 @@ app.options(
         credentials: true,
     })
 );
-
-app.set("trust proxy", true);
 
 app.use(json());
 app.use(urlencoded({ extended: true }));
