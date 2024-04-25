@@ -23,6 +23,8 @@ spec:
                             secretKeyRef:
                                 name: jwt-secret
                                 key: JWT_KEY
+                      - name: KAFKA_SERVICE
+                        value: kafka-srv:9092
                       - name: AWS_BUCKET_NAME
                         valueFrom:
                             secretKeyRef:
