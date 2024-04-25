@@ -6,7 +6,7 @@ import { User } from "../model/UserModel";
 const router = express.Router();
 
 router.get(
-    "/api/payments/dashboard-data",
+    "/api/payments/analytics",
     catchAsync(async (req: Request, res: Response) => {
         const currentMonth = new Date().getMonth();
         const currentYear = new Date().getFullYear();

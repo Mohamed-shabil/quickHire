@@ -69,9 +69,10 @@ router.post(
                 endDate: new Date(data.metadata.subscriptionTenure),
                 startDate: new Date(),
             });
+            await subscriber.save();
+
             user.subscription = subscriber._id;
             await user.save();
-            await subscriber.save();
         }
         res.send().end();
     })

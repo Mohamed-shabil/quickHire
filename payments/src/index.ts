@@ -22,6 +22,9 @@ const start = async () => {
         if (!process.env.END_POINT_SECRET) {
             throw new Error("END_POINT_SECRET is not defined");
         }
+        if (!process.env.KAFKA_SERVICE) {
+            throw new Error("Kafka Service is missing...");
+        }
 
         console.log(process.env.MONGO_URI);
         await mongoose.connect(process.env.MONGO_URI);

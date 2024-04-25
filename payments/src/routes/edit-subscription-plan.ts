@@ -12,7 +12,7 @@ import { kafkaClient } from "../events/kafkaClient";
 
 const router = express.Router();
 
-router.post(
+router.patch(
     "/api/payments/subscription/edit/:subscriptionId",
     requireAuth,
     isAdmin,
