@@ -6,21 +6,23 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { createPostRoute } from "./routes/createPost";
 import { editPostRouter } from "./routes/EditPost";
-import { getAllPosts } from "./routes/getAllposts";
-import { myPostsRoute } from "./routes/getAllMyPosts";
-import { getOnePost } from "./routes/getPost";
-import { likePostRouter } from "./routes/likePost";
+import { getAllPosts } from "./routes/get-posts";
+import { myPostsRoute } from "./routes/get-my-posts";
+import { getOnePost } from "./routes/get-post";
+import { likePostRouter } from "./routes/like-post";
 import { getAllComments } from "./routes/getComments";
 import { commentRouter } from "./routes/comments";
 import { reportRoute } from "./routes/report-post";
 import { trendingPostRoute } from "./routes/trending-posts";
 import { reportedPostsRoute } from "./routes/get-reports";
-import { deletePostRouter } from "./routes/deletePost";
+import { deletePostRouter } from "./routes/delete-post";
 import { deletepostAdmin } from "./routes/delete-post-admin";
 
 dotenv.config();
 
 const app = express();
+
+app.set("trust proxy", true);
 
 app.use(
     cors({
@@ -36,8 +38,6 @@ app.options(
         credentials: true,
     })
 );
-
-app.set("trust proxy", true);
 
 app.use(json());
 

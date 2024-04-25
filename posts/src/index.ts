@@ -1,13 +1,11 @@
 import mongoose from "mongoose";
-import { kafkaClient } from "./events/kafkaClient";
 import { kafkaConsumer } from "./events/KafkaBaseConsumer";
 import { UpdatedUser } from "./events/consumer/updateUser";
 import { createUser } from "./events/consumer/userCreated";
 import { app } from "./app";
+import { kafkaClient } from "./events/kafkaClient";
 import { userFollow } from "./events/consumer/userFollow";
 import { userUnfollow } from "./events/consumer/userUnfollow";
-
-// const consumer = new kafkaConsumer(kafkaClient, "post-group");
 
 const start = async () => {
     try {
@@ -30,9 +28,14 @@ const start = async () => {
         if (!process.env.AWS_S3_SECRETKEY) {
             throw new Error("AWS_S3_SECRETKEY is not defined");
         }
+        if (!process.env.KAFKA_SERVICE) {
+            throw new Error("kafka service is not defined");
+        }
+        console.log(process.env.KAFKA_SERVICE);
         await mongoose.connect(process.env.MONGO_URI);
 
         console.log("[POSTS DB] Database Connected Successfully!");
+
         new kafkaConsumer(kafkaClient, "post-group-1").consume(
             "user-created",
             createUser
