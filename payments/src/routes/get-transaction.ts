@@ -10,7 +10,9 @@ router.get(
     requireAuth,
     isAdmin,
     catchAsync(async (req: Request, res: Response) => {
-        const transactions = await Subscribers.find()
+        const transactions = await Subscribers.find({
+            stripeId: { $ne: "00000" },
+        })
             .populate(["userId", "subscription"])
             .sort("-1");
 

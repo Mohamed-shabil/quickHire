@@ -14,7 +14,7 @@ import { body } from "express-validator";
 
 const router = express.Router();
 router.post(
-    "/api/jobs/createjobs",
+    "/api/jobs/create-job",
     requireAuth,
     isRecruiter,
     uploadCompanyImage,

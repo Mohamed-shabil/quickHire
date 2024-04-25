@@ -21,14 +21,6 @@ export const Subscription: ModelDefined<any, any> = sequelize.define(
             type: DataTypes.TEXT,
             allowNull: false,
         },
-        startDate: {
-            type: DataTypes.DATE,
-            allowNull: false,
-        },
-        endDate: {
-            type: DataTypes.DATE,
-            allowNull: false,
-        },
         billingPeriod: {
             type: DataTypes.STRING,
             allowNull: false,

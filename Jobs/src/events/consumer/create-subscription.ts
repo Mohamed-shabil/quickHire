@@ -20,8 +20,7 @@ export const createSubscription = async (message: KafkaMessage) => {
         planName: subscriptionData.planName,
         postLimit: subscriptionData.postLimit,
         description: subscriptionData.description,
-        startDate: subscriptionData.startDate,
-        endDate: subscriptionData.endDate,
+        billingPeriod: subscriptionData.billingPeriod,
     });
     await subscription.save();
     console.log(subscription);

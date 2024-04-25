@@ -23,6 +23,8 @@ router.post(
         const currentUser = req.currentUser;
         const { email, recruiter, phone, resume } = req.body;
 
+        console.log(req.body);
+
         console.log("Recruiter", recruiter);
 
         if (!currentUser) {

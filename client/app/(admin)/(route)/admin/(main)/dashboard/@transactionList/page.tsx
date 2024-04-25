@@ -77,11 +77,11 @@ const TransactionList = async () => {
                                 <TableRow key={transaction._id}>
                                     <TableCell>
                                         <div className="font-medium">
-                                            {transaction.userId.fullName ||
-                                                transaction.userId.fullName}
+                                            {transaction.userId?.fullName ||
+                                                transaction.userId?.name}
                                         </div>
                                         <div className="hidden text-sm text-muted-foreground md:inline">
-                                            {transaction.userId.email}
+                                            {transaction.userId?.email}
                                         </div>
                                     </TableCell>
                                     <TableCell className="hidden xl:table-column"></TableCell>

@@ -32,23 +32,30 @@ const start = async () => {
         if (!process.env.AWS_S3_SECRETKEY) {
             throw new Error("AWS_S3_SECRETKEY is missing...");
         }
+        if (!process.env.KAFKA_SERVICE) {
+            throw new Error("Kafka Service is missing...");
+        }
         new kafkaConsumer(kafkaClient, "job-group-1").consume(
             "user-created",
             createUser
         );
         new kafkaConsumer(kafkaClient, "job-group-2").consume(
-            "avatar-updated",
+            "headline-updated",
             UpdatedUser
         );
         new kafkaConsumer(kafkaClient, "job-group-3").consume(
+            "avatar-updated",
+            UpdatedUser
+        );
+        new kafkaConsumer(kafkaClient, "job-group-4").consume(
             "subscription-created",
             createSubscription
         );
-        new kafkaConsumer(kafkaClient, "job-group-4").consume(
+        new kafkaConsumer(kafkaClient, "job-group-5").consume(
             "subscription-updated",
             updateSubscription
         );
-        new kafkaConsumer(kafkaClient, "job-group-5").consume(
+        new kafkaConsumer(kafkaClient, "job-group-6").consume(
             "subscription-deleted",
             deleteSubscription
         );

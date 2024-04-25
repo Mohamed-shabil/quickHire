@@ -79,13 +79,16 @@ const Transactions = async () => {
                         <TableBody>
                             {transactions.length ? (
                                 transactions.map((transaction) => (
-                                    <TableRow>
+                                    <TableRow key={transaction._id}>
                                         <TableCell className="hidden sm:table-cell">
                                             <Image
                                                 alt={transaction.userId.name}
                                                 className="aspect-square rounded-md object-cover"
                                                 height="64"
-                                                src={transaction.userId.avatar}
+                                                src={
+                                                    transaction.userId.avatar ||
+                                                    "/user.png"
+                                                }
                                                 width="64"
                                             />
                                         </TableCell>
