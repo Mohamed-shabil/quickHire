@@ -20,17 +20,17 @@ class SocketService {
         this._io = new Server({
             cors: {
                 allowedHeaders: ["*"],
-                origin: process.env.CORS_ORIGIN,
+                origin: [process.env.CORS_ORIGIN!, process.env.SOCKET_ORIGIN!],
             },
         });
         this.userSocketMap = new Map();
     }
 
-    public initListeners(nsp: Namespace) {
-        // const io = this._io;
+    public initListeners() {
+        const io = this._io;
         console.log("Init Socket Listeners...");
 
-        nsp.on("connect", (socket: Socket) => {
+        io.on("connect", (socket: Socket) => {
             const socketId = socket.id;
 
             socket.on(
@@ -55,7 +55,7 @@ class SocketService {
                 );
                 if (recipientSocketId) {
                     console.log("Message:EMIT", message);
-                    nsp.to(recipientSocketId).emit("message", message);
+                    io.to(recipientSocketId).emit("message", message);
                 }
             });
 
@@ -74,7 +74,7 @@ class SocketService {
                     console.log("CallUser", recipientSocketId);
                     if (recipientSocketId) {
                         console.log(from);
-                        nsp.to(recipientSocketId).emit("calluser", {
+                        io.to(recipientSocketId).emit("calluser", {
                             signal: signalData,
                             from,
                             name,
@@ -88,18 +88,18 @@ class SocketService {
                 console.log("answerCall... callaccepted...");
                 const recipientSocketId = this.userSocketMap.get(data.to);
                 if (recipientSocketId) {
-                    nsp.to(recipientSocketId).emit("callaccepted", data.signal);
+                    io.to(recipientSocketId).emit("callaccepted", data.signal);
                 }
             });
         });
     }
 
-    public attachToRoute(app: express.Application, route: string) {
-        const httpServer = http.createServer(app);
-        const namespace = this._io.of(route);
-        this.initListeners(namespace);
-        httpServer.listen(process.env.PORT || 3000);
-    }
+    // public attachToRoute(app: express.Application, route: string) {
+    //     const httpServer = http.createServer(app);
+    //     const namespace = this._io.of(route);
+    //     this.initListeners(namespace);
+    //     httpServer.listen(process.env.PORT || 3000);
+    // }
 
     get io() {
         return this._io;

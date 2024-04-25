@@ -48,7 +48,7 @@ app.use(errorHandler);
 
 const socketService = new SocketService();
 
-const httpServer = http.createServer(app);
+const httpServer = http.createServer();
 
 socketService.io.attach(httpServer);
 

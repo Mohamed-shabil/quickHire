@@ -1,6 +1,7 @@
 import { kafkaConsumer } from "@quickhire/common";
 import mongoose from "mongoose";
 import { socketService, httpServer, app } from "./app";
+
 import { kafkaClient } from "./event/kafkaClient";
 import { createUser } from "./event/consumer/userCreated";
 import { UpdatedUser } from "./event/consumer/updateUser";
@@ -48,11 +49,14 @@ const start = async () => {
         console.error(err);
     }
 
-    httpServer.listen(3006, () => {
+    app.listen(3006, () => {
         console.log("[CHATS SERVICE] Listening on port 3006!");
     });
 
-    socketService.attachToRoute(app, "/api/chats/socket");
+    httpServer.listen(3000, () => {
+        console.log("[SOCKET SERVER] Listening on Port 3000");
+    });
+    socketService.initListeners();
 };
 
 start();
