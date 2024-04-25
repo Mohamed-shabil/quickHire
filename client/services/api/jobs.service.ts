@@ -6,7 +6,7 @@ import { headers } from "next/headers";
 export const getUserJobs = async (recruiter: string, token?: string) => {
     const url = new BuildUrl().jobs(`/${recruiter}/get-jobs`);
     const response = await axiosInstance.get(url, {
-        ...(token && { headers: { Cookies: `jwt=${token}` } }),
+        ...(token && { headers: { Cookie: `jwt=${token}` } }),
     });
     return response;
 };
@@ -26,7 +26,7 @@ export const editJob = async (
 ) => {
     const url = new BuildUrl().jobs(`/edit-jobs/${jobId}`);
     const response = await axiosInstance.patch(url, data, {
-        ...(token && { headers: { Cookies: `jwt=${token}` } }),
+        ...(token && { headers: { Cookie: `jwt=${token}` } }),
     });
 };
 
@@ -98,7 +98,7 @@ export const searchJob = async (
 };
 
 export const createJob = async (data: FormData) => {
-    const url = new BuildUrl().jobs(`/crate-job`);
+    const url = new BuildUrl().jobs(`/create-job`);
     const response = await axiosInstance.post(url, data, {
         headers: {
             "Content-Type": "multipart/form-data",

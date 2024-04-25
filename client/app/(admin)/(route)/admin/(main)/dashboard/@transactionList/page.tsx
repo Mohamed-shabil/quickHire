@@ -22,6 +22,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Transaction } from "@/types/types";
 import { getTransactions } from "@/services/api/payments.service";
+import ErrorMessage from "@/components/ErrorMessage";
 
 const getTransactionsList = async (token: string): Promise<Transaction[]> => {
     const response = await getTransactions(token);
@@ -71,9 +72,9 @@ const TransactionList = async () => {
                             <TableHead className="text-right">Amount</TableHead>
                         </TableRow>
                     </TableHeader>
-                    <TableBody>
-                        {transactions.length &&
-                            transactions.map((transaction) => (
+                    {transactions.length ? (
+                        <TableBody>
+                            {transactions.map((transaction) => (
                                 <TableRow key={transaction._id}>
                                     <TableCell>
                                         <div className="font-medium">
@@ -106,7 +107,10 @@ const TransactionList = async () => {
                                     </TableCell>
                                 </TableRow>
                             ))}
-                    </TableBody>
+                        </TableBody>
+                    ) : (
+                        <ErrorMessage message="No Transaction records" />
+                    )}
                 </Table>
             </CardContent>
         </Card>

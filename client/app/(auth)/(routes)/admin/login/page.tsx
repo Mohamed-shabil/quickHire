@@ -66,6 +66,7 @@ export default function LoginForm() {
                 console.log(err);
                 toast({
                     title: "Something went wrong",
+                    description: err.response.data.errors[0].message,
                     action: (
                         <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
                             <X />

@@ -153,6 +153,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
     useEffect(() => {
         console.log(process.env.NEXT_PUBLIC_SOCKET_URL);
         const _socket = io(process.env.NEXT_PUBLIC_SOCKET_URL!);
+        console.log(_socket);
         _socket.on("message", onMessageRec);
         setSocket(_socket);
         return () => {
@@ -165,6 +166,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
 
     const sendMessage: ISocketContext["sendMessage"] = (msg) => {
         if (socket) {
+            console.log("MESSAGE EMITTED", msg);
             socket.emit("event:message", msg);
         }
     };

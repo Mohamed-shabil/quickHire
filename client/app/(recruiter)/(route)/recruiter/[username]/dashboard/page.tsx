@@ -15,7 +15,7 @@ import { getUserJobs } from "@/services/api/jobs.service";
 
 const getMyJob = async (token: string, recruiter: string) => {
     try {
-        const response = await getUserJobs(token);
+        const response = await getUserJobs(recruiter, token);
         return response.data.jobs as Jobs[];
     } catch (error) {
         console.log(error);

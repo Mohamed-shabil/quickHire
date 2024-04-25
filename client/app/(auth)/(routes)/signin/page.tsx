@@ -16,7 +16,7 @@ import {
 import { axiosInstance } from "@/axios/axios";
 import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/use-toast";
-import { Check, Eye, EyeOff, X } from "lucide-react";
+import { Check, Eye, EyeOff, Loader2, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -26,6 +26,7 @@ import { userLogin, userSignup } from "@/services/api/auth.service";
 
 export default function Signin() {
     const [show, setShow] = useState(false);
+    const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
     const formSchema = z.object({
         email: z.string().email({
@@ -48,6 +49,7 @@ export default function Signin() {
     const router = useRouter();
     const isLoading = form.formState.isLoading;
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        setLoading(true);
         console.log(values);
         try {
             const response = await userLogin(values);
@@ -67,13 +69,16 @@ export default function Signin() {
             console.log("Error", error);
             toast({
                 title: "Something Went Wrong try again",
-                description: "Please try again",
+                description:
+                    error.response.data.errors[0].message || "Please try again",
                 action: (
                     <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
                         <X />
                     </div>
                 ),
             });
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -125,7 +130,7 @@ export default function Signin() {
                                 <div className="col-span-6 sm:col-span-3">
                                     <FormField
                                         name="email"
-                                        disabled={isLoading}
+                                        disabled={loading}
                                         control={form.control}
                                         render={({ field }) => (
                                             <FormItem>
@@ -199,13 +204,17 @@ export default function Signin() {
                                 <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
                                     <Button
                                         type="submit"
-                                        disabled={isLoading}
+                                        disabled={loading}
                                         className="inline-block shrink-0 rounded-md border border-blue-600
                      bg-blue-600 px-12 py-3 text-sm font-medium text-white transition 
                      hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring
                      active:text-blue-500"
                                     >
-                                        Login
+                                        {loading ? (
+                                            <Loader2 className="animate-spin" />
+                                        ) : (
+                                            "Login"
+                                        )}
                                     </Button>
 
                                     <p className="mt-4 text-sm text-gray-500 sm:mt-0">

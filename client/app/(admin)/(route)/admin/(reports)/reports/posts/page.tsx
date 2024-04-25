@@ -14,6 +14,7 @@ import React from "react";
 import { Report, Media } from "@/types/types";
 import DeletePost from "@/components/Admin/DeletePost";
 import { axiosInstance } from "@/axios/axios";
+import { getReports } from "@/services/api/posts.service";
 
 type Post = {
     _id: string;
@@ -31,11 +32,7 @@ type Post = {
 };
 
 const getReportedPosts = async (token: string): Promise<Post[]> => {
-    const response = await axiosInstance.get("/api/posts/report", {
-        headers: {
-            Cookie: `jwt=${token}`,
-        },
-    });
+    const response = await getReports(token);
     return response.data.posts;
 };
 const PostReports = async () => {

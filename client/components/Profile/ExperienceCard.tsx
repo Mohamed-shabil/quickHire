@@ -16,6 +16,7 @@ import { axiosInstance } from "@/axios/axios";
 import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import { RootState } from "@/store/reducers";
+import { deleteExperience } from "@/services/api/profile.service";
 
 export function ExperienceCard({
     experience,
@@ -29,11 +30,8 @@ export function ExperienceCard({
     console.log(experience);
     const user = useSelector((state: RootState) => state.user.userData);
 
-    const deleteExperience = (company: string, position: string) => {
-        axiosInstance
-            .patch("/api/profile/experience/delete", {
-                experienceId: experience._id,
-            })
+    const onClick = (id: string) => {
+        deleteExperience(id)
             .then((res) => {
                 console.log(res.data);
                 toast({
@@ -48,6 +46,7 @@ export function ExperienceCard({
                 router.refresh();
             })
             .catch((err) => {
+                console.log(err);
                 toast({
                     title: "Something Went Wrong 😢",
                     description: err.response.errors[0].message,
@@ -77,12 +76,7 @@ export function ExperienceCard({
                         <Button
                             variant={"fade"}
                             size={"mini"}
-                            onClick={() =>
-                                deleteExperience(
-                                    experience.companyName,
-                                    experience.position
-                                )
-                            }
+                            onClick={() => onClick(experience._id.toString())}
                         >
                             <Trash2 className="text-rose-500 w-5 h-5" />
                         </Button>

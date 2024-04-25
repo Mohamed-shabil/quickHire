@@ -37,10 +37,12 @@ export default function Signin() {
             const response = await selectRole(values);
             console.log(response);
             router.push("/");
-        } catch (error) {
+        } catch (error: any) {
             toast({
                 title: "Something went wrong",
-                description: "Please refresh and try again",
+                description:
+                    error.response.data.errors[0].message ||
+                    "Please refresh and try again",
                 action: (
                     <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
                         <X />

@@ -114,3 +114,15 @@ export async function influencersList(token?: string) {
     });
     return response;
 }
+
+export async function deleteExperience(experienceId: string, token?: string) {
+    const url = new BuildUrl().profile("/experience/delete");
+    const response = await axiosInstance.patch(
+        url,
+        { experienceId },
+        {
+            ...(token && { headers: { cookie: `jwt=${token}` } }),
+        }
+    );
+    return response;
+}

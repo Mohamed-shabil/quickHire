@@ -76,9 +76,9 @@ const Transactions = async () => {
                                 </TableHead>
                             </TableRow>
                         </TableHeader>
-                        <TableBody>
-                            {transactions.length ? (
-                                transactions.map((transaction) => (
+                        {transactions.length ? (
+                            <TableBody>
+                                {transactions.map((transaction) => (
                                     <TableRow key={transaction._id}>
                                         <TableCell className="hidden sm:table-cell">
                                             <Image
@@ -115,13 +115,11 @@ const Transactions = async () => {
                                             ).format("LL")}
                                         </TableCell>
                                     </TableRow>
-                                ))
-                            ) : (
-                                <ErrorMessage
-                                    message={"No transaction record"}
-                                />
-                            )}
-                        </TableBody>
+                                ))}
+                            </TableBody>
+                        ) : (
+                            <ErrorMessage message={"No transaction record"} />
+                        )}
                     </Table>
                 </CardContent>
                 {/* <CardFooter>
