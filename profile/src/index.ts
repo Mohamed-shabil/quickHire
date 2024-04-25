@@ -4,8 +4,6 @@ import { kafkaClient } from "./events/kafkaClient";
 import { kafkaConsumer } from "@quickhire/common";
 import { createProfile } from "./events/consumer/consumeCallback";
 
-const consumer = new kafkaConsumer(kafkaClient, "profile-group");
-
 const start = async () => {
     try {
         if (!process.env.JWT_KEY) {
@@ -26,7 +24,9 @@ const start = async () => {
         if (!process.env.AWS_S3_SECRETKEY) {
             throw new Error("AWS_S3_SECRETKEY is not defined");
         }
-
+        if (!process.env.KAFKA_SERVICE) {
+            throw new Error("KAFKA_SERVICE is not defined");
+        }
         await mongoose.connect(process.env.MONGO_URI);
 
         console.log("[Profile DB] Database Connected Successfully!");

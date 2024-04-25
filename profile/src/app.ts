@@ -23,9 +23,11 @@ dotenv.config();
 
 export const app = express();
 
+app.set("trust proxy", true);
+
 app.use(
     cors({
-        origin: process.env.CORS_ORIGIN,
+        origin: process.env.CORS_ORIGIN!,
         methods: ["POST", "GET", "DELETE", "PATCH"],
         credentials: true,
     })
@@ -34,12 +36,10 @@ app.use(
 app.options(
     "*",
     cors({
-        origin: process.env.CORS_ORIGIN,
+        origin: process.env.CORS_ORIGIN!,
         credentials: true,
     })
 );
-
-app.set("trust proxy", true);
 
 app.use(json());
 
