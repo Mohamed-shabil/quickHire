@@ -13,6 +13,12 @@ import { RootState } from "@/store/reducers";
 import { redirect, useParams, useSearchParams } from "next/navigation";
 import moment from "moment";
 import ChatSection from "@/components/ChatSection";
+import {
+    chatHistory,
+    getChats,
+    searchProfile,
+} from "@/services/api/chats.service";
+import { string } from "zod";
 
 interface IChatUser {
     _id: string;
@@ -38,43 +44,42 @@ function Chats() {
 
     useEffect(() => {
         if (user) {
-            axiosInstance
-                .get(`/api/chats/history/${user?._id}`)
+            chatHistory(user._id)
                 .then((res) => {
-                    console.log(res);
                     setChats(res.data.chats);
                 })
                 .catch((err) => {
-                    console.error(err);
+                    console.log(err);
                 });
         }
     }, [user]);
 
     useEffect(() => {
-        axiosInstance
-            .get("/api/chats/get-chats")
+        getChats()
             .then((res) => {
-                console.log("chatsuser -----", res.data.chats);
+                console.log("Get chats", res.data);
                 setChatUsers(res.data.chats);
             })
             .catch((err) => {
                 console.log(err);
             });
-        console.log("Im working....");
     }, []);
 
-    useEffect(() => {}, [chatUser]);
+    useEffect(() => {
+        if (chatUser) {
+            onSearch(chatUser);
+        }
+    }, [chatUser]);
 
     const onSearch = async (value: string) => {
-        axiosInstance
-            .get("/api/chats/search", {
-                params: {
-                    name: value,
-                },
-            })
+        searchProfile(value)
             .then((res) => {
-                console.log(res.data.users);
-                setChatUsers(res.data.users);
+                console.log("Fetching char", res.data);
+                if (chatUsers) {
+                    setChatUsers([...res.data.users, ...chatUsers]);
+                } else {
+                    setChatUsers(res.data.users);
+                }
             })
             .catch((err) => {
                 console.log(err);

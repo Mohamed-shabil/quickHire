@@ -31,6 +31,7 @@ import { Label } from "./ui/label";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/reducers";
 import Link from "next/link";
+import { chatHistory, saveChat } from "@/services/api/chats.service";
 
 const ChatSection = ({ user }: { user: ChatUser }) => {
     const router = useRouter();
@@ -48,8 +49,7 @@ const ChatSection = ({ user }: { user: ChatUser }) => {
 
     useEffect(() => {
         if (!currentUser) return;
-        axiosInstance
-            .get(`/api/chats/history/${user?._id}`)
+        chatHistory(user._id)
             .then((res) => {
                 console.log(res);
                 setChats(res.data.chats);
@@ -89,23 +89,21 @@ const ChatSection = ({ user }: { user: ChatUser }) => {
             time: new Date(),
         };
         setChats([...chats, newChat]);
-        try {
-            const data = new FormData();
-            data.append("recipientId", recipientId);
-            data.append("content", content);
-            data.append("contentType", contentType);
+        const data = new FormData();
+        data.append("recipientId", recipientId);
+        data.append("content", content);
+        data.append("contentType", contentType);
 
-            const response = await axiosInstance.post(
-                "/api/chats/save-chat",
-                data
-            );
-            console.log("Saved Chat", response);
-            sendMessage(newChat);
-        } catch (err) {
-            console.log(err);
-        } finally {
-            setLoading(false);
-        }
+        saveChat(data)
+            .then((res) => {
+                sendMessage(newChat);
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     };
 
     return (

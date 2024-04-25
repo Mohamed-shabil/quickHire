@@ -9,6 +9,7 @@ import { axiosInstance } from "@/axios/axios";
 import { Subscription } from "@/types/types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/reducers";
+import { subscribe } from "@/services/api/payments.service";
 
 function PricingPlan({ plan }: { plan: Subscription }) {
     const [loading, setLoading] = useState<boolean>(false);
@@ -25,14 +26,7 @@ function PricingPlan({ plan }: { plan: Subscription }) {
                 process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!
             );
 
-            const response = await axiosInstance.post(
-                `/api/payments/subscribe/${subscription._id}`,
-                {},
-                {
-                    withCredentials: true,
-                }
-            );
-
+            const response = await subscribe(subscription._id);
             console.log(response.data);
             await stripe?.redirectToCheckout({
                 sessionId: response.data.session.id,
@@ -64,14 +58,13 @@ function PricingPlan({ plan }: { plan: Subscription }) {
                 </p>
                 <Button className="w-full" onClick={() => openStripe(plan)}>
                     {loading ? (
-                        <Loader2 size={"0.9em"} />
+                        <Loader2 size={"0.9em"} className="animate-spin" />
                     ) : subscription?._id == plan._id ? (
                         "Manage Plan"
                     ) : (
                         "Subscribe"
                     )}
                 </Button>
-
                 <SvgGraph />
             </div>
         </div>

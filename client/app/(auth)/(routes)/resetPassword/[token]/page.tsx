@@ -16,6 +16,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Check, Loader2, X } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
+import { resetPassword } from "@/services/api/auth.service";
 import { useRouter } from "next/router";
 const ResetPassword = () => {
     const params = useParams();
@@ -45,35 +46,31 @@ const ResetPassword = () => {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         console.log(values);
-        axiosInstance
-            .post(`/api/auth/users/resetPassword/${params.token}`, values)
-            .then((res) => {
-                console.log(res);
-                toast({
-                    title: "Password Updated successfully ",
-                    description: `Welcome back 🥰`,
-                    action: (
-                        <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
-                            <Check />
-                        </div>
-                    ),
-                });
-                router.push("/");
-            })
-            .catch((err) => {
-                console.log(err);
-                toast({
-                    title: "Something went wrong 😥",
-                    description:
-                        err.response.data.errors[0].message ||
-                        "Something went wrong try again after sometimes",
-                    action: (
-                        <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
-                            <X />
-                        </div>
-                    ),
-                });
+        try {
+            const token = params.token as string;
+            const response = await resetPassword(values, { token });
+            toast({
+                title: "Password Updated successfully ",
+                description: `Welcome back 🥰`,
+                action: (
+                    <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
+                        <Check />
+                    </div>
+                ),
             });
+        } catch (error: any) {
+            toast({
+                title: "Something went wrong 😥",
+                description:
+                    error.response.data.errors[0].message ||
+                    "Something went wrong try again after sometimes",
+                action: (
+                    <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
+                        <X />
+                    </div>
+                ),
+            });
+        }
     };
 
     const isLoading = form.formState.isSubmitting;

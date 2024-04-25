@@ -26,10 +26,11 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import ReactQuill from "react-quill";
-import { z } from "zod";
+import { string, z } from "zod";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/reducers";
 import { axiosInstance } from "@/axios/axios";
+import { editJob } from "@/services/api/jobs.service";
 
 const EditJob = ({ params }: { params: { jobId: string } }) => {
     const { jobId } = params;
@@ -73,9 +74,36 @@ const EditJob = ({ params }: { params: { jobId: string } }) => {
         requirements: z.string().min(20, {
             message: "requirements must be atleast 10 letters long",
         }),
-        minSalary: z.number(),
-        maxSalary: z.number(),
-        openings: z.number(),
+        minSalary: z.string().refine(
+            (data) => {
+                if (data) {
+                    return parseInt(data);
+                }
+            },
+            {
+                message: "Minimum Salary Must be a Number",
+            }
+        ),
+        maxSalary: z.string().refine(
+            (data) => {
+                if (data) {
+                    return parseInt(data);
+                }
+            },
+            {
+                message: "Maximum Salary Must be a Number",
+            }
+        ),
+        openings: z.string().refine(
+            (data) => {
+                if (data) {
+                    return parseInt(data);
+                }
+            },
+            {
+                message: "Opening must be a Number and Greater than 0",
+            }
+        ),
         experience: z.string(),
     });
 
@@ -112,7 +140,7 @@ const EditJob = ({ params }: { params: { jobId: string } }) => {
     const [preview, setPreview] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const onSubmit = (values: z.infer<typeof formSchema>) => {
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
         setLoading(true);
         const selectedImage = document.getElementById(
             "companyImage"
@@ -121,6 +149,18 @@ const EditJob = ({ params }: { params: { jobId: string } }) => {
 
         const data = new FormData();
 
+        data.append("title", values.title);
+        data.append("company", values.company);
+        data.append("workplace", values.workplace);
+        data.append("employmentType", values.employmentType);
+        data.append("jobDescription", values.jobDescription);
+        data.append("requirements", values.requirements);
+        data.append("minSalary", values.minSalary);
+        data.append("maxSalary", values.maxSalary);
+        data.append("openings", values.openings);
+        data.append("experience", values.experience);
+        data.append("location", values.location);
+
         if (companyImage) {
             data.append("companyImage", companyImage);
         }
@@ -128,40 +168,31 @@ const EditJob = ({ params }: { params: { jobId: string } }) => {
             data.append("skills[]", item);
         });
 
-        axiosInstance
-            .patch(`/api/jobs/edit-job/${jobId}`, data, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-                withCredentials: true,
-            })
-            .then((res) => {
-                toast({
-                    title: "Job edited successfully! 🥳",
-                    action: (
-                        <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
-                            <Check />
-                        </div>
-                    ),
-                });
-                console.log(res.data);
-            })
-            .catch((err) => {
-                console.error("Error:", err);
-                toast({
-                    title: "Something went Wrong",
-                    description: err.response.data.errors[0].message || "",
-                    action: (
-                        <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
-                            <X />
-                        </div>
-                    ),
-                });
-            })
-            .finally(() => {
-                setLoading(false);
-                router.push(`/recruiter/${user?.name}/dashboard/my-jobs`);
+        try {
+            const response = await editJob(jobId, data);
+            toast({
+                title: "Job edited successfully! 🥳",
+                action: (
+                    <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
+                        <Check />
+                    </div>
+                ),
             });
+            console.log(response);
+        } catch (error: any) {
+            toast({
+                title: "Something went Wrong",
+                description: error.response.data.errors[0].message || "",
+                action: (
+                    <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
+                        <X />
+                    </div>
+                ),
+            });
+        } finally {
+            setLoading(false);
+            router.push(`/recruiter/${user?.name}/dashboard/my-jobs`);
+        }
     };
 
     const handleAddSkill = () => {

@@ -9,10 +9,12 @@ import { number, z } from "zod";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "./ui/button";
-import { Loader2, SendHorizontal } from "lucide-react";
+import { Loader2, SendHorizontal, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/reducers";
+import { getComments } from "@/services/api/posts.service";
+import { toast } from "./ui/use-toast";
 
 type comment = {
     comment: string;
@@ -39,19 +41,24 @@ export function CommentBox({ postId }: { postId: string }) {
     const [commentsData, setCommentsData] = useState<commentData>();
 
     const refetch = async () => {
-        axiosInstance
-            .get(`/api/posts/comments/${postId}`)
-            .then((res) => {
-                console.log(res);
-                setComments(res.data.comment);
-                setCommentsData(res.data);
-            })
-            .catch((err) => {
-                console.log(err);
-            })
-            .finally(() => {
-                setLoading(false);
+        try {
+            const response = await getComments(postId);
+            setComments(response.data.comment);
+            setCommentsData(response.data);
+        } catch (error: any) {
+            toast({
+                title: "Something went wrong!",
+                description:
+                    error.response.errors[0].message || "Please try again",
+                action: (
+                    <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
+                        <X />
+                    </div>
+                ),
             });
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {

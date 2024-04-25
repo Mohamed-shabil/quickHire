@@ -6,21 +6,42 @@ import { axiosInstance } from "@/axios/axios";
 import { useState } from "react";
 import { toast } from "../ui/use-toast";
 import { Check, X } from "lucide-react";
+import { blockUser, unBlockUser } from "@/services/api/auth.service";
 
 export function BlockSwitch({ user }: { user: User }) {
     const [blocked, setBlocked] = useState<boolean>(user.isBlocked);
     const handleUserBlock = () => {
         console.log("current Block", blocked);
-        setBlocked(!blocked);
-        console.log("set Block", blocked);
 
-        if (blocked) {
-            axiosInstance
-                .patch(`/api/auth/users/unblock/${user._id}`)
+        if (!blocked) {
+            blockUser(user._id)
                 .then((res) => {
                     console.log(res.data);
                     toast({
-                        title: `You Unblocked ${user.fullName || user.name}`,
+                        title: `Blocked ${user.fullName || user.name}`,
+                        action: (
+                            <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
+                                <Check />
+                            </div>
+                        ),
+                    });
+                })
+                .catch((err) => {
+                    toast({
+                        title: `You unblocked ${user.fullName || user.name}`,
+                        action: (
+                            <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
+                                <Check />
+                            </div>
+                        ),
+                    });
+                });
+        } else {
+            unBlockUser(user._id)
+                .then((res) => {
+                    console.log(res.data);
+                    toast({
+                        title: `Unblocked ${user.fullName || user.name}`,
                         action: (
                             <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
                                 <Check />
@@ -39,29 +60,6 @@ export function BlockSwitch({ user }: { user: User }) {
                         ),
                     });
                 });
-        } else {
-            axiosInstance
-                .patch(`http://localhost:3001/api/auth/users/block/${user._id}`)
-                .then((res) => {
-                    toast({
-                        title: `You blocked ${user.fullName || user.name}`,
-                        action: (
-                            <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
-                                <Check />
-                            </div>
-                        ),
-                    });
-                })
-                .catch((err) => {
-                    toast({
-                        title: `You unblocked ${user.fullName || user.name}`,
-                        action: (
-                            <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
-                                <Check />
-                            </div>
-                        ),
-                    });
-                });
         }
     };
     return (
@@ -69,7 +67,10 @@ export function BlockSwitch({ user }: { user: User }) {
             <Switch
                 id={user._id}
                 checked={blocked}
-                onCheckedChange={() => handleUserBlock()}
+                onCheckedChange={() => {
+                    setBlocked(!blocked);
+                    handleUserBlock();
+                }}
             />
             <Label htmlFor={user._id}>Block User</Label>
         </div>

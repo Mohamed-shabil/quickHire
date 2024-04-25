@@ -10,7 +10,7 @@ import {
 
 import { axiosInstance } from "@/axios/axios";
 import { toast } from "../ui/use-toast";
-import { Check, Loader2, Router } from "lucide-react";
+import { Check, Loader2, Router, X } from "lucide-react";
 import { Textarea } from "../ui/textarea";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/reducers";
@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { Label } from "../ui/label";
+import { updateProfileImage } from "@/services/api/profile.service";
 
 export function AvatarModal() {
     const dispatch = useDispatch();
@@ -26,7 +27,7 @@ export function AvatarModal() {
     const [preview, setPreview] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
         const data = new FormData();
@@ -37,25 +38,35 @@ export function AvatarModal() {
         if (image) {
             data.append("profile", image);
         }
-        axiosInstance
-            .patch("/api/profile/avatar", data)
-            .then((res) => {
-                console.log(res);
-                setLoading(false);
-                toast({
-                    title: "Profile Avatar Updated Successfully",
-                    action: (
-                        <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
-                            <Check />
-                        </div>
-                    ),
-                });
-                onClose();
-                router.refresh();
-            })
-            .catch((err) => {
-                console.log(err);
+        setLoading(true);
+
+        try {
+            const response = await updateProfileImage(data);
+            toast({
+                title: "Profile Avatar Updated Successfully",
+                action: (
+                    <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
+                        <Check />
+                    </div>
+                ),
             });
+            onClose();
+            router.refresh();
+        } catch (error: any) {
+            toast({
+                title: "Something went wrong",
+                ...(error.response.errors[0].message && {
+                    description: error.response.errors[0].message,
+                }),
+                action: (
+                    <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
+                        <X />
+                    </div>
+                ),
+            });
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handlePreview = (e: ChangeEvent<HTMLInputElement>) => {

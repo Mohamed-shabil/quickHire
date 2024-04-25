@@ -27,6 +27,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { axiosInstance } from "@/axios/axios";
+import { adminLogin } from "@/services/api/auth.service";
 
 export default function LoginForm() {
     const [show, setShow] = useState<boolean>(false);
@@ -48,8 +49,7 @@ export default function LoginForm() {
     });
 
     const onSubmit = (values: z.infer<typeof formSchema>) => {
-        axiosInstance
-            .post("/api/auth/admin/login", values)
+        adminLogin(values)
             .then((res) => {
                 console.log(res.data);
                 toast({

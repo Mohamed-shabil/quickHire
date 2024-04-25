@@ -8,27 +8,18 @@ import { JobPreview } from "@/components/Jobs/JobPreview";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
 
-import { axiosInstance } from "@/axios/axios";
+import { searchJob } from "@/services/api/jobs.service";
 
 interface IFilter {
-    title: string | null;
-    location: string | null;
-    experience: string | null;
+    title?: string;
+    location?: string;
+    experience?: string;
 }
 
 const getJobs = async (token: string, filter: IFilter) => {
-    const res = await axiosInstance.get(`/api/jobs/search-job?`, {
-        params: {
-            ...(filter.experience && { experience: filter.experience }),
-            ...(filter.title && { title: filter.title }),
-            ...(filter.location && { location: filter.location }),
-        },
-        headers: {
-            Cookie: `jwt=${token}`,
-        },
-    });
-
-    return res.data.jobs;
+    console.log("TOKEN in JOB", token);
+    const response = await searchJob(filter, token);
+    return response.data.jobs;
 };
 
 export default async function page({

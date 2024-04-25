@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import JobsCard from "@/components/Jobs/JobsCard";
 import { Application, Jobs } from "@/types/types";
 import { axiosInstance } from "@/axios/axios";
+import ErrorMessage from "@/components/ErrorMessage";
 
 export default function MyJobs() {
     const user = useSelector((state: RootState) => state.user.userData);
@@ -74,57 +75,100 @@ export default function MyJobs() {
                             </TabsList>
 
                             <TabsContent value="all">
-                                {applications.map((application) => (
-                                    <JobsCard
-                                        key={application._id}
-                                        job={application.jobId}
+                                {applications.length ? (
+                                    applications.map((application) => (
+                                        <JobsCard
+                                            key={application._id}
+                                            job={application.jobId}
+                                        />
+                                    ))
+                                ) : (
+                                    <ErrorMessage
+                                        className="mt-5"
+                                        message="You don't have any job applications"
+                                        type="info"
                                     />
-                                ))}
+                                )}
                             </TabsContent>
                             <TabsContent value="submitted">
-                                {submitted &&
+                                {submitted.length ? (
                                     submitted.map((application) => (
                                         <JobsCard
                                             job={application.jobId}
                                             key={application._id}
                                         />
-                                    ))}
+                                    ))
+                                ) : (
+                                    <ErrorMessage
+                                        className="mt-5"
+                                        message="No submitted job applications"
+                                        type="info"
+                                    />
+                                )}
                             </TabsContent>
                             <TabsContent value="applied">
-                                {applied &&
+                                {applied.length ? (
                                     applied.map((application) => (
                                         <JobsCard
                                             job={application.jobId}
                                             key={application._id}
                                         />
-                                    ))}
+                                    ))
+                                ) : (
+                                    <ErrorMessage
+                                        className="mt-5"
+                                        message="No Applied Applications"
+                                        type="info"
+                                    />
+                                )}
                             </TabsContent>
                             <TabsContent value="reviewed">
-                                {reviewed &&
+                                {reviewed.length ? (
                                     reviewed.map((application) => (
                                         <JobsCard
                                             job={application.jobId}
                                             key={application._id}
                                         />
-                                    ))}
+                                    ))
+                                ) : (
+                                    <ErrorMessage
+                                        className="mt-5"
+                                        message="No Reviewed Applications"
+                                        type="info"
+                                    />
+                                )}
                             </TabsContent>
                             <TabsContent value="shortlisted">
-                                {shortlisted &&
+                                {shortlisted.length ? (
                                     shortlisted.map((application) => (
                                         <JobsCard
                                             job={application.jobId}
                                             key={application._id}
                                         />
-                                    ))}
+                                    ))
+                                ) : (
+                                    <ErrorMessage
+                                        className="mt-5"
+                                        message="No Shortlisted Application"
+                                        type="info"
+                                    />
+                                )}
                             </TabsContent>
                             <TabsContent value="rejected">
-                                {rejected &&
+                                {rejected.length ? (
                                     rejected.map((application) => (
                                         <JobsCard
                                             job={application.jobId}
                                             key={application._id}
                                         />
-                                    ))}
+                                    ))
+                                ) : (
+                                    <ErrorMessage
+                                        className="mt-5"
+                                        message="No Rejected Application"
+                                        type="info"
+                                    />
+                                )}
                             </TabsContent>
                         </Tabs>
                     </div>

@@ -20,32 +20,32 @@ import { useRouter } from "next/navigation";
 
 function DeleteJobTrigger({ job }: { job: Jobs }) {
     const router = useRouter();
-    const deleteJob = (jobId: string) => {
-        axiosInstance
-            .delete(`/api/jobs/${jobId}/delete-job`)
-            .then((res) => {
-                toast({
-                    title: "Job Deleted Successfully",
-                    action: (
-                        <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
-                            <Check />
-                        </div>
-                    ),
-                });
-                router.refresh();
-            })
-            .catch((err) => {
-                console.log(err);
-                toast({
-                    title: "Something went wrong 😢",
-                    description: "Please try again...",
-                    action: (
-                        <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
-                            <X />
-                        </div>
-                    ),
-                });
+    const deleteJob = async (jobId: string) => {
+        try {
+            const response = await deleteJob(job._id);
+            console.log(response);
+            toast({
+                title: "Job Deleted Successfully",
+                action: (
+                    <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
+                        <Check />
+                    </div>
+                ),
             });
+            router.refresh();
+        } catch (error: any) {
+            console.log(error);
+            toast({
+                title: "Something went wrong 😢",
+                description:
+                    error.response.errors[0].message || "Please try again",
+                action: (
+                    <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
+                        <X />
+                    </div>
+                ),
+            });
+        }
     };
     return (
         <>

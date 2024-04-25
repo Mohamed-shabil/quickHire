@@ -22,16 +22,12 @@ import {
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { getJob } from "@/services/api/jobs.service";
 
-const getJob = async (token: string, currentJob: string) => {
+const getCurrentJob = async (token: string, currentJob: string) => {
     try {
-        const res = await axiosInstance.get(`/api/jobs/${currentJob}`, {
-            headers: {
-                Cookie: `jwt=${token}`,
-            },
-        });
-
-        return res.data.job;
+        const response = await getJob(currentJob, token);
+        return response.data.job;
     } catch (error) {
         console.error(error);
     }
@@ -69,7 +65,7 @@ export const JobPreview = async ({
         currency: "INR",
     });
 
-    const job: Jobs = await getJob(token, currentJob);
+    const job: Jobs = await getCurrentJob(token, currentJob);
     console.log("JOB IS HERE _____-0---", job);
     return (
         <main className="p-2 max-h-screen overflow-y-scroll">

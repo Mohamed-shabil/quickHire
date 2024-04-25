@@ -151,7 +151,8 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
     };
 
     useEffect(() => {
-        const _socket = io(process.env.NEXT_PUBLIC_STRIPE_SOCKET_URL!);
+        console.log(process.env.NEXT_PUBLIC_SOCKET_URL);
+        const _socket = io(process.env.NEXT_PUBLIC_SOCKET_URL!);
         _socket.on("message", onMessageRec);
         setSocket(_socket);
         return () => {

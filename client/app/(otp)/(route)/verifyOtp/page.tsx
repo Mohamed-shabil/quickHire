@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/reducers";
 import { axiosInstance } from "@/axios/axios";
+import { verifyOtp } from "@/services/api/auth.service";
 
 const VerifyOtp = () => {
     const user = useSelector((state: RootState) => state.user);
@@ -45,66 +46,61 @@ const VerifyOtp = () => {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         console.log(values);
-        axiosInstance
-            .post(`/api/auth/users/verifyOtp`, values)
-            .then((res) => {
-                console.log(res);
-                toast({
-                    title: "Your account verified successfully",
-                    description: "Welcome to QuickHire",
-                    action: (
-                        <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
-                            <Check />
-                        </div>
-                    ),
-                });
-                router.push("/selectRole");
-            })
-            .catch((err) => {
-                console.log(err);
-                toast({
-                    title: "Something Went Wrong 😥",
-                    description:
-                        err.response?.data?.errors[0].message ||
-                        "Please try Again Sometimes later!",
-                    action: (
-                        <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
-                            <X />
-                        </div>
-                    ),
-                });
+
+        try {
+            const response = await verifyOtp(values);
+            console.log(response.data);
+            toast({
+                title: "Your account verified successfully",
+                description: "Welcome to QuickHire",
+                action: (
+                    <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
+                        <Check />
+                    </div>
+                ),
             });
+            router.push("/selectRole");
+        } catch (error: any) {
+            console.log(error);
+            toast({
+                title: "Something Went Wrong 😥",
+                description:
+                    error.response?.data?.errors[0].message ||
+                    "Please try Again Sometimes later!",
+                action: (
+                    <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
+                        <X />
+                    </div>
+                ),
+            });
+        }
     };
 
     const resendOtp = async () => {
-        axiosInstance
-            .post(`/api/auth/users/sendOtp`)
-            .then((res) => {
-                console.log(res);
-                toast({
-                    title: "New Otp is sent to your Email",
-                    description: "check your Email to get the OTP",
-                    action: (
-                        <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
-                            <Check />
-                        </div>
-                    ),
-                });
-            })
-            .catch((err) => {
-                console.log(err);
-                toast({
-                    title: "Something Went Wrong 😥",
-                    description:
-                        err.response?.data?.errors[0].message ||
-                        "Please try Again Sometimes later!",
-                    action: (
-                        <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
-                            <X />
-                        </div>
-                    ),
-                });
+        try {
+            const response = await resendOtp();
+            toast({
+                title: "New Otp is sent to your Email",
+                description: "check your Email to get the OTP",
+                action: (
+                    <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
+                        <Check />
+                    </div>
+                ),
             });
+        } catch (error: any) {
+            toast({
+                title: "Something Went Wrong 😥",
+                description:
+                    error.response?.data?.errors[0].message ||
+                    "Please try Again Sometimes later!",
+                action: (
+                    <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
+                        <X />
+                    </div>
+                ),
+            });
+        }
     };
 
     const isLoading = form.formState.isSubmitting;

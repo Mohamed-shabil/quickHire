@@ -29,7 +29,9 @@ export function ProfileOptions({ profile }: any) {
                     <DropdownMenuContent>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
-                            onClick={() => dispatch(setOpen("createPost"))}
+                            onClick={() =>
+                                dispatch(setOpen({ type: "createPost" }))
+                            }
                         >
                             Create a post
                         </DropdownMenuItem>

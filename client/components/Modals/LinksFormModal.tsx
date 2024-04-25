@@ -28,6 +28,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/reducers";
 import { setClose } from "@/store/slices/modalSlice";
 import { useRouter } from "next/navigation";
+import { addLinks } from "@/services/api/profile.service";
 
 export function LinkFormModal() {
     const dispatch = useDispatch();
@@ -75,33 +76,32 @@ export function LinkFormModal() {
         mode: "onTouched",
     });
 
-    const onSubmit = (values: z.infer<typeof formSchema>) => {
-        axiosInstance
-            .patch("/api/profile/links", values)
-            .then((res) => {
-                toast({
-                    title: "Profile Section Updated Successfully",
-                    action: (
-                        <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
-                            <Check />
-                        </div>
-                    ),
-                });
-                onClose();
-                router.refresh();
-            })
-            .catch((err) => {
-                console.log(err);
-                toast({
-                    title: "Something Went Wrong",
-                    description: "Please try again!",
-                    action: (
-                        <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
-                            <X />
-                        </div>
-                    ),
-                });
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        try {
+            const response = await addLinks(values);
+            toast({
+                title: "Profile Section Updated Successfully",
+                action: (
+                    <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
+                        <Check />
+                    </div>
+                ),
             });
+            onClose();
+            router.refresh();
+        } catch (error: any) {
+            console.log(error);
+            toast({
+                title: "Something Went Wrong",
+                description:
+                    error.response.error[0].message || "Please try again!",
+                action: (
+                    <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
+                        <X />
+                    </div>
+                ),
+            });
+        }
     };
 
     const onClose = () => {

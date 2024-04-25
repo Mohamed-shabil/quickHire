@@ -34,9 +34,13 @@ import {
 } from "@/components/ui/select";
 import { axiosInstance } from "@/axios/axios";
 import { useRouter } from "next/navigation";
-import { Pencil, Plus } from "lucide-react";
+import { Loader2, Pencil, Plus } from "lucide-react";
 import { Subscription } from "@/types/types";
 import { toast } from "@/components/ui/use-toast";
+import {
+    createSubscriptionPlan,
+    editSubscription,
+} from "@/services/api/payments.service";
 
 export default function SubscriptionModal({
     subscription,
@@ -75,41 +79,38 @@ export default function SubscriptionModal({
         mode: "onTouched",
     });
 
-    const onSubmit = (values: z.infer<typeof formSchema>) => {
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
         console.log(values);
         if (subscription) {
-            axiosInstance
-                .post(
-                    `/api/payments/subscription/edit/${subscription._id}`,
-                    values
-                )
-                .then((res) => {
-                    toast({
-                        title: "Subscription Edited successfully",
-                    });
-                    console.log(res.data);
-                })
-                .catch((err) => {
-                    toast({
-                        title: "Subscription Edited successfully",
-                        description: err.response.errors[0].message,
-                    });
-                })
-                .finally(() => {
-                    onClose();
-                    router.refresh();
+            try {
+                const response = await editSubscription(values);
+                toast({
+                    title: "Subscription Edited successfully",
                 });
+                console.log(response.data);
+                onClose();
+                router.refresh();
+            } catch (error: any) {
+                toast({
+                    title: "Subscription Edited successfully",
+                    description: error.response.errors[0].message,
+                });
+            }
         } else {
-            axiosInstance
-                .post("/api/payments/subscription/new", values)
-                .then((res) => {
-                    console.log(res.data);
-                    onClose();
-                    router.refresh();
-                })
-                .catch((err) => {
-                    console.log(err);
+            try {
+                const response = await createSubscriptionPlan(values);
+                console.log(response);
+                toast({
+                    title: "Subscription created!",
                 });
+                onClose();
+                router.refresh();
+            } catch (error: any) {
+                console.log(error);
+                toast({
+                    title: "Something went wrong try again!",
+                });
+            }
         }
     };
 
@@ -256,7 +257,11 @@ export default function SubscriptionModal({
                         </div>
                         <DialogFooter className="flex items-end col-span-6">
                             <Button type="submit" className="w-20">
-                                Save
+                                {isLoading ? (
+                                    <Loader2 className="animate-spin" />
+                                ) : (
+                                    "Submit"
+                                )}
                             </Button>
                         </DialogFooter>
                     </form>

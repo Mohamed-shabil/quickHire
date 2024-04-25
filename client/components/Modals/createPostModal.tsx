@@ -39,6 +39,7 @@ import Image from "next/image";
 import { Label } from "../ui/label";
 import { EmojiPicker } from "../EmojiPicker";
 import { axiosInstance } from "@/axios/axios";
+import { createPost } from "@/services/api/posts.service";
 
 export function CreatePostModal() {
     const dispatch = useDispatch();
@@ -69,7 +70,7 @@ export function CreatePostModal() {
         mode: "onTouched",
     });
 
-    const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
         const data = new FormData();
@@ -83,36 +84,33 @@ export function CreatePostModal() {
         if (caption) {
             data.append("caption", caption);
         }
-        axiosInstance
-            .post("/api/posts/create", data)
-            .then((res) => {
-                console.log(res);
-                toast({
-                    title: "New Post Created Successfully",
-                    action: (
-                        <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
-                            <Check />
-                        </div>
-                    ),
-                });
-                onClose();
-                router.refresh();
-            })
-            .catch((err) => {
-                console.log(err);
-                toast({
-                    title: "Something Went Wrong",
-                    description: "Please try again!",
-                    action: (
-                        <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
-                            <X />
-                        </div>
-                    ),
-                });
-            })
-            .finally(() => {
-                setLoading(false);
+        try {
+            const response = await createPost(data);
+            console.log(response);
+            toast({
+                title: "New Post Created Successfully",
+                action: (
+                    <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
+                        <Check />
+                    </div>
+                ),
             });
+            onClose();
+            router.refresh();
+        } catch (error: any) {
+            console.log("Error", error);
+            toast({
+                title: "Something Went Wrong",
+                description: "Please try again!",
+                action: (
+                    <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
+                        <X />
+                    </div>
+                ),
+            });
+        } finally {
+            setLoading(false);
+        }
     };
 
     const onClose = () => {

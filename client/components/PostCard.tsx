@@ -6,6 +6,7 @@ import {
     MessageCircleMore,
     MoreVerticalIcon,
     Option,
+    X,
 } from "lucide-react";
 import { PostType } from "@/types/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -19,9 +20,11 @@ import { axiosInstance } from "@/axios/axios";
 import { Separator } from "./ui/separator";
 import { CommentBox } from "./CommentBox";
 import { useRouter } from "next/navigation";
+import { followUser, unFollowUser } from "@/services/api/profile.service";
 import Link from "next/link";
-
+import { likePost } from "@/services/api/posts.service";
 import PostReportModal from "./Modals/PostReportModal";
+import { toast } from "./ui/use-toast";
 
 const PostCard = ({ post }: { post: PostType }) => {
     const dispatch = useDispatch();
@@ -34,42 +37,53 @@ const PostCard = ({ post }: { post: PostType }) => {
     const [comment, setComment] = useState(false);
     const [isFollowing, setIsFollowing] = useState<boolean>(post.isFollowing);
     const [isOpen, setIsOpen] = useState<boolean>(false);
+
     const user = useSelector((state: RootState) => state.user.userData);
 
-    const likePost = async (postId: string) => {
+    const handleLikes = async (postId: string) => {
         setLike(!like);
         if (like) {
             setLikeCount(likeCount - 1);
         } else {
             setLikeCount(likeCount + 1);
         }
-        axiosInstance
-            .post("/api/posts/likePost", { postId })
-            .then((res) => {
-                console.log(res);
-            })
-            .catch((err) => {
-                console.log(err);
+
+        try {
+            const response = await likePost(postId);
+        } catch (error: any) {
+            console.log(error);
+            toast({
+                title: "Something went wrong!",
+                description: error.response.errors[0].message,
             });
+        }
     };
 
     const handleFollow = async () => {
-        if (isFollowing) {
-            setIsFollowing(!isFollowing);
-            axiosInstance
-                .delete(`/api/profile/followers/unfollow/${post.creatorId}`)
-                .then((res) => {
-                    console.log(res);
-                });
-        } else {
-            setIsFollowing(!isFollowing);
-            axiosInstance
-                .post(`/api/profile/followers/follow/${post.creatorId}`)
-                .then((res) => {
-                    console.log(res);
-                });
+        try {
+            console.log("isFollowing", isFollowing);
+            if (isFollowing) {
+                setIsFollowing(!isFollowing);
+                const response = await unFollowUser(post.creatorId);
+            } else {
+                setIsFollowing(!isFollowing);
+                const response = await followUser(post.creatorId);
+                console.log(response);
+                console.log(response);
+            }
+        } catch (error: any) {
+            console.log(error);
+            toast({
+                title: "Something went wrong!",
+                description:
+                    error.response.errors[0].message || "Please try again",
+                action: (
+                    <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
+                        <X />
+                    </div>
+                ),
+            });
         }
-        router.refresh();
     };
 
     const reported =
@@ -116,7 +130,6 @@ const PostCard = ({ post }: { post: PostType }) => {
                             >
                                 {isFollowing ? "Following" : "Follow"}
                             </Button>
-                            <PostReportModal postId={post._id} />
                             {/* <DropdownMenu>
                                 <DropdownMenuTrigger>
                                     <MoreVerticalIcon />
@@ -129,16 +142,18 @@ const PostCard = ({ post }: { post: PostType }) => {
                             </DropdownMenu> */}
                         </div>
                     ) : (
-                        <Link href={`posts/editPost/${post._id}`}>
+                        <Link
+                            href={`/${user?.name}/posts/editPost/${post._id}`}
+                        >
                             <Button variant={"ghost"}>Edit Post</Button>
                         </Link>
                     )}
                 </div>
                 <Separator className="my-1" />
-                {post.media?.length ? (
+                {post?.media?.length ? (
                     <Image
                         alt=""
-                        src={post.media[0]?.url}
+                        src={post?.media[0]?.url}
                         width={500}
                         height={500}
                         className="h-96 w-full rounded-md object-cover"
@@ -175,7 +190,7 @@ const PostCard = ({ post }: { post: PostType }) => {
                         <Button
                             variant={"ghost"}
                             onClick={() => {
-                                likePost(post._id);
+                                handleLikes(post._id);
                             }}
                             className="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2"
                         >
@@ -210,6 +225,8 @@ const PostCard = ({ post }: { post: PostType }) => {
                                 </p>
                             </div>
                         </Button>
+
+                        <PostReportModal postId={post._id} />
 
                         {/* <Button variant={'ghost'} className="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2">
                             <Bookmark className="text-blue-600 cursor-pointer"/>

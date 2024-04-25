@@ -23,7 +23,6 @@ import {
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { axiosInstance } from "@/axios/axios";
 import { Jobs } from "@/types/types";
 import {
     Form,
@@ -39,6 +38,12 @@ import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/use-toast";
 import { Resume } from "@/types/types";
 import moment from "moment";
+import {
+    applicantInfo,
+    applyToJob,
+    uploadResume,
+} from "@/services/api/jobs.service";
+import { useRouter } from "next/navigation";
 
 type FieldValues = {
     email: string;
@@ -47,11 +52,12 @@ type FieldValues = {
 };
 
 export default function ApplyJobModal({ job }: { job: Jobs }) {
+    console.log(job);
     const [open, setOpen] = useState(false);
     const [resumes, setResumes] = useState<Resume[]>([]);
     const [loading, setLoading] = useState(false);
     const newResume = useRef<HTMLInputElement>(null);
-
+    const router = useRouter();
     const formSchema = z.object({
         email: z.string(),
         phone: z.string().refine(
@@ -79,10 +85,7 @@ export default function ApplyJobModal({ job }: { job: Jobs }) {
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: async (): Promise<FieldValues> => {
-            const response = await axiosInstance.get(
-                "/api/jobs/applicant-info"
-            );
-
+            const response = await applicantInfo();
             if (response.data.user.resume) {
                 setResumes(response.data.user.resume);
             }
@@ -97,40 +100,41 @@ export default function ApplyJobModal({ job }: { job: Jobs }) {
     });
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        console.log(values, job.recruiter);
-        axiosInstance
-            .post(`http://localhost:3005/api/jobs/apply-job/${job._id}`, {
-                ...values,
-                recruiter: job.recruiter,
-            })
-            .then((res) => {
-                console.log(res);
-                toast({
-                    title: "Job Application has been submitted",
-                    action: (
-                        <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
-                            <Check />
-                        </div>
-                    ),
-                });
-                setOpen(false);
-            })
-            .catch((err) => {
-                console.log(err);
-                toast({
-                    title: "Something went wrong!😢",
-                    description:
-                        err.response.errors[0].message || "Please try again",
-                    action: (
-                        <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
-                            <X />
-                        </div>
-                    ),
-                });
+        console.log(values, job.recruiterId);
+        try {
+            const response = await applyToJob(
+                { ...values, recruiter: job.recruiterId },
+                job._id
+            );
+            console.log(response);
+            toast({
+                title: "Job Application has been submitted",
+                action: (
+                    <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
+                        <Check />
+                    </div>
+                ),
             });
+            setOpen(false);
+            router.refresh();
+        } catch (error: any) {
+            console.log(error);
+            toast({
+                title: "Something went wrong!😢",
+                description:
+                    error.response.errors[0].message || "Please try again",
+                action: (
+                    <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
+                        <X />
+                    </div>
+                ),
+            });
+        }
     };
 
-    const uploadResume = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const uploadResumes = async (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
         try {
             setLoading(true);
             const resume = newResume.current?.files?.[0];
@@ -138,17 +142,29 @@ export default function ApplyJobModal({ job }: { job: Jobs }) {
             if (resume) {
                 data.append("resume", resume);
             }
-            const response = await axiosInstance.post(
-                "/api/jobs/upload-resume",
-                data
-            );
-            console.log(response.data);
+            const response = await uploadResume(data);
             if (response.data.user.resume) {
                 setResumes(response.data.user.resume);
             }
-            console.log(response.data);
-        } catch (error) {
-            console.log(error);
+            toast({
+                title: "Resume uploaded",
+                action: (
+                    <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
+                        <X />
+                    </div>
+                ),
+            });
+        } catch (error: any) {
+            toast({
+                title: "Something went wrong!😢",
+                description:
+                    error.response.errors[0].message || "Please try again",
+                action: (
+                    <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
+                        <X />
+                    </div>
+                ),
+            });
         } finally {
             setLoading(false);
         }
@@ -311,7 +327,7 @@ export default function ApplyJobModal({ job }: { job: Jobs }) {
                                     className="hidden"
                                     id="uploadResume"
                                     ref={newResume}
-                                    onChange={uploadResume}
+                                    onChange={uploadResumes}
                                 />
                             </Label>
                         </div>

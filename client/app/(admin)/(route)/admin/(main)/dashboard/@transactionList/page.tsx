@@ -21,14 +21,10 @@ import { Badge } from "@/components/ui/badge";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Transaction } from "@/types/types";
-import { axiosInstance } from "@/axios/axios";
+import { getTransactions } from "@/services/api/payments.service";
 
-const getTransactions = async (token: string): Promise<Transaction[]> => {
-    const response = await axiosInstance.get("/api/payments/transactions", {
-        headers: {
-            Cookie: `jwt=${token}`,
-        },
-    });
+const getTransactionsList = async (token: string): Promise<Transaction[]> => {
+    const response = await getTransactions(token);
     console.log(response);
     return response.data.transactions;
 };
@@ -38,7 +34,7 @@ const TransactionList = async () => {
     if (!token) {
         return redirect("/admin/login");
     }
-    const transactions = await getTransactions(token);
+    const transactions = await getTransactionsList(token);
     if (!transactions) {
         console.log(transactions);
     }

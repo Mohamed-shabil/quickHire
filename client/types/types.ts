@@ -151,8 +151,9 @@ type employmentType = "Part-time" | "Full-time" | "Freelancer";
 
 export interface Jobs {
     _id: string;
-    recruiter: string;
+    recruiterId: string;
     title: string;
+    recruiterName: string;
     company: string;
     companyImage: string;
     workPlace: workPlace;

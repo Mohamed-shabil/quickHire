@@ -1,36 +1,30 @@
 "use client";
 import React from "react";
-import { axiosInstance } from "@/axios/axios";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
+import { deleteSubscription } from "@/services/api/payments.service";
 
 function SubscriptionDelete({ subscriptionId }: { subscriptionId: string }) {
     const router = useRouter();
-    const deleteSubscription = async (subscriptionId: string) => {
+    const Onclick = async (subscriptionId: string) => {
         console.log("delete Subscription");
-        axiosInstance
-            .delete(`/api/payments/subscription/remove/${subscriptionId}`)
-            .then((res) => {
-                console.log(res);
-                toast({
-                    title: "Subscription plan deleted Successfully",
-                });
-                router.reload();
-            })
-            .catch((err) => {
-                console.log(err);
-                toast({
-                    title: "Something went wrong please try again",
-                });
+        try {
+            const response = await deleteSubscription(subscriptionId);
+            toast({
+                title: "Subscription plan deleted Successfully",
             });
+            router.refresh();
+        } catch (error: any) {
+            console.log(error);
+            toast({
+                title: "Something went wrong please try again",
+            });
+        }
     };
     return (
-        <Button
-            variant={"outline"}
-            onClick={() => deleteSubscription(subscriptionId)}
-        >
+        <Button variant={"outline"} onClick={() => Onclick(subscriptionId)}>
             <Trash2 className="text-rose-500" />
         </Button>
     );

@@ -15,23 +15,14 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ArrowDownToLine } from "lucide-react";
 import Link from "next/link";
-
 import ApplicationStatus from "@/components/Recruiter/ApplicationStatus";
 import { axiosInstance } from "@/axios/axios";
+import { string } from "zod";
+import { getApplicants } from "@/services/api/jobs.service";
+
 const getApplicant = async (token: string, jobId: string) => {
-    try {
-        const response = await axiosInstance.get(
-            `/api/jobs/${jobId}/get-applicants`,
-            {
-                headers: {
-                    Cookie: `jwt=${token}`,
-                },
-            }
-        );
-        return response.data.applications;
-    } catch (error) {
-        console.log("this is error :", error);
-    }
+    const response = await getApplicants(jobId, token);
+    return response.data.applications;
 };
 
 async function Applicants({ params }: { params: { jobId: string } }) {
@@ -61,7 +52,7 @@ async function Applicants({ params }: { params: { jobId: string } }) {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {applications.length &&
+                    {applications.length ? (
                         applications.map((application, index) => (
                             <TableRow key={application._id}>
                                 <TableCell>{index + 1}</TableCell>
@@ -102,7 +93,14 @@ async function Applicants({ params }: { params: { jobId: string } }) {
                                     <Link href={``}></Link>
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        ))
+                    ) : (
+                        <div className="w-full mt-12">
+                            <h1 className="font-semibold text-center text-sm">
+                                No Applicants
+                            </h1>
+                        </div>
+                    )}
                 </TableBody>
             </Table>
         </section>

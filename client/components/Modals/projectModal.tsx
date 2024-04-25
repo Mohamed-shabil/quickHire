@@ -25,7 +25,7 @@ import { toast } from "@/components/ui/use-toast";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/reducers";
 import { setClose } from "@/store/slices/modalSlice";
-import { Check, Plus, X } from "lucide-react";
+import { Check, Loader2, Plus, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar";
@@ -40,7 +40,8 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import { url } from "inspector";
+
+import { addProject } from "@/services/api/profile.service";
 
 export function ProjectFormModal() {
     const dispatch = useDispatch();
@@ -75,41 +76,38 @@ export function ProjectFormModal() {
         mode: "onTouched",
     });
 
-    const onSubmit = (values: z.infer<typeof formSchema>) => {
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
         const data = {
             ...values,
             skills,
         };
         console.log(data);
-        axiosInstance
-            .patch("/api/profile/project", data)
-            .then((res) => {
-                toast({
-                    title: "Your account has been created ",
-                    description: "Welcome to QuickHire",
-                    action: (
-                        <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
-                            <Check />
-                        </div>
-                    ),
-                });
-                form.reset();
-                onClose();
-                router.refresh();
-            })
-            .catch((err) => {
-                console.log({ err });
-                toast({
-                    title: "Something went Wrong",
-                    description: err.response.data.errors[0].message || "",
-                    action: (
-                        <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
-                            <X />
-                        </div>
-                    ),
-                });
-            })
-            .finally(() => {});
+
+        try {
+            const response = await addProject(data);
+            toast({
+                title: "Project added successfully ",
+                action: (
+                    <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
+                        <Check />
+                    </div>
+                ),
+            });
+            form.reset();
+            onClose();
+            router.refresh();
+        } catch (err: any) {
+            console.log(err);
+            toast({
+                title: "Something went Wrong",
+                description: err.response.data.errors[0].message || "",
+                action: (
+                    <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
+                        <X />
+                    </div>
+                ),
+            });
+        }
     };
 
     const onClose = () => {
@@ -122,7 +120,7 @@ export function ProjectFormModal() {
             setInputValue("");
         }
     };
-    //   const isLoading = form.formState.isSubmitting;
+    const isLoading = form.formState.isSubmitting;
     const user = useSelector((state: RootState) => state.user.userData);
     const open = useSelector((state: RootState) => state.modal.open);
     const type = useSelector((state: RootState) => state.modal.type);
@@ -340,7 +338,13 @@ export function ProjectFormModal() {
                             />
                         </div>
                         <DialogFooter>
-                            <Button type="submit">Submit</Button>
+                            <Button type="submit" disabled={isLoading}>
+                                {isLoading ? (
+                                    <Loader2 className="animate-spin" />
+                                ) : (
+                                    "Submit"
+                                )}
+                            </Button>
                         </DialogFooter>
                     </form>
                 </Form>

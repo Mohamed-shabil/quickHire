@@ -1,13 +1,9 @@
 "use client";
 import * as z from "zod";
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { axiosInstance } from "@/axios/axios";
-import { useDispatch } from "react-redux";
 import { setUserData } from "@/store/slices/userSlice";
-import { Separator } from "@/components/ui/separator";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,14 +21,12 @@ import { toast, useToast } from "@/components/ui/use-toast";
 import { Check, Eye, EyeOff, Loader2, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { userSignup } from "@/services/api/auth.service";
+import { useDispatch } from "react-redux";
 
 export default function Signup() {
     const [show, setShow] = useState(false);
-    const [isLoading, setLoading] = useState<boolean>(false);
-
-    // const [error,SetError] = useState([{}]);
     const { toast } = useToast();
-    const dispatch = useDispatch();
     const formSchema = z
         .object({
             email: z.string().email({
@@ -63,9 +57,6 @@ export default function Signup() {
             ConfirmPassword: z.string().min(4, {
                 message: "Password must be 4 characters long",
             }),
-            OtpMethod: z.string({
-                required_error: "You need to select a otp type.",
-            }),
         })
         .refine(
             (data) => {
@@ -85,49 +76,38 @@ export default function Signup() {
             phone: "",
             password: "",
             ConfirmPassword: "",
-            OtpMethod: "sms",
         },
         mode: "onTouched",
     });
-
+    const dispatch = useDispatch();
     const router = useRouter();
+    const isLoading = form.formState.isLoading;
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        console.log(values);
-        setLoading(true);
-        axiosInstance
-            .post("/api/auth/users/signup", values)
-            .then((res) => {
-                console.log(res);
-                dispatch(setUserData(res.data.user));
-                toast({
-                    title: "Your account has been created ",
-                    description: "Welcome to QuickHire",
-                    action: (
-                        <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
-                            <Check />
-                        </div>
-                    ),
-                });
-
-                router.push("/verifyOtp");
-            })
-            .catch((err) => {
-                console.log(err);
-                toast({
-                    title: "Something went Wrong",
-                    description:
-                        err.response.data.errors[0].message ||
-                        "Please try again ",
-                    action: (
-                        <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
-                            <X />
-                        </div>
-                    ),
-                });
-            })
-            .finally(() => {
-                setLoading(false);
+        try {
+            const response = await userSignup(values);
+            dispatch(setUserData(response.data.user));
+            toast({
+                title: "Your account has been created ",
+                description: "Welcome to QuickHire",
+                action: (
+                    <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
+                        <Check />
+                    </div>
+                ),
             });
+            router.push("/verifyOtp");
+        } catch (error: any) {
+            toast({
+                title: "Something went Wrong",
+                description:
+                    error.response.data.errors[0].message || "Please try again",
+                action: (
+                    <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
+                        <X />
+                    </div>
+                ),
+            });
+        }
     };
 
     return (
@@ -305,45 +285,6 @@ export default function Signup() {
                                         )}
                                     />
                                 </div>
-
-                                {/* <div className="col-span-6">
-                            <div className="grid grid-cols-2 gap-4">
-                                <FormField
-                                    name="OtpMethod"
-                                    disabled={isLoading}
-                                    control={form.control}
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>OTP Method</FormLabel>
-                                            <RadioGroup defaultValue="email" className="grid grid-cols-2 gap-4">
-                                                <div className="flex items-center space-x-2">
-                                                    <Label
-                                                        htmlFor="r1"
-                                                        className="flex cursor-pointer justify-between gap-4 rounded-lg border border-gray-100 bg-white p-4 text-sm font-medium shadow-sm hover:border-gray-200 has-[:checked]:border-blue-500 has-[:checked]:ring-1 has-[:checked]:ring-blue-500"
-                                                    >
-                                                        SMS
-                                                        <FormControl>
-                                                            <RadioGroupItem value="sms" id="r1" />
-                                                        </FormControl>
-                                                    </Label>
-                                                </div>
-                                                <div className="flex items-center space-x-2">
-                                                    <Label 
-                                                        htmlFor="r2"
-                                                        className="flex cursor-pointer justify-between gap-4 rounded-lg border border-gray-100 bg-white p-4 text-sm font-medium shadow-sm hover:border-gray-200 has-[:checked]:border-blue-500 has-[:checked]:ring-1 has-[:checked]:ring-blue-500"
-                                                    >
-                                                        Email
-                                                        <FormControl>
-                                                            <RadioGroupItem value="email" id="r2" />
-                                                        </FormControl>
-                                                    </Label>
-                                                </div>
-                                            </RadioGroup>
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
-                        </div> */}
                                 <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
                                     <Button
                                         type="submit"

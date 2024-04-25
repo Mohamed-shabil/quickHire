@@ -5,16 +5,14 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Analytics } from "@/types/types";
 import { axiosInstance } from "@/axios/axios";
+import { getAnalytics } from "@/services/api/payments.service";
 
 const getDashBoardData = async (token: string): Promise<Analytics> => {
-    const response = await axiosInstance.get("/api/payments/dashboard-data", {
-        headers: {
-            Cookie: `jwt=${token}`,
-        },
-    });
+    const response = await getAnalytics(token);
     console.log(response.data.analyticsData);
     return response.data.analytics;
 };
+
 const dashboardCards = async () => {
     const token = cookies().get("jwt")?.value;
     if (!token) {

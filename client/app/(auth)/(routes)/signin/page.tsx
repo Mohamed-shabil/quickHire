@@ -1,7 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -17,16 +16,16 @@ import {
 import { axiosInstance } from "@/axios/axios";
 import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/use-toast";
-import { Check, Eye, EyeOff } from "lucide-react";
+import { Check, Eye, EyeOff, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
 import { useDispatch } from "react-redux";
 import { setUserData } from "@/store/slices/userSlice";
+import { userLogin, userSignup } from "@/services/api/auth.service";
 
 export default function Signin() {
     const [show, setShow] = useState(false);
-    const [isLoading, SetLoading] = useState<boolean>(false);
     const dispatch = useDispatch();
     const formSchema = z.object({
         email: z.string().email({
@@ -47,40 +46,35 @@ export default function Signin() {
     });
 
     const router = useRouter();
+    const isLoading = form.formState.isLoading;
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        SetLoading(true);
         console.log(values);
-        axiosInstance
-            .post("/api/auth/users/signin", values)
-            .then((res) => {
-                console.log(res);
-                dispatch(setUserData(res.data.user));
-                toast({
-                    title: "Signin Successfull ",
-                    description: `Welcome back ${res.data.user.name}`,
-                    action: (
-                        <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
-                            <Check />
-                        </div>
-                    ),
-                });
-                router.push("/");
-            })
-            .catch((err) => {
-                toast({
-                    title: "Something Went Wrong try again",
-                    description: err.response.errors[0].message,
-                    action: (
-                        <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
-                            <Check />
-                        </div>
-                    ),
-                });
-                console.log(err);
-            })
-            .finally(() => {
-                SetLoading(false);
+        try {
+            const response = await userLogin(values);
+            console.log(response);
+            dispatch(setUserData(response.data.user));
+            toast({
+                title: "Signin Successfull ",
+                // description: `Welcome back ${response.data.user.name}`,
+                action: (
+                    <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
+                        <Check />
+                    </div>
+                ),
             });
+            router.push("/");
+        } catch (error: any) {
+            console.log("Error", error);
+            toast({
+                title: "Something Went Wrong try again",
+                description: "Please try again",
+                action: (
+                    <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
+                        <X />
+                    </div>
+                ),
+            });
+        }
     };
 
     return (
@@ -211,7 +205,7 @@ export default function Signin() {
                      hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring
                      active:text-blue-500"
                                     >
-                                        Create an account
+                                        Login
                                     </Button>
 
                                     <p className="mt-4 text-sm text-gray-500 sm:mt-0">

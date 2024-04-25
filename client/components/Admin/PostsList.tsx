@@ -25,11 +25,12 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { axiosInstance } from "@/axios/axios";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import moment from "moment";
 import Link from "next/link";
+import { trendingPosts } from "@/services/api/posts.service";
+import ErrorMessage from "../ErrorMessage";
 
 type TrendingPost = {
     _id: string;
@@ -53,12 +54,7 @@ type TrendingPost = {
 };
 
 const getPosts = async (token: string): Promise<TrendingPost[]> => {
-    const response = await axiosInstance.get("/api/posts/trending-posts", {
-        headers: {
-            Cookie: `jwt=${token}`,
-        },
-    });
-
+    const response = await trendingPosts(token);
     return response.data.posts;
 };
 
@@ -70,105 +66,109 @@ export default async function Component() {
     const posts = await getPosts(token);
     console.log(posts);
     return (
-        <Card>
+        <Card className="border-b-0">
             <CardHeader>
                 <CardTitle>Posts</CardTitle>
                 <CardDescription>
                     Check the most trending Posts in quickHire
                 </CardDescription>
             </CardHeader>
-            <CardContent>
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead className="hidden w-[100px] sm:table-cell">
-                                <span className="sr-only">Post</span>
-                            </TableHead>
-                            <TableHead>Caption</TableHead>
-                            <TableHead>Likes</TableHead>
-                            <TableHead className="hidden md:table-cell">
-                                Creator
-                            </TableHead>
-                            <TableHead className="hidden md:table-cell">
-                                Created At
-                            </TableHead>
-                            <TableHead className="hidden md:table-cell">
-                                Reports
-                            </TableHead>
-                            <TableHead>
-                                <span className="sr-only">Actions</span>
-                            </TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {posts.map((post) => (
-                            <TableRow key={post._id}>
-                                <TableCell className="hidden sm:table-cell">
-                                    <Image
-                                        alt="Product image"
-                                        className="aspect-square rounded-md object-cover"
-                                        height="64"
-                                        src={post.media[0].url}
-                                        width="64"
-                                    />
-                                </TableCell>
-                                <TableCell className="font-medium">
-                                    {post.caption}
-                                </TableCell>
-                                <TableCell className="font-medium">
-                                    {post.likes || 0}
-                                </TableCell>
-                                <TableCell className="hidden md:table-cell">
-                                    {post.creator.name || post.creator.fullName}
-                                </TableCell>
-                                <TableCell className="hidden md:table-cell">
-                                    {moment(post.createdAt).format("ll")}
-                                </TableCell>
-                                <TableCell className="hidden md:table-cell">
-                                    {post.report.length}
-                                </TableCell>
-                                <TableCell>
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button
-                                                aria-haspopup="true"
-                                                size="icon"
-                                                variant="ghost"
-                                            >
-                                                <MoreHorizontal className="h-4 w-4" />
-                                                <span className="sr-only">
-                                                    Toggle menu
-                                                </span>
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end">
-                                            <DropdownMenuLabel>
-                                                Actions
-                                            </DropdownMenuLabel>
-                                            <Link
-                                                href={`/admin/posts/${post._id}`}
-                                            >
-                                                <DropdownMenuItem>
-                                                    View
-                                                </DropdownMenuItem>
-                                            </Link>
-                                            <DropdownMenuItem>
-                                                Delete
-                                            </DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
-                                </TableCell>
+            {posts.length ? (
+                <CardContent>
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead className="hidden w-[100px] sm:table-cell">
+                                    <span className="sr-only">Post</span>
+                                </TableHead>
+                                <TableHead>Caption</TableHead>
+                                <TableHead>Likes</TableHead>
+                                <TableHead className="hidden md:table-cell">
+                                    Creator
+                                </TableHead>
+                                <TableHead className="hidden md:table-cell">
+                                    Created At
+                                </TableHead>
+                                <TableHead className="hidden md:table-cell">
+                                    Reports
+                                </TableHead>
+                                <TableHead>
+                                    <span className="sr-only">Actions</span>
+                                </TableHead>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </CardContent>
-            <CardFooter>
-                <div className="text-xs text-muted-foreground">
-                    Showing <strong>1-10</strong> of <strong>32</strong>{" "}
-                    products
-                </div>
-            </CardFooter>
+                        </TableHeader>
+                        <TableBody>
+                            {posts.map((post) => (
+                                <TableRow key={post._id}>
+                                    <TableCell className="hidden sm:table-cell">
+                                        <Image
+                                            alt="Product image"
+                                            className="aspect-square rounded-md object-cover"
+                                            height="64"
+                                            src={
+                                                post.media[0]?.url ||
+                                                "/user.png"
+                                            }
+                                            width="64"
+                                        />
+                                    </TableCell>
+                                    <TableCell className="font-medium max-w-52">
+                                        <p className="line-clamp-2">
+                                            {post.caption}
+                                        </p>
+                                    </TableCell>
+                                    <TableCell className="font-medium">
+                                        {post.likes || 0}
+                                    </TableCell>
+                                    <TableCell className="hidden md:table-cell">
+                                        {post.creator.name ||
+                                            post.creator.fullName}
+                                    </TableCell>
+                                    <TableCell className="hidden md:table-cell">
+                                        {moment(post.createdAt).format("ll")}
+                                    </TableCell>
+                                    <TableCell className="hidden md:table-cell">
+                                        {post.report.length}
+                                    </TableCell>
+                                    <TableCell>
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button
+                                                    aria-haspopup="true"
+                                                    size="icon"
+                                                    variant="ghost"
+                                                >
+                                                    <MoreHorizontal className="h-4 w-4" />
+                                                    <span className="sr-only">
+                                                        Toggle menu
+                                                    </span>
+                                                </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent align="end">
+                                                <DropdownMenuLabel>
+                                                    Actions
+                                                </DropdownMenuLabel>
+                                                <Link
+                                                    href={`/admin/posts/${post._id}`}
+                                                >
+                                                    <DropdownMenuItem>
+                                                        View
+                                                    </DropdownMenuItem>
+                                                </Link>
+                                                <DropdownMenuItem>
+                                                    Delete
+                                                </DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </CardContent>
+            ) : (
+                <ErrorMessage message="No trending posts found" type="info" />
+            )}
         </Card>
     );
 }

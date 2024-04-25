@@ -29,8 +29,8 @@ export default function RootLayout({
                     enableSystem
                     disableTransitionOnChange
                 >
+                    <Toaster />
                     <Providers>
-                        <Toaster />
                         <SocketProvider>
                             <PeerProvider>{children}</PeerProvider>
                         </SocketProvider>

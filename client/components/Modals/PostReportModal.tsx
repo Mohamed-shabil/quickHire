@@ -5,7 +5,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { Check, Flag, X } from "lucide-react";
+import { Check, Flag, Loader2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
     Form,
@@ -22,11 +22,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { axiosInstance } from "@/axios/axios";
 import { useState } from "react";
+import { reportPost } from "@/services/api/posts.service";
+import { useRouter } from "next/navigation";
 
 function PostReportModal({ postId }: { postId: string }) {
     const [open, setOpen] = useState<boolean>(false);
+    const router = useRouter();
     const FormSchema = z.object({
-        report: z.enum(
+        reason: z.enum(
             [
                 "spam or misleading content",
                 "hate speech or harassment",
@@ -47,37 +50,36 @@ function PostReportModal({ postId }: { postId: string }) {
         resolver: zodResolver(FormSchema),
     });
 
+    const isLoading = form.formState.isLoading;
     const onSubmit = async (value: z.infer<typeof FormSchema>) => {
         console.log(value);
-        await axiosInstance
-            .patch(`/api/posts/${postId}/report`, {
-                reason: value.report,
-            })
-            .then((res) => {
-                console.log(res);
-                toast({
-                    title: "Report has been submitted",
-                    action: (
-                        <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
-                            <Check />
-                        </div>
-                    ),
-                });
-                onClose();
-            })
-            .catch((err) => {
-                toast({
-                    title: "Something went wrong",
-                    description:
-                        err.response.errors[0].message ||
-                        "Please Try again later !",
-                    action: (
-                        <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
-                            <X />
-                        </div>
-                    ),
-                });
+        try {
+            const response = await reportPost(postId, value);
+            console.log(response);
+            toast({
+                title: "Report has been submitted",
+                action: (
+                    <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
+                        <Check />
+                    </div>
+                ),
             });
+            onClose();
+            router.refresh();
+        } catch (error: any) {
+            console.log(error);
+            toast({
+                title: "Something went wrong",
+                description:
+                    error.response.errors[0].message ||
+                    "Please Try again later !",
+                action: (
+                    <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
+                        <X />
+                    </div>
+                ),
+            });
+        }
     };
 
     const onClose = () => {
@@ -96,7 +98,8 @@ function PostReportModal({ postId }: { postId: string }) {
                 className="flex items-center"
                 onClick={() => setOpen(true)}
             >
-                <Flag className="mr-2 h-4 w-4" />
+                <Flag className="text-blue-600 cursor-pointer" />
+                Report
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
@@ -109,7 +112,7 @@ function PostReportModal({ postId }: { postId: string }) {
                     >
                         <FormField
                             control={form.control}
-                            name="report"
+                            name="reason"
                             render={({ field }) => (
                                 <FormItem className="space-y-3">
                                     <FormControl>
@@ -199,8 +202,12 @@ function PostReportModal({ postId }: { postId: string }) {
                                 </FormItem>
                             )}
                         />
-                        <Button className="" type="submit">
-                            Submit
+                        <Button className="" type="submit" disabled={isLoading}>
+                            {isLoading ? (
+                                <Loader2 className="animate-spin" />
+                            ) : (
+                                "Submit"
+                            )}
                         </Button>
                     </form>
                 </Form>

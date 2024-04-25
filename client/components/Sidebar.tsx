@@ -1,5 +1,5 @@
 "use client";
-import React, { Children } from "react";
+import React, { Children, useEffect } from "react";
 import ProfileCard from "./ProfileCard";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
@@ -39,11 +39,12 @@ import {
     AccordionTrigger,
 } from "./ui/accordion";
 import { fetchSubscription } from "@/store/slices/SubscriptionSlice";
-
+import { fetchUser } from "@/store/slices/userSlice";
+import { userSignout } from "@/services/api/auth.service";
 function SideBar({ children }: { children: React.ReactNode }) {
     const user = useSelector((state: RootState) => state.user.userData);
-    const dispatch = useDispatch<AppDispatch>();
 
+    const dispatch = useDispatch<AppDispatch>();
     const router = useRouter();
     const { connectSocket } = useSocket();
 
@@ -55,14 +56,27 @@ function SideBar({ children }: { children: React.ReactNode }) {
         redirect("/suspended");
     }
 
-    if (user?.role === "recruiter") {
-        dispatch(fetchSubscription());
-    }
+    useEffect(() => {
+        dispatch(fetchUser());
+        if (user && user.role === "recruiter") {
+            dispatch(fetchSubscription());
+        }
+    }, []);
+
+    useEffect(() => {
+        if (user && user.role === "recruiter") {
+            dispatch(fetchSubscription());
+        }
+    }, [user]);
 
     const logout = async () => {
-        await axiosInstance.get("/api/auth/users/signout");
+        await userSignout();
         router.push("/signin");
     };
+    const subscription = useSelector(
+        (state: RootState) => state.subscription.subscription
+    );
+    console.log("SUBSCRIPTION", subscription);
     return (
         <>
             <nav className="fixed top-0 z-50 w-full bg-white  border-gray-200 border-b">
@@ -190,7 +204,7 @@ function SideBar({ children }: { children: React.ReactNode }) {
                         <li>
                             <Link
                                 className="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-slate-700 rounded-lg hover:shadow-sm hover:bg-white group"
-                                href={`/${user?.name}`}
+                                href={`/${user?.name}/posts`}
                             >
                                 <Posts
                                     size={"1.2em"}
@@ -277,7 +291,7 @@ function SideBar({ children }: { children: React.ReactNode }) {
                 </div>
             </aside>
 
-            <div className="p-4 mt-20 sm:ml-64">{children}</div>
+            <div className="mt-20 pt-2 sm:ml-64">{children}</div>
         </>
     );
 }

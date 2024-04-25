@@ -34,7 +34,7 @@ export default function Navbar() {
                     Posts
                 </Link>
                 <Link
-                    href="/admin/reports/posts"
+                    href="/admin/reports"
                     className="text-muted-foreground transition-colors hover:text-foreground"
                 >
                     Reports
@@ -91,7 +91,7 @@ export default function Navbar() {
                             Posts
                         </Link>
                         <Link
-                            href="/admin/reports/posts"
+                            href="/admin/reports"
                             className="text-muted-foreground hover:text-foreground"
                         >
                             Reports

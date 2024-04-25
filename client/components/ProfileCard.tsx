@@ -8,6 +8,7 @@ import { axiosInstance } from "@/axios/axios";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { getCurrentUser } from "@/services/api/profile.service";
 
 interface currentUser {
     _id: string;
@@ -27,11 +28,13 @@ interface currentUser {
 function ProfileCard({ className }: { className?: String }) {
     const [profile, setProfile] = useState<currentUser>();
     useEffect(() => {
-        axiosInstance
-            .get("/api/profile/currentUser")
+        getCurrentUser()
             .then((res: AxiosResponse<{ currentUser: currentUser }>) => {
                 console.log(res.data.currentUser);
                 setProfile(res.data.currentUser);
+            })
+            .catch((err) => {
+                console.log(err);
             });
     }, []);
     console.log(profile?.fullName);

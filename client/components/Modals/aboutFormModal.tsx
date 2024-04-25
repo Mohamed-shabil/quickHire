@@ -22,12 +22,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { axiosInstance } from "@/axios/axios";
 import { toast } from "../ui/use-toast";
-import { Check, Router } from "lucide-react";
+import { Check, Router, X } from "lucide-react";
 import { Textarea } from "../ui/textarea";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/reducers";
 import { setClose } from "@/store/slices/modalSlice";
 import { useRouter } from "next/navigation";
+import { addAbout } from "@/services/api/profile.service";
 
 export function AboutFormModal() {
     const dispatch = useDispatch();
@@ -54,24 +55,31 @@ export function AboutFormModal() {
         mode: "onTouched",
     });
 
-    const onSubmit = (values: z.infer<typeof formSchema>) => {
-        axiosInstance
-            .post("/api/profile/about", values)
-            .then((res) => {
-                toast({
-                    title: "Profile About Updated Successfully",
-                    action: (
-                        <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
-                            <Check />
-                        </div>
-                    ),
-                });
-                onClose();
-                router.refresh();
-            })
-            .catch((err) => {
-                console.log(err);
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        try {
+            const response = await addAbout(values);
+            toast({
+                title: "Profile About Updated Successfully",
+                action: (
+                    <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
+                        <Check />
+                    </div>
+                ),
             });
+            onClose();
+            router.refresh();
+        } catch (error: any) {
+            toast({
+                title: "Something went wrong ",
+                description:
+                    error.response.errors[0].message || "Please try again!",
+                action: (
+                    <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
+                        <X />
+                    </div>
+                ),
+            });
+        }
     };
 
     const onClose = () => {

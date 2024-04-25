@@ -1,18 +1,17 @@
+import { currentSubscription } from "@/services/api/payments.service";
 import { Subscription } from "@/types/types";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
 
 export const fetchSubscription = createAsyncThunk(
     "fetchSubscription",
     async () => {
-        const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_BASE_URL}/api/payments/subscriptions/current-subscription`,
-            {
-                withCredentials: true,
-            }
-        );
-        console.log("thunk subscription ----", response.data);
-        return response.data.subscription;
+        try {
+            const response = await currentSubscription();
+            console.log("thunk subscription ----", response.data);
+            return response.data.subscription;
+        } catch (error: any) {
+            console.log(error);
+        }
     }
 );
 

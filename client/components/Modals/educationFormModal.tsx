@@ -34,6 +34,7 @@ import {
 import { Check, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { axiosInstance } from "@/axios/axios";
+import { addEducation } from "@/services/api/profile.service";
 
 export function EducationFormModal() {
     const dispatch = useDispatch();
@@ -118,33 +119,31 @@ export function EducationFormModal() {
         mode: "onTouched",
     });
 
-    const onSubmit = (values: z.infer<typeof formSchema>) => {
-        axiosInstance
-            .post("/api/profile/education", values)
-            .then((res) => {
-                toast({
-                    title: "Profile Section Updated Successfully",
-                    action: (
-                        <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
-                            <Check />
-                        </div>
-                    ),
-                });
-                onClose();
-                router.refresh();
-            })
-            .catch((err) => {
-                console.log(err);
-                toast({
-                    title: "Something Went Wrong!😥",
-                    description: err.response.data.errors[0].message || "",
-                    action: (
-                        <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
-                            <X />
-                        </div>
-                    ),
-                });
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        try {
+            const response = await addEducation(values);
+            toast({
+                title: "Profile Section Updated Successfully",
+                action: (
+                    <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
+                        <Check />
+                    </div>
+                ),
             });
+            onClose();
+            router.refresh();
+        } catch (error: any) {
+            console.log(error);
+            toast({
+                title: "Something Went Wrong!😥",
+                description: error.response.data.errors[0].message || "",
+                action: (
+                    <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
+                        <X />
+                    </div>
+                ),
+            });
+        }
     };
 
     const onClose = () => {

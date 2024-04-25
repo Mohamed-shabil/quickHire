@@ -4,25 +4,23 @@ import {
     Card,
     CardContent,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { Form, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { Form, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { axiosInstance } from "@/axios/axios";
-import { CircleUserRound, Loader2, UserRoundSearch } from "lucide-react";
+import { CircleUserRound, Loader2, UserRoundSearch, X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { toast } from "@/components/ui/use-toast";
+import { selectRole } from "@/services/api/auth.service";
 
 export default function Signin() {
     const router = useRouter();
-    const [isLoading, SetLoading] = useState<boolean>(false);
     const formSchema = z.object({
         role: z.string(),
     });
@@ -33,23 +31,23 @@ export default function Signin() {
         },
         mode: "onTouched",
     });
-    const onSubmit = (values: z.infer<typeof formSchema>) => {
-        SetLoading(true);
-        axiosInstance
-            .patch("/api/auth/users/selectRole", values)
-            .then((res) => {
-                console.log(res);
-                router.push("/");
-            })
-            .catch((err) => {
-                toast({
-                    title: "Something went wrong",
-                    description: "Please refresh and try again",
-                });
-            })
-            .finally(() => {
-                SetLoading(false);
+    const isLoading = form.formState.isLoading;
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        try {
+            const response = await selectRole(values);
+            console.log(response);
+            router.push("/");
+        } catch (error) {
+            toast({
+                title: "Something went wrong",
+                description: "Please refresh and try again",
+                action: (
+                    <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
+                        <X />
+                    </div>
+                ),
             });
+        }
     };
     return (
         <div className="w-full h-screen flex items-center justify-center overflow-hidden">

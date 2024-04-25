@@ -7,15 +7,12 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { User } from "@/types/types";
 import { Button } from "@/components/ui/button";
+import { influencersList } from "@/services/api/profile.service";
 
 const getMostFollowedUsers = async (
     token: string
 ): Promise<{ count: number; profile: User }[]> => {
-    const response = await axiosInstance.get("/api/profile/most-followed", {
-        headers: {
-            Cookie: `jwt=${token}`,
-        },
-    });
+    const response = await influencersList(token);
     return response.data.users;
 };
 

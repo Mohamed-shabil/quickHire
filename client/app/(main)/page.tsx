@@ -5,15 +5,11 @@ import { redirect } from "next/navigation";
 import CreatePostButton from "@/components/CreatePostButton";
 import { PostType } from "@/types/types";
 import { axiosInstance } from "@/axios/axios";
+import { getAllPosts } from "@/services/api/posts.service";
 
-const getAllposts = async (token: string) => {
-    const res = await axiosInstance.get("/api/posts/show", {
-        headers: {
-            Cookie: `jwt=${token}`,
-        },
-    });
-
-    return res.data.post;
+const getPosts = async (token: string) => {
+    const response = await getAllPosts(token);
+    return response.data.post;
 };
 
 export default async function Home() {
@@ -22,7 +18,7 @@ export default async function Home() {
         return redirect("/signup");
     }
 
-    const posts = await getAllposts(token);
+    const posts = await getPosts(token);
     console.log(posts);
     return (
         <section className="w-full flex flex-col justify-center">

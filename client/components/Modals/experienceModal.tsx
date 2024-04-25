@@ -34,6 +34,7 @@ import {
 import { Check, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Experience } from "@/types/types";
+import { addExperience } from "@/services/api/profile.service";
 
 export function ExperienceFormModal() {
     const dispatch = useDispatch();
@@ -123,35 +124,34 @@ export function ExperienceFormModal() {
         mode: "onTouched",
     });
 
-    const onSubmit = (values: z.infer<typeof formSchema>) => {
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
         console.log(values);
-        axiosInstance
-            .post("/api/profile/experience", values)
-            .then((res) => {
-                console.log(res);
-                toast({
-                    title: "Profile Section Updated Successfully",
-                    action: (
-                        <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
-                            <Check />
-                        </div>
-                    ),
-                });
-                onClose();
-                router.refresh();
-            })
-            .catch((err) => {
-                console.log(err);
-                toast({
-                    title: "Something Went Wrong!😥",
-                    description: err.response.data.errors[0].message || "",
-                    action: (
-                        <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
-                            <X />
-                        </div>
-                    ),
-                });
+
+        try {
+            const response = await addExperience(values);
+            console.log(response);
+            toast({
+                title: "Profile Section Updated Successfully",
+                action: (
+                    <div className="h-8 w-8 bg-emerald-500 text-white grid place-items-center rounded">
+                        <Check />
+                    </div>
+                ),
             });
+            onClose();
+            router.refresh();
+        } catch (error: any) {
+            toast({
+                title: "Something Went Wrong!😥",
+                description:
+                    error.response.data.errors[0].message || "Please try again",
+                action: (
+                    <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
+                        <X />
+                    </div>
+                ),
+            });
+        }
     };
 
     const onClose = () => {

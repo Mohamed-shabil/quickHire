@@ -22,17 +22,15 @@ import { redirect } from "next/navigation";
 import { axiosInstance } from "@/axios/axios";
 import { User } from "@/types/types";
 import { BlockSwitch } from "./BlockSwitch";
+import { getAllUsers } from "@/services/api/auth.service";
 
-const getAllUsers = async (token: string, role: string) => {
-    const response = await axiosInstance.get("/api/auth/users/get-all", {
-        headers: {
-            Cookie: `jwt=${token}`,
-        },
-    });
-
+const getAllUsersList = async (
+    token: string,
+    role: string
+): Promise<User[]> => {
+    const response = await getAllUsers(token);
     console.log(response.data);
-
-    return response.data.users as User[];
+    return response.data.users;
 };
 
 const UsersList = async ({ role }: { role: string }) => {
@@ -40,7 +38,7 @@ const UsersList = async ({ role }: { role: string }) => {
     if (!token) {
         return redirect("/signup");
     }
-    const users = await getAllUsers(token, role);
+    const users = await getAllUsersList(token, role);
 
     return (
         <Card>

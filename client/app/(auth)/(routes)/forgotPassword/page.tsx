@@ -17,11 +17,12 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import AlertModal from "@/components/AlertModal";
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { setClose, setOpen } from "@/store/slices/modalSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/reducers";
+import { forgotPassword } from "@/services/api/auth.service";
 
 const Forgotpassword = () => {
     const [disable, setDisable] = useState(false);
@@ -43,16 +44,22 @@ const Forgotpassword = () => {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         console.log(values);
-        axiosInstance
-            .post("/api/auth/users/forgotPassword", values)
-            .then((res) => {
-                console.log(res);
-                dispatch(setOpen("AlertModal"));
-                setDisable(true);
-            })
-            .catch((err) => {
-                console.log(err);
+        try {
+            const res = await forgotPassword(values);
+            dispatch(setOpen({ type: "alertModal" }));
+        } catch (error: any) {
+            toast({
+                title: "Something went Wrong",
+                description:
+                    error.response.data.errors[0].message ||
+                    "Please try again ",
+                action: (
+                    <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
+                        <X />
+                    </div>
+                ),
             });
+        }
     };
 
     const isLoading = form.formState.isSubmitting;

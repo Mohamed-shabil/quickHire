@@ -12,11 +12,13 @@ export default function Error({
     reset: () => void;
 }) {
     useEffect(() => {
-        console.log("Erorr-------------", error);
+        if (error instanceof AxiosError) {
+            console.log("Axios error");
+        }
     }, [error]);
 
     return (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center w-full h-full">
             <h2>{error.message}</h2>
             <Button variant={"link"} onClick={() => reset()}>
                 Try again

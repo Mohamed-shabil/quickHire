@@ -41,6 +41,7 @@ import Image from "next/image";
 import { toast } from "../ui/use-toast";
 import Link from "next/link";
 import { axiosInstance } from "@/axios/axios";
+import { createJob } from "@/services/api/jobs.service";
 
 interface JobFormData {
     title: string;
@@ -130,7 +131,7 @@ export function CreateJobModal({ jobsCount }: { jobsCount: number }) {
         mode: "onTouched",
     });
 
-    const onSubmit = (values: z.infer<typeof formSchema>) => {
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
         setLoading(true);
         const selectedImage = document.getElementById(
             "companyImage"
@@ -157,12 +158,9 @@ export function CreateJobModal({ jobsCount }: { jobsCount: number }) {
         skills.forEach((item) => {
             data.append("skills[]", item);
         });
-        axiosInstance.post("/api/jobs/createJobs", data,{
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        })
-        .then((res) => {
+
+        try {
+            const response = await createJob(data);
             toast({
                 title: "Congratulations! 🥳",
                 description: "Job Posted Successfully!",
@@ -172,26 +170,23 @@ export function CreateJobModal({ jobsCount }: { jobsCount: number }) {
                     </div>
                 ),
             });
-            console.log(res.data);
-            form.reset();
+            console.log(response.data);
             onClose();
             router.refresh();
-        })
-        .catch((err) => {
-            console.error("Error:", err);
+        } catch (error: any) {
+            console.log(error);
             toast({
                 title: "Something went Wrong",
-                description: err.response.data.errors[0].message || "",
+                description: error.response.data.errors[0].message || "",
                 action: (
                     <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
                         <X />
                     </div>
                 ),
             });
-        })
-        .finally(() => {
+        } finally {
             setLoading(false);
-        });
+        }
     };
 
     const onClose = () => {

@@ -14,6 +14,7 @@ import { ProjectCard } from "@/components/Profile/ProjectCart";
 import { Button } from "@/components/ui/button";
 import { MessageCircleMore } from "lucide-react";
 import { axiosInstance } from "@/axios/axios";
+import { getUserProfile } from "@/services/api/profile.service";
 
 interface Link {
     title: string;
@@ -23,35 +24,30 @@ interface Link {
 
 const getProfile = async (
     token: string,
-    userId: string
+    username: string
 ): Promise<{ profile: Profile; followers: number; followings: number }> => {
-    const res = await axiosInstance.get(`/api/profile/${userId}`, {
-        headers: {
-            Cookie: `jwt=${token}`,
-        },
-    });
-
-    console.log("someone profile", res.data);
-    return res.data.profile;
+    const response = await getUserProfile(username, token);
+    console.log("someone profile", response.data);
+    return response.data.profile;
 };
 
 export default async function ProfilePage({
     params,
 }: {
-    params: { userId: string };
+    params: { username: string };
 }) {
     const token = cookies().get("jwt")?.value;
-    const { userId } = params;
+    const { username } = params;
     if (!token) {
         return redirect("/signup");
     }
     const { profile, followers, followings } = await getProfile(
         token,
-        params.userId
+        params.username
     );
 
     const gotoChat = () => {
-        redirect(`/chats/${userId}`);
+        redirect(`/chats/${username}`);
     };
 
     const links = [
@@ -126,7 +122,7 @@ export default async function ProfilePage({
                 </section>
                 <section className="flex gap-4 my-auto">
                     {/* <ProfileOptions profile={profile}/> */}
-                    <Link href={`/chats?user=${userId}`}>
+                    <Link href={`/chats?user=${username}`}>
                         <Button variant={"default"}>
                             <MessageCircleMore />
                         </Button>
@@ -167,7 +163,7 @@ export default async function ProfilePage({
                                 <ExperienceCard
                                     key={index}
                                     experience={experience}
-                                    userId={userId}
+                                    userId={username}
                                 />
                             )
                         )}

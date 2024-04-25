@@ -3,14 +3,23 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Subscription } from "@/types/types";
 import PricingPlan from "@/components/PricingPlan";
+import { getSubscriptions } from "@/services/api/payments.service";
 
 const SubscriptionPage = () => {
     const [subscriptions, setSubscriptions] = useState<Subscription[]>();
     const [loading, setLoading] = useState<boolean>(false);
     useEffect(() => {
-        axios.get(`/api/payments/subscription`).then((res) => {
-            setSubscriptions(res.data.subscriptions);
-        });
+        // axios.get(`/api/payments/subscription`).then((res) => {
+        //     setSubscriptions(res.data.subscriptions);
+        // });
+        getSubscriptions()
+            .then((res) => {
+                console.log(res.data);
+                setSubscriptions(res.data.subscriptions);
+            })
+            .catch((err: any) => {
+                console.log("err----r-we-r-we-rw-e", err);
+            });
     }, []);
 
     return (

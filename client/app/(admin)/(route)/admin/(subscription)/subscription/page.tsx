@@ -10,13 +10,10 @@ import {
 } from "@/components/ui/hover-card";
 import SubscriptionDelete from "@/components/Admin/SubscriptionDelete";
 import { axiosInstance } from "@/axios/axios";
+import { getSubscriptions } from "@/services/api/payments.service";
 
 const getSubscriptionPlan = async (token: string) => {
-    const response = await axiosInstance.get("/api/payments/subscription", {
-        headers: {
-            cookie: `jwt=${token}`,
-        },
-    });
+    const response = await getSubscriptions(token);
     return response.data.subscriptions as Subscription[];
 };
 

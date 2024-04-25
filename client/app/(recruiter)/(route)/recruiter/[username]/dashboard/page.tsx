@@ -9,22 +9,16 @@ import { toast } from "@/components/ui/use-toast";
 import DeactivateJob from "@/components/Recruiter/DeactivateJob";
 import DeleteJobTrigger from "@/components/Recruiter/DeleteJobTrigger";
 import Link from "next/link";
+import ErrorMessage from "@/components/ErrorMessage";
 import { CreateJobModal } from "@/components/Modals/CreateJobModal";
-import { axiosInstance } from "@/axios/axios";
+import { getUserJobs } from "@/services/api/jobs.service";
 
 const getMyJob = async (token: string, recruiter: string) => {
     try {
-        const response = await axiosInstance.get(
-            `/api/jobs/${recruiter}/get-jobs`,
-            {
-                headers: {
-                    Cookie: `jwt=${token}`,
-                },
-                withCredentials: true,
-            }
-        );
+        const response = await getUserJobs(token);
         return response.data.jobs as Jobs[];
     } catch (error) {
+        console.log(error);
         toast({
             title: "Something went wrong!😢",
             description: "Something went wrong, Please try again",
@@ -80,7 +74,12 @@ const Recruiter = async ({ params }: { params: { username: string } }) => {
                             </div>
                         ))
                     ) : (
-                        <h2>You Dont have any Job posts</h2>
+                        <div className="w-full text-center">
+                            <ErrorMessage
+                                message={"You don't have any job posted"}
+                                type="info"
+                            />
+                        </div>
                     )}
                 </section>
             </div>

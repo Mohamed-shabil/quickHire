@@ -150,21 +150,21 @@ const Navbar = () => {
                 >
                     <div className="flex flex-col gap-5 mt-5 sm:flex-row sm:items-center sm:mt-0 sm:ps-5">
                         <Link
-                            className="font-medium text-blue-500 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                            className="font-medium text-gray-600 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                             aria-current="page"
-                            href="http://localhost:3000/"
+                            href="/"
                         >
                             Home
                         </Link>
                         <Link
                             className="font-medium text-gray-600 hover:text-gray-400 dark:text-gray-400 dark:hover:text-gray-500 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-                            href="http://localhost:3000/jobs"
+                            href="/jobs"
                         >
                             Jobs
                         </Link>
                         <Link
                             className="font-medium text-gray-600 hover:text-gray-400 dark:text-gray-400 dark:hover:text-gray-500 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-                            href="http://localhost:3000/chats"
+                            href="/chats"
                         >
                             Messages
                         </Link>

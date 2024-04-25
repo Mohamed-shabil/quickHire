@@ -24,18 +24,13 @@ import { ProfileOptions } from "@/components/Profile/ProfileOption";
 import { ProjectCard } from "@/components/Profile/ProjectCart";
 import { axiosInstance } from "@/axios/axios";
 import { FollowerListModal } from "@/components/Modals/FollowersListModal";
-
-const getProfile = async (
+import { getProfile } from "@/services/api/profile.service";
+const getMyProfile = async (
     token: string,
     username: string
 ): Promise<{ profile: Profile; followers: number; followings: number }> => {
-    console.log("here is the token", token);
-    const res = await axiosInstance.get(`/api/profile/my-profile/${username}`, {
-        headers: {
-            Cookie: `jwt=${token}`,
-        },
-    });
-    return res.data.data;
+    const response = await getProfile(username, token);
+    return response.data.data;
 };
 
 interface Link {
@@ -54,7 +49,7 @@ export default async function MyProfile({
     if (!token) {
         return redirect("/signup");
     }
-    const { profile, followers, followings } = await getProfile(
+    const { profile, followers, followings } = await getMyProfile(
         token,
         username
     );
