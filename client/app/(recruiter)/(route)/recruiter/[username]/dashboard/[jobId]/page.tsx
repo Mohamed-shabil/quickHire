@@ -21,8 +21,14 @@ import { string } from "zod";
 import { getApplicants } from "@/services/api/jobs.service";
 
 const getApplicant = async (token: string, jobId: string) => {
-    const response = await getApplicants(jobId, token);
-    return response.data.applications;
+    try {
+        const response = await getApplicants(jobId, token);
+        return response.data.applications;
+    } catch (error: any) {
+        throw new Error(
+            error.response.data.errors[0].message || "Something went wrong "
+        );
+    }
 };
 
 async function Applicants({ params }: { params: { jobId: string } }) {

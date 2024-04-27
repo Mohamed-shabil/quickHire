@@ -38,9 +38,14 @@ function Chats() {
     const [chatSend, setChatSend] = useState(false);
 
     const searchParams = useSearchParams();
+
     const chatUser = searchParams.get("user");
 
     const currentUser = useSelector((state: RootState) => state.user.userData);
+
+    if (!currentUser) {
+        return redirect("/signin");
+    }
 
     useEffect(() => {
         if (user) {
@@ -72,18 +77,17 @@ function Chats() {
     }, [chatUser]);
 
     const onSearch = async (value: string) => {
-        searchProfile(value)
-            .then((res) => {
-                console.log("Fetching char", res.data);
-                if (chatUsers) {
-                    setChatUsers([...res.data.users, ...chatUsers]);
-                } else {
+        console.log(value);
+        if (value.trim()) {
+            searchProfile(value)
+                .then((res) => {
+                    console.log("Fetching char", res.data);
                     setChatUsers(res.data.users);
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
     };
 
     const handleInputChange = async (
@@ -131,7 +135,8 @@ function Chats() {
                                                     <Avatar className="h-12 w-12">
                                                         <AvatarImage
                                                             src={
-                                                                chatUser.avatar
+                                                                chatUser.avatar ||
+                                                                "/user.png"
                                                             }
                                                             className=" object-cover"
                                                         />
@@ -142,9 +147,8 @@ function Chats() {
                                                     <div className="flex flex-col w-full">
                                                         <span className="flex justify-between w-full">
                                                             <h3 className="font-medium text-base ">
-                                                                {
-                                                                    chatUser.fullName
-                                                                }
+                                                                {chatUser.fullName ||
+                                                                    chatUser.name}
                                                             </h3>
                                                             {chatUser.message
                                                                 ?.time ? (

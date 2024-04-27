@@ -17,9 +17,15 @@ interface IFilter {
 }
 
 const getJobs = async (token: string, filter: IFilter) => {
-    console.log("TOKEN in JOB", token);
-    const response = await searchJob(filter, token);
-    return response.data.jobs;
+    try {
+        console.log("TOKEN in JOB", token);
+        const response = await searchJob(filter, token);
+        return response.data.jobs;
+    } catch (error: any) {
+        throw new Error(
+            error.response.data.errors[0].message || "Something Went Wrong"
+        );
+    }
 };
 
 export default async function page({

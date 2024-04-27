@@ -9,9 +9,15 @@ import { Button } from "@/components/ui/button";
 import CreatePostButton from "@/components/CreatePostButton";
 
 const getMyPosts = async (token: string) => {
-    const repsonse = await getUserPosts(token);
-    console.log(repsonse.data.posts);
-    return repsonse.data.posts as PostType[];
+    try {
+        const repsonse = await getUserPosts(token);
+        console.log(repsonse.data.posts);
+        return repsonse.data.posts as PostType[];
+    } catch (error: any) {
+        throw Error(
+            error.response.data.errors[0].message || "Something Went Wrong"
+        );
+    }
 };
 
 export default async function Profile() {

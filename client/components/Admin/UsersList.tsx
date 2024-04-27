@@ -28,9 +28,13 @@ const getAllUsersList = async (
     token: string,
     role: string
 ): Promise<User[]> => {
-    const response = await getAllUsers(token);
-    console.log(response.data);
-    return response.data.users;
+    try {
+        const response = await getAllUsers(token);
+        console.log(response.data);
+        return response.data.users;
+    } catch (error: any) {
+        throw new Error(error.response.data.errors[0].message);
+    }
 };
 
 const UsersList = async ({ role }: { role: string }) => {

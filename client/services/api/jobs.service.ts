@@ -11,7 +11,7 @@ export const getUserJobs = async (recruiter: string, token?: string) => {
     return response;
 };
 
-export const getJob = async (jobId: string, token: string) => {
+export const getJob = async (jobId: string, token?: string) => {
     const url = new BuildUrl().jobs(`/${jobId}`);
     const response = await axiosInstance.get(url, {
         ...(token && { headers: { Cookie: `jwt=${token}` } }),

@@ -32,8 +32,12 @@ type Post = {
 };
 
 const getReportedPosts = async (token: string): Promise<Post[]> => {
-    const response = await getReports(token);
-    return response.data.posts;
+    try {
+        const response = await getReports(token);
+        return response.data.posts;
+    } catch (error: any) {
+        throw new Error(error.response.data.errors[0].message);
+    }
 };
 
 const PostReports = async () => {

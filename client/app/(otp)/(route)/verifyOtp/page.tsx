@@ -14,7 +14,7 @@ import { Check, Loader2, X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/reducers";
 import { axiosInstance } from "@/axios/axios";
@@ -102,6 +102,10 @@ const VerifyOtp = () => {
             });
         }
     };
+
+    if (user) {
+        return redirect("/");
+    }
 
     const isLoading = form.formState.isSubmitting;
 

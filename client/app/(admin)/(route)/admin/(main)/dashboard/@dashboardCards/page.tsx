@@ -8,9 +8,15 @@ import { axiosInstance } from "@/axios/axios";
 import { getAnalytics } from "@/services/api/payments.service";
 
 const getDashBoardData = async (token: string): Promise<Analytics> => {
-    const response = await getAnalytics(token);
-    console.log(response.data.analyticsData);
-    return response.data.analytics;
+    try {
+        const response = await getAnalytics(token);
+        console.log(response.data.analyticsData);
+        return response.data.analytics;
+    } catch (error: any) {
+        throw new Error(
+            error.response.data.errors[0].message || "Something went wrong"
+        );
+    }
 };
 
 const dashboardCards = async () => {

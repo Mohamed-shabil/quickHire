@@ -124,7 +124,9 @@ const ChatSection = ({ user }: { user: ChatUser }) => {
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
                         <span>
-                            <h2 className="font-medium ">{user?.fullName}</h2>
+                            <h2 className="font-medium ">
+                                {user?.fullName || user.name}
+                            </h2>
                         </span>
                     </span>
                     <span>
@@ -227,6 +229,7 @@ const ChatSection = ({ user }: { user: ChatUser }) => {
                     <Button
                         variant={"fade"}
                         size={"icon"}
+                        disabled={!!content}
                         onClick={() => {
                             handleMessage(content, user._id, "text");
                         }}

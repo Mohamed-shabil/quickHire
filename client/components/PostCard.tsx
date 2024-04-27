@@ -101,7 +101,7 @@ const PostCard = ({ post }: { post: PostType }) => {
             <div className="w-full max-w-lg block rounded-lg p-3 shadow-sm border">
                 <div className="flex h-full itmes-center">
                     <Link
-                        href={`/profile/${post.creator[0].name || ""}`}
+                        href={`/profile/${post.creator[0]?.name || ""}`}
                         className="flex flex-1 gap-2 items-center"
                     >
                         <Avatar className="mb-2">
@@ -114,7 +114,7 @@ const PostCard = ({ post }: { post: PostType }) => {
                         </Avatar>
                         <div>
                             <h1 className="font-medium capitalize">
-                                {post.creator[0].name}
+                                {post.creator[0]?.name}
                             </h1>
                             <p className="text-xs capitalize">
                                 {post.creator[0].headLine}

@@ -15,9 +15,11 @@ import { axiosInstance } from "@/axios/axios";
 import { CircleUserRound, Loader2, UserRoundSearch, X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { toast } from "@/components/ui/use-toast";
 import { selectRole } from "@/services/api/auth.service";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/reducers";
 
 export default function Signin() {
     const router = useRouter();
@@ -51,6 +53,12 @@ export default function Signin() {
             });
         }
     };
+
+    const user = useSelector((state: RootState) => state.user.userData);
+    if (!user?.role) {
+        return redirect("/");
+    }
+
     return (
         <div className="w-full h-screen flex items-center justify-center overflow-hidden">
             <Card className="border-0">

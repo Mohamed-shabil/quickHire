@@ -30,7 +30,7 @@ import { string, z } from "zod";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/reducers";
 import { axiosInstance } from "@/axios/axios";
-import { editJob } from "@/services/api/jobs.service";
+import { editJob, getJob } from "@/services/api/jobs.service";
 
 const EditJob = ({ params }: { params: { jobId: string } }) => {
     const { jobId } = params;
@@ -39,16 +39,17 @@ const EditJob = ({ params }: { params: { jobId: string } }) => {
     const user = useSelector((state: RootState) => state.user.userData);
 
     useEffect(() => {
-        axiosInstance
-            .get(`/api/jobs/${jobId}`)
+        getJob(jobId)
             .then((res) => {
                 console.log(res.data.job);
                 setJob(res.data.job);
             })
-            .catch((err) => {
+            .catch((err: any) => {
                 toast({
                     title: "Something went wrong 😢",
-                    description: "Please try again!",
+                    description:
+                        err.response.data.errors[0].message ||
+                        "Something went wrong",
                     action: (
                         <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
                             <X />

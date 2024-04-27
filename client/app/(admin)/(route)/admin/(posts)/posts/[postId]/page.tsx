@@ -7,8 +7,12 @@ import { redirect } from "next/navigation";
 import React from "react";
 
 const getPost = async (token: string, postId: string): Promise<PostType> => {
-    const response = await getOnePost(postId, token);
-    return response.data.post;
+    try {
+        const response = await getOnePost(postId, token);
+        return response.data.post;
+    } catch (error: any) {
+        throw new Error(error.respoanse.data.errors[0].message);
+    }
 };
 
 async function Post({ params }: { params: { postId: string } }) {

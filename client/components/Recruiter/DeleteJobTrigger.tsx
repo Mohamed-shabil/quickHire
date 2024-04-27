@@ -17,10 +17,11 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useRouter } from "next/navigation";
+import { deleteJob } from "@/services/api/jobs.service";
 
 function DeleteJobTrigger({ job }: { job: Jobs }) {
     const router = useRouter();
-    const deleteJob = async (jobId: string) => {
+    const jobDeleteHandler = async (jobId: string) => {
         try {
             const response = await deleteJob(job._id);
             console.log(response);
@@ -67,7 +68,9 @@ function DeleteJobTrigger({ job }: { job: Jobs }) {
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => deleteJob(job._id)}>
+                        <AlertDialogAction
+                            onClick={() => jobDeleteHandler(job._id)}
+                        >
                             Delete
                         </AlertDialogAction>
                     </AlertDialogFooter>

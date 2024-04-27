@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { axiosInstance } from "@/axios/axios";
 import { setUserData } from "@/store/slices/userSlice";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,7 +22,8 @@ import { Check, Eye, EyeOff, Loader2, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { userSignup } from "@/services/api/auth.service";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/reducers";
 
 export default function Signup() {
     const [show, setShow] = useState(false);

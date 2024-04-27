@@ -36,8 +36,12 @@ import ErrorMessage from "@/components/ErrorMessage";
 import moment from "moment";
 
 const getTransactionsList = async (token: string): Promise<Transaction[]> => {
-    const response = await getTransactions(token);
-    return response.data.transactions;
+    try {
+        const response = await getTransactions(token);
+        return response.data.transactions;
+    } catch (error: any) {
+        throw new Error(error.response.data.errors[0].message);
+    }
 };
 
 const Transactions = async () => {

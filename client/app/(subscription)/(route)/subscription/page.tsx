@@ -4,6 +4,9 @@ import axios from "axios";
 import { Subscription } from "@/types/types";
 import PricingPlan from "@/components/PricingPlan";
 import { getSubscriptions } from "@/services/api/payments.service";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/reducers";
+import { redirect } from "next/navigation";
 
 const SubscriptionPage = () => {
     const [subscriptions, setSubscriptions] = useState<Subscription[]>();
@@ -21,6 +24,11 @@ const SubscriptionPage = () => {
                 console.log("err----r-we-r-we-rw-e", err);
             });
     }, []);
+
+    const user = useSelector((state: RootState) => state.user.userData);
+    if (!user) {
+        return redirect("/signin");
+    }
 
     return (
         <section className="container mx-auto">

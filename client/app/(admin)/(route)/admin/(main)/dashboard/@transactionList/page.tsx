@@ -25,9 +25,15 @@ import { getTransactions } from "@/services/api/payments.service";
 import ErrorMessage from "@/components/ErrorMessage";
 
 const getTransactionsList = async (token: string): Promise<Transaction[]> => {
-    const response = await getTransactions(token);
-    console.log(response);
-    return response.data.transactions;
+    try {
+        const response = await getTransactions(token);
+        console.log(response);
+        return response.data.transactions;
+    } catch (error: any) {
+        throw new Error(
+            error.response.data.errors[0].message || "Something went wrong"
+        );
+    }
 };
 
 const TransactionList = async () => {

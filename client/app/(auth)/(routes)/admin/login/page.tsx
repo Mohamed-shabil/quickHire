@@ -25,9 +25,12 @@ import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { axiosInstance } from "@/axios/axios";
 import { adminLogin } from "@/services/api/auth.service";
+import { userAgent } from "next/server";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/reducers";
 
 export default function LoginForm() {
     const [show, setShow] = useState<boolean>(false);
@@ -75,6 +78,11 @@ export default function LoginForm() {
                 });
             });
     };
+
+    const admin = useSelector((state: RootState) => state.user.userData);
+    if (admin?.role === "admin") {
+        return redirect("/admin/dashboard");
+    }
 
     const isLoading = form.formState.isSubmitting;
     return (
@@ -161,7 +169,7 @@ export default function LoginForm() {
                                 hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring
                               active:text-blue-500"
                                 >
-                                    Create an account
+                                    Login
                                 </Button>
                             </div>
                         </form>

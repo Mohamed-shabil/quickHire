@@ -29,8 +29,14 @@ const getMyProfile = async (
     token: string,
     username: string
 ): Promise<{ profile: Profile; followers: number; followings: number }> => {
-    const response = await getProfile(username, token);
-    return response.data.data;
+    try {
+        const response = await getProfile(username, token);
+        return response.data.data;
+    } catch (error: any) {
+        throw new Error(
+            error.response.data.erros[0].message || "Something went wrong"
+        );
+    }
 };
 
 interface Link {

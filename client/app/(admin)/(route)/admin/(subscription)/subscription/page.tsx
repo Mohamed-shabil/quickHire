@@ -13,8 +13,12 @@ import { axiosInstance } from "@/axios/axios";
 import { getSubscriptions } from "@/services/api/payments.service";
 
 const getSubscriptionPlan = async (token: string) => {
-    const response = await getSubscriptions(token);
-    return response.data.subscriptions as Subscription[];
+    try {
+        const response = await getSubscriptions(token);
+        return response.data.subscriptions as Subscription[];
+    } catch (error: any) {
+        throw new Error(error.response.data.errors[0].message);
+    }
 };
 
 const page = async () => {

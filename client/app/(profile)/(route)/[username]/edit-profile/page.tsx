@@ -14,12 +14,16 @@ import { axiosInstance } from "@/axios/axios";
 
 const getProfile = async (token: string, username: string) => {
     console.log("here is the token", token);
-    const res = await axiosInstance.get(`/api/profile/${username}`, {
-        headers: {
-            Cookie: `jwt=${token}`,
-        },
-    });
-    return res.data.profile;
+    try {
+        const res = await axiosInstance.get(`/api/profile/${username}`, {
+            headers: {
+                Cookie: `jwt=${token}`,
+            },
+        });
+        return res.data.profile;
+    } catch (error: any) {
+        throw new Error(error.response.data.errors[0].message);
+    }
 };
 
 export default async function EditProfile({

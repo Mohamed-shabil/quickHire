@@ -8,8 +8,14 @@ import { axiosInstance } from "@/axios/axios";
 import { getAllPosts } from "@/services/api/posts.service";
 
 const getPosts = async (token: string) => {
-    const response = await getAllPosts(token);
-    return response.data.post;
+    try {
+        const response = await getAllPosts(token);
+        return response.data.post;
+    } catch (error: any) {
+        throw new Error(
+            error.response.data.errors[0].message || "Something went wrong"
+        );
+    }
 };
 
 export default async function Home() {

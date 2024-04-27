@@ -45,8 +45,7 @@ export const JobPreview = async ({
                 <Alert className="w-full max-w-[400px]">
                     <AlertCircle className="h-4 w-4 text-red-500" />
                     <AlertDescription>
-                        You can add components and dependencies to your app
-                        using the cli.
+                        Select a Job to see the job details 
                     </AlertDescription>
                 </Alert>
             </div>

@@ -54,8 +54,12 @@ type TrendingPost = {
 };
 
 const getPosts = async (token: string): Promise<TrendingPost[]> => {
-    const response = await trendingPosts(token);
-    return response.data.posts;
+    try {
+        const response = await trendingPosts(token);
+        return response.data.posts;
+    } catch (error: any) {
+        throw new Error(error.response.data.errors[0].message);
+    }
 };
 
 export default async function Component() {

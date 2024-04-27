@@ -12,8 +12,14 @@ import { influencersList } from "@/services/api/profile.service";
 const getMostFollowedUsers = async (
     token: string
 ): Promise<{ count: number; profile: User }[]> => {
-    const response = await influencersList(token);
-    return response.data.users;
+    try {
+        const response = await influencersList(token);
+        return response.data.users;
+    } catch (error: any) {
+        throw new Error(
+            error.response.data.errors[0].message || "Something went wrong"
+        );
+    }
 };
 
 const InfluencerList = async () => {

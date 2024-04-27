@@ -17,12 +17,15 @@ const getMyJob = async (token: string, recruiter: string) => {
     try {
         const response = await getUserJobs(recruiter, token);
         return response.data.jobs as Jobs[];
-    } catch (error) {
+    } catch (error: any) {
         console.log(error);
         toast({
             title: "Something went wrong!😢",
             description: "Something went wrong, Please try again",
         });
+        throw new Error(
+            error.response.data.errors[0].message || "Somethig went wrong"
+        );
     }
 };
 
