@@ -1,12 +1,14 @@
 import mongoose from "mongoose";
-import { kafkaConsumer } from "./events/KafkaBaseConsumer";
+// import { kafkaConsumer } from "./events/KafkaBaseConsumer";
 import { UpdatedUser } from "./events/consumer/updateUser";
 import { createUser } from "./events/consumer/userCreated";
 import { app } from "./app";
 import { kafkaClient } from "./events/kafkaClient";
 import { userFollow } from "./events/consumer/userFollow";
 import { userUnfollow } from "./events/consumer/userUnfollow";
+import { kafkaConsumer, TopicCallbackMap, Topics } from "@quickhire/common";
 
+const consumer = new kafkaConsumer(kafkaClient, "posts-group");
 const start = async () => {
     try {
         if (!process.env.JWT_KEY) {
@@ -36,25 +38,22 @@ const start = async () => {
 
         console.log("[POSTS DB] Database Connected Successfully!");
 
-        new kafkaConsumer(kafkaClient, "post-group-1").consume(
-            "user-created",
-            createUser
-        );
-        new kafkaConsumer(kafkaClient, "post-group-2").consume(
-            "avatar-updated",
-            UpdatedUser
-        );
-        new kafkaConsumer(kafkaClient, "post-group-3").consume(
-            "headline-updated",
-            UpdatedUser
-        );
-        new kafkaConsumer(kafkaClient, "post-group-4").consume(
-            "user-followed",
-            userFollow
-        );
-        new kafkaConsumer(kafkaClient, "post-group-5").consume(
-            "user-unFollowed",
-            userUnfollow
+        const callbackMap: TopicCallbackMap = {
+            "user-created": createUser,
+            "avatar-updated": UpdatedUser,
+            "headline-updated": UpdatedUser,
+            "user-followed": userFollow,
+            "user-unFollowed": userUnfollow,
+        };
+        consumer.consume(
+            [
+                Topics.UserCreated,
+                Topics.AvatarUpdated,
+                Topics.HeadlineUpdated,
+                Topics.UserFollowed,
+                Topics.UserUnfollowed,
+            ],
+            callbackMap
         );
     } catch (err) {
         console.error(err);
@@ -67,28 +66,28 @@ const start = async () => {
 
 start();
 
-// const errorTypes = ["unhandledRejection", "uncaughtException"];
-// const signalTraps = ["SIGTERM", "SIGINT", "SIGUSR2"];
+const errorTypes = ["unhandledRejection", "uncaughtException"];
+const signalTraps = ["SIGTERM", "SIGINT", "SIGUSR2"];
 
-// errorTypes.forEach((type) => {
-//     process.on(type, async (e) => {
-//         try {
-//             console.log(`process.on ${type}`);
-//             console.log(e);
-//             await consumer.disconnect();
-//             process.exit(0);
-//         } catch (error) {
-//             process.exit(1);
-//         }
-//     });
-// });
+errorTypes.forEach((type) => {
+    process.on(type, async (e) => {
+        try {
+            console.log(`process.on ${type}`);
+            console.log(e);
+            await consumer.disconnect();
+            process.exit(0);
+        } catch (error) {
+            process.exit(1);
+        }
+    });
+});
 
-// signalTraps.forEach((type) => {
-//     process.once(type, async () => {
-//         try {
-//             await consumer.disconnect();
-//         } catch (error) {
-//             process.kill(process.pid, type);
-//         }
-//     });
-// });
+signalTraps.forEach((type) => {
+    process.once(type, async () => {
+        try {
+            await consumer.disconnect();
+        } catch (error) {
+            process.kill(process.pid, type);
+        }
+    });
+});
