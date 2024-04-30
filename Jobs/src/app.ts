@@ -62,6 +62,7 @@ app.use(currentUser);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
     console.log(req.currentUser);
+    console.log(req.currentUser?.role);
     next();
 });
 

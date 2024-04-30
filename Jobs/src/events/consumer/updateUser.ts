@@ -11,9 +11,11 @@ export const UpdatedUser = async (message: KafkaMessage) => {
             _id: userData._id,
         },
     });
+
     if (!user) {
-        throw new BadRequestError("User with ID does not exist");
+        return console.log("User with ID does not exist");
     }
+
     user.set({
         avatar: userData.avatar,
         headLine: userData.headline,

@@ -8,6 +8,7 @@ import {
     NotAutherizedError,
     validateRequest,
     BadRequestError,
+    ForbiddenError,
 } from "@quickhire/common";
 import { uploadCompanyImage } from "../middleware/upload";
 import { body } from "express-validator";
@@ -16,7 +17,6 @@ const router = express.Router();
 router.post(
     "/api/jobs/create-job",
     requireAuth,
-    isRecruiter,
     uploadCompanyImage,
     [
         body("title").notEmpty().withMessage("Title can't be empty"),
@@ -41,7 +41,6 @@ router.post(
         validateRequest,
     ],
     catchAsync(async (req: Request, res: Response) => {
-        console.log("Im reaching ....", req.body);
         const {
             title,
             company,
@@ -62,6 +61,16 @@ router.post(
         if (!currentUser) {
             throw new NotAutherizedError();
         }
+
+        if (currentUser.role == "recruiter") {
+            console.log(true);
+        }
+
+        if (currentUser.role != ("recruiter" || "admin")) {
+            console.log("why this could happen", currentUser?.role.toString());
+            throw new ForbiddenError();
+        }
+
         const file = req.file as Express.MulterS3.File | undefined;
 
         const recruiter = await User.findOne({
@@ -72,13 +81,11 @@ router.post(
             throw new NotAutherizedError();
         }
 
-        const subscription = await Jobs.findOne({});
-
         const newJob = await Jobs.create({
             recruiterId: currentUser._id,
             recruiterName: currentUser.name.toLowerCase(),
             title: title.toLowerCase(),
-            company: title.toLowerCase(),
+            company: company.toLowerCase(),
             workPlace: workplace.toLowerCase(),
             employmentType: employmentType.toLowerCase(),
             requirements: requirements.toLowerCase(),

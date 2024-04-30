@@ -11,8 +11,9 @@ export const createSubscription = async (message: KafkaMessage) => {
             _id: subscriptionData._id,
         },
     });
+
     if (isSubscriptionExist) {
-        throw new BadRequestError("User with ID does not exist");
+        return console.log("User with ID does not exist");
     }
 
     const subscription = await Subscription.create({

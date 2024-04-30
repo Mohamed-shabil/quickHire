@@ -24,7 +24,7 @@ spec:
                                 name: jwt-secret
                                 key: JWT_KEY
                       - name: KAFKA_SERVICE
-                        value: kafka-srv:9092
+                        value: kafka-service:9092
                       - name: STRIPE_PRIVATE_KEY
                         valueFrom:
                             secretKeyRef:

@@ -50,6 +50,8 @@ spec:
                             secretKeyRef:
                                 name: cors-origin
                                 key: CORS_ORIGIN
+                      - name: SOCKET_ORIGIN
+                        value: https://socket.quick-hire.live/api/chats/socket
 
 ---
 apiVersion: v1
@@ -64,3 +66,16 @@ spec:
           protocol: TCP
           port: 3006
           targetPort: 3006
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: socket-srv
+spec:
+    selector:
+        app: chats
+    ports:
+        - name: chats
+          protocol: TCP
+          port: 3000
+          targetPort: 3000

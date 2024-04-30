@@ -19,8 +19,8 @@ spec:
                   env:
                       - name: NEXT_PUBLIC_BASE_URL
                         value: https://quick-hire.live
-                      - name: NEXT_PUBLIC_STRIPE_SOCKET_URL
-                        value: https://socket.quick-hire.live/api/chats/socket
+                      - name: NEXT_PUBLIC_SOCKET_URL
+                        value: https://socket.quick-hire.live
                       - name: NEXT_PUBLIC_AUTH
                         value: /api/auth
                       - name: NEXT_PUBLIC_PROFILE

@@ -1,4 +1,4 @@
-import { kafkaConsumer } from "@quickhire/common";
+import { Topics, kafkaConsumer, TopicCallbackMap } from "@quickhire/common";
 import { app } from "./app";
 import { kafkaClient } from "./events/kafkaClient";
 import { createUser } from "./events/consumer/userCreated";
@@ -9,6 +9,8 @@ import { updateSubscription } from "./events/consumer/update-subscription";
 
 import "./config/config";
 import "./model/Relations";
+
+const consumer = new kafkaConsumer(kafkaClient, "jobs-group");
 
 const start = async () => {
     try {
@@ -35,62 +37,59 @@ const start = async () => {
         if (!process.env.KAFKA_SERVICE) {
             throw new Error("Kafka Service is missing...");
         }
-        new kafkaConsumer(kafkaClient, "job-group-1").consume(
-            "user-created",
-            createUser
-        );
-        new kafkaConsumer(kafkaClient, "job-group-2").consume(
-            "headline-updated",
-            UpdatedUser
-        );
-        new kafkaConsumer(kafkaClient, "job-group-3").consume(
-            "avatar-updated",
-            UpdatedUser
-        );
-        new kafkaConsumer(kafkaClient, "job-group-4").consume(
-            "subscription-created",
-            createSubscription
-        );
-        new kafkaConsumer(kafkaClient, "job-group-5").consume(
-            "subscription-updated",
-            updateSubscription
-        );
-        new kafkaConsumer(kafkaClient, "job-group-6").consume(
-            "subscription-deleted",
-            deleteSubscription
+
+        const callbackMap: TopicCallbackMap = {
+            "user-created": createUser,
+            "avatar-updated": UpdatedUser,
+            "headline-updated": UpdatedUser,
+            "subscription-created": createSubscription,
+            "subscription-updated": updateSubscription,
+            "subscription-deleted": deleteSubscription,
+        };
+        consumer.consume(
+            [
+                Topics.UserCreated,
+                Topics.HeadlineUpdated,
+                Topics.AvatarUpdated,
+                Topics.subscriptionCreated,
+                Topics.subscriptionUpdated,
+                Topics.subscriptionDeleted,
+            ],
+            callbackMap
         );
     } catch (err) {
         console.error(err);
     }
     app.listen(3005, () => {
+        console.log("Updated create-job route with logger");
         console.log("[JOBS SERVICE] Listening on port 3005!");
     });
 };
 
 start();
 
-// const errorTypes = ["unhandledRejection", "uncaughtException"];
-// const signalTraps = ["SIGTERM", "SIGINT", "SIGUSR2"];
+const errorTypes = ["unhandledRejection", "uncaughtException"];
+const signalTraps = ["SIGTERM", "SIGINT", "SIGUSR2"];
 
-// errorTypes.forEach((type) => {
-//     process.on(type, async (e) => {
-//         try {
-//             console.log(`process.on ${type}`);
-//             console.log(e);
-//             await consumer.disconnect();
-//             process.exit(0);
-//         } catch (error) {
-//             process.exit(1);
-//         }
-//     });
-// });
+errorTypes.forEach((type) => {
+    process.on(type, async (e) => {
+        try {
+            console.log(`process.on ${type}`);
+            console.log(e);
+            await consumer.disconnect();
+            process.exit(0);
+        } catch (error) {
+            process.exit(1);
+        }
+    });
+});
 
-// signalTraps.forEach((type) => {
-//     process.once(type, async () => {
-//         try {
-//             await consumer.disconnect();
-//         } catch (error) {
-//             process.kill(process.pid, type);
-//         }
-//     });
-// });
+signalTraps.forEach((type) => {
+    process.once(type, async () => {
+        try {
+            await consumer.disconnect();
+        } catch (error) {
+            process.kill(process.pid, type);
+        }
+    });
+});

@@ -33,12 +33,12 @@ spec:
                       - name: MONGO_URI
                         value: "mongodb://auth-mongo-srv:27017/auth"
                       - name: JWT_KEY
-                      - name: KAFKA_SERVICE
-                        value: kafka-service:9092
                         valueFrom:
                             secretKeyRef:
                                 name: jwt-secret
                                 key: JWT_KEY
+                      - name: KAFKA_SERVICE
+                        value: kafka-service:9092
                       - name: JWT_ACCESSTOKEN_EXPIRESIN
                         value: 1d
                       - name: MAIL_PASS
