@@ -43,10 +43,6 @@ function Chats() {
 
     const currentUser = useSelector((state: RootState) => state.user.userData);
 
-    if (!currentUser) {
-        return redirect("/signin");
-    }
-
     useEffect(() => {
         if (user) {
             chatHistory(user._id)
@@ -72,6 +68,7 @@ function Chats() {
 
     useEffect(() => {
         if (chatUser) {
+            console.log(chatUser);
             onSearch(chatUser);
         }
     }, [chatUser]);

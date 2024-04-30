@@ -103,19 +103,15 @@ const VerifyOtp = () => {
         }
     };
 
-    if (user) {
-        return redirect("/");
-    }
-
     const isLoading = form.formState.isSubmitting;
 
     return (
         <div className="container flex flex-col items-center h-screen justify-center w-full pt-10">
-            <div className="max-w-[450px] shadow-sm border p-5 rounded-lg">
-                <h2 className="font-medium text-3xl text-center mb-5">
+            <div className="max-w-[450px] p-5 rounded-lg">
+                <h2 className="font-semibold text-2xl text-center mb-2">
                     Verify your account
                 </h2>
-                <p className="text-slate-600 text-center py-3">
+                <p className="text-slate-600 text-center py-3 text-sm">
                     Enter the 4-digit verification code that was sent to your
                     email address
                 </p>

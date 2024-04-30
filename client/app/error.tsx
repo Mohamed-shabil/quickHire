@@ -18,7 +18,7 @@ export default function Error({
     }, [error]);
 
     return (
-        <div className="flex items-center justify-center w-full h-full">
+        <div className="flex items-center flex-col justify-center w-full h-max">
             <h2>{error.message}</h2>
             <Button variant={"link"} onClick={() => reset()}>
                 Try again

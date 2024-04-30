@@ -28,6 +28,7 @@ import { RootState } from "@/store/reducers";
 export default function Signup() {
     const [show, setShow] = useState(false);
     const { toast } = useToast();
+    console.log("New Updated chats");
     const formSchema = z
         .object({
             email: z.string().email({

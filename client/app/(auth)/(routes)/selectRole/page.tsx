@@ -54,11 +54,6 @@ export default function Signin() {
         }
     };
 
-    const user = useSelector((state: RootState) => state.user.userData);
-    if (!user?.role) {
-        return redirect("/");
-    }
-
     return (
         <div className="w-full h-screen flex items-center justify-center overflow-hidden">
             <Card className="border-0">

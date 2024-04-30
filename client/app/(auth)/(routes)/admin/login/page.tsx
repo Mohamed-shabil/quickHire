@@ -169,7 +169,7 @@ export default function LoginForm() {
                                 hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring
                               active:text-blue-500"
                                 >
-                                    Login
+                                    Login/
                                 </Button>
                             </div>
                         </form>

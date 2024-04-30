@@ -229,7 +229,6 @@ const ChatSection = ({ user }: { user: ChatUser }) => {
                     <Button
                         variant={"fade"}
                         size={"icon"}
-                        disabled={!!content}
                         onClick={() => {
                             handleMessage(content, user._id, "text");
                         }}
