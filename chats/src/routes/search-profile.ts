@@ -10,7 +10,9 @@ router.get(
     catchAsync(async (req: Request, res: Response) => {
         const name = req.query.name;
         const regex = new RegExp(`^${name}`, "i");
-        const users = await User.find({ fullName: regex });
+        const users = await User.find({
+            $or: [{ name: regex }, { fullName: regex }],
+        });
         console.log("RESULTS", users);
         return res.status(200).json({
             status: "success",

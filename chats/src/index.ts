@@ -1,10 +1,12 @@
-import { kafkaConsumer } from "@quickhire/common";
+import { Topics, kafkaConsumer, TopicCallbackMap } from "@quickhire/common";
 import mongoose from "mongoose";
 import { socketService, httpServer, app } from "./app";
 
 import { kafkaClient } from "./event/kafkaClient";
 import { createUser } from "./event/consumer/userCreated";
 import { UpdatedUser } from "./event/consumer/updateUser";
+
+const consumer = new kafkaConsumer(kafkaClient, "chat-group-1");
 
 const start = async () => {
     try {
@@ -33,23 +35,35 @@ const start = async () => {
         await mongoose.connect(process.env.MONGO_URI);
         console.log("[CHATS DB] Database Connected Successfully!");
 
-        new kafkaConsumer(kafkaClient, "chat-group-1").consume(
-            "user-created",
-            createUser
-        );
-        new kafkaConsumer(kafkaClient, "chat-group-2").consume(
-            "avatar-updated",
-            UpdatedUser
-        );
-        new kafkaConsumer(kafkaClient, "chat-group-3").consume(
-            "headline-updated",
-            UpdatedUser
+        // new kafkaConsumer(kafkaClient, "chat-group-1").consume(
+        //     "user-created",
+        //     createUser
+        // );
+        // new kafkaConsumer(kafkaClient, "chat-group-2").consume(
+        //     "avatar-updated",
+        //     UpdatedUser
+        // );
+        // new kafkaConsumer(kafkaClient, "chat-group-3").consume(
+        //     "headline-updated",
+        //     UpdatedUser
+        // );
+
+        // user-created  avatar-updated  headline-updated
+        const callbackMap: TopicCallbackMap = {
+            "user-created": createUser,
+            "avatar-updated": UpdatedUser,
+            "headline-updated": UpdatedUser,
+        };
+        consumer.consume(
+            [Topics.UserCreated, Topics.AvatarUpdated, Topics.HeadlineUpdated],
+            callbackMap
         );
     } catch (err) {
         console.error(err);
     }
 
     app.listen(3006, () => {
+        console.log("Changed Search Profile");
         console.log("[CHATS SERVICE] Listening on port 3006!");
     });
 
