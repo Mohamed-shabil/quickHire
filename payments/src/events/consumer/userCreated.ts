@@ -8,8 +8,15 @@ export const createUser = async (message: KafkaMessage) => {
     const userData = JSON.parse(message.value!.toString());
     console.log("User Creating", userData);
 
+    const userExist = await User.findById(userData._id);
+
+    if (userExist) {
+        return console.log("User is Already Exist");
+    }
+
     const startDate = new Date();
     const endDate = new Date(startDate.getFullYear() + 10);
+
     const freeSubscription = await Subscription.findOne({ planName: "free" });
 
     const subscribe = new Subscribers({
