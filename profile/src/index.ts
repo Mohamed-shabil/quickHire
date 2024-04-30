@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
 import { app } from "./app";
 import { kafkaClient } from "./events/kafkaClient";
-import { kafkaConsumer } from "@quickhire/common";
-import { createProfile } from "./events/consumer/consumeCallback";
+import { kafkaConsumer, Topics, TopicCallbackMap } from "@quickhire/common";
+import { createProfile } from "./events/consumer/createProfile";
 
+const consumer = new kafkaConsumer(kafkaClient, "profile-group");
 const start = async () => {
     try {
         if (!process.env.JWT_KEY) {
@@ -31,10 +32,11 @@ const start = async () => {
 
         console.log("[Profile DB] Database Connected Successfully!");
 
-        new kafkaConsumer(kafkaClient, "profile-group").consume(
-            "user-created",
-            createProfile
-        );
+        const callbackMap: TopicCallbackMap = {
+            "user-created": createProfile,
+        };
+
+        consumer.consume([Topics.UserCreated], callbackMap);
     } catch (err) {
         console.error(err);
     }
@@ -45,28 +47,28 @@ const start = async () => {
 
 start();
 
-// const errorTypes = ["unhandledRejection", "uncaughtException"];
-// const signalTraps = ["SIGTERM", "SIGINT", "SIGUSR2"];
+const errorTypes = ["unhandledRejection", "uncaughtException"];
+const signalTraps = ["SIGTERM", "SIGINT", "SIGUSR2"];
 
-// errorTypes.forEach((type) => {
-//     process.on(type, async (e) => {
-//         try {
-//             console.log(`process.on ${type}`);
-//             console.log(e);
-//             await consumer.disconnect();
-//             process.exit(0);
-//         } catch (error) {
-//             process.exit(1);
-//         }
-//     });
-// });
+errorTypes.forEach((type) => {
+    process.on(type, async (e) => {
+        try {
+            console.log(`process.on ${type}`);
+            console.log(e);
+            await consumer.disconnect();
+            process.exit(0);
+        } catch (error) {
+            process.exit(1);
+        }
+    });
+});
 
-// signalTraps.forEach((type) => {
-//     process.once(type, async () => {
-//         try {
-//             await consumer.disconnect();
-//         } catch (error) {
-//             process.kill(process.pid, type);
-//         }
-//     });
-// });
+signalTraps.forEach((type) => {
+    process.once(type, async () => {
+        try {
+            await consumer.disconnect();
+        } catch (error) {
+            process.kill(process.pid, type);
+        }
+    });
+});
