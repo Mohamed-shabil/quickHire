@@ -5,7 +5,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { Check, Flag, Loader2, X } from "lucide-react";
+import { Ban, Check, Flag, Loader2, MessageCircleMore, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
     Form,
@@ -98,8 +98,22 @@ function PostReportModal({ postId }: { postId: string }) {
                 className="flex items-center"
                 onClick={() => setOpen(true)}
             >
-                <Flag className="text-blue-600 cursor-pointer" />
-                Report
+                {/* <Button variant={"ghost"}>
+                    <Flag className="text-blue-600 cursor-pointer" />
+                    Report
+                </Button> */}
+                <Button
+                    variant={"ghost"}
+                    type="button"
+                    className="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2"
+                >
+                    <Ban className="text-blue-600 cursor-pointer" />
+                    <div className="mt-1.5 sm:mt-0">
+                        <p className="text-gray-500 font-normal text-xs">
+                            Report
+                        </p>
+                    </div>
+                </Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>

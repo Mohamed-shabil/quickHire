@@ -7,7 +7,6 @@ const mainLayout = async ({ children }: { children: React.ReactNode }) => {
     return (
         <div className="h-full">
             <ModalProvider />
-            <Navbar />
             <SideBar>
                 <div className="w-full flex flex-row justify-between relative">
                     <div className="container">{children}</div>

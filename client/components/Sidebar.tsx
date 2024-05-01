@@ -79,7 +79,7 @@ function SideBar({ children }: { children: React.ReactNode }) {
     console.log("SUBSCRIPTION", subscription);
     return (
         <>
-            <nav className="fixed top-0 z-50 w-full bg-white  border-gray-200 border-b">
+            <nav className="fixed top-0 z-50 w-full bg-background border-b">
                 <div className="h-20 flex items-center gap-2 px-3 justify-between">
                     <span className="flex flex-row items-center gap-2">
                         <svg
@@ -171,15 +171,14 @@ function SideBar({ children }: { children: React.ReactNode }) {
             </nav>
 
             <aside
-                id="logo-sidebar"
-                className="fixed top-0 left-0 z-40 w-64 h-screen pt-24 transition-transform -translate-x-full bg-secondary border-r border-gray-200 sm:translate-x-0"
+                className="fixed top-0 left-0 z-40 w-64 h-screen pt-24 transition-transform -translate-x-full border-r sm:translate-x-0"
                 aria-label="Sidebar"
             >
                 <div className="h-full px-3 pb-4 overflow-y-auto ">
-                    <ul className="space-y-2 font-medium">
+                    <ul className="space-y-2">
                         <li>
                             <Link
-                                className="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-slate-700 rounded-lg hover:shadow-sm hover:bg-white group"
+                                className="flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg hover:bg-secondary hover:shadow-sm group"
                                 href="/"
                             >
                                 <Home
@@ -191,7 +190,7 @@ function SideBar({ children }: { children: React.ReactNode }) {
                         </li>
                         <li>
                             <Link
-                                className="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-slate-700 rounded-lg hover:shadow-sm hover:bg-white group"
+                                className="flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg hover:bg-secondary hover:shadow-sm group"
                                 href={`/${user?.name}`}
                             >
                                 <User
@@ -203,7 +202,7 @@ function SideBar({ children }: { children: React.ReactNode }) {
                         </li>
                         <li>
                             <Link
-                                className="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-slate-700 rounded-lg hover:shadow-sm hover:bg-white group"
+                                className="flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg hover:bg-secondary hover:shadow-sm group"
                                 href={`/${user?.name}/posts`}
                             >
                                 <Posts
@@ -215,7 +214,7 @@ function SideBar({ children }: { children: React.ReactNode }) {
                         </li>
                         <li>
                             <Link
-                                className="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-slate-700 rounded-lg hover:shadow-sm hover:bg-white group"
+                                className="flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg hover:bg-secondary hover:shadow-sm group"
                                 href={`/chats`}
                             >
                                 <MessageSquareMore
@@ -229,13 +228,13 @@ function SideBar({ children }: { children: React.ReactNode }) {
                             <Accordion
                                 type="single"
                                 collapsible
-                                className="w-full border-0 hover:bg-white hover:shadow-sm rounded-lg"
+                                className="w-full border-0 hover:shadow-sm rounded-lg hover:bg-secondary"
                             >
                                 <AccordionItem
                                     value="item-1"
                                     className="border-0"
                                 >
-                                    <AccordionTrigger className="flex items-center p-2 rounded-lg hover:bg-white group border-0 no-underline text-sm text-slate-700">
+                                    <AccordionTrigger className="flex items-center p-2 rounded-lg group border-0 no-underline text-sm">
                                         <span className="flex items-center gap-x-3.5 flex-row pl-1">
                                             <Briefcase
                                                 size={"1.2em"}
@@ -245,7 +244,7 @@ function SideBar({ children }: { children: React.ReactNode }) {
                                         </span>
                                     </AccordionTrigger>
                                     <AccordionContent className="p-2">
-                                        <ul className="space-y-2 text-xs text-gray-500 px-4">
+                                        <ul className="space-y-2 text-xs px-4">
                                             <li>
                                                 <Link href="/jobs">Job</Link>
                                             </li>
@@ -263,7 +262,7 @@ function SideBar({ children }: { children: React.ReactNode }) {
                             <>
                                 <li>
                                     <Link
-                                        className="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-slate-700 rounded-lg hover:shadow-sm hover:bg-white hover:bg-secondary group"
+                                        className="flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg hover:shadow-sm hover:bg-secondary group"
                                         href={`/recruiter/${user.name}/dashboard`}
                                     >
                                         <BarChart3
@@ -275,7 +274,7 @@ function SideBar({ children }: { children: React.ReactNode }) {
                                 </li>
                                 <li>
                                     <Link
-                                        className="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-slate-700 rounded-lg hover:shadow-sm hover:bg-white hover:bg-secondary group"
+                                        className="flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg hover:shadow-sm hover:bg-secondary group"
                                         href={`/subscription`}
                                     >
                                         <Gem

@@ -147,9 +147,9 @@ export default function Signup() {
                         </h1>
 
                         <p className="mt-4 leading-relaxed text-gray-500">
-                            Lorem, ipsum dolor sit amet consectetur adipisicing
-                            elit. Eligendi nam dolorum aliquam, quibusdam
-                            aperiam voluptatum.
+                            {
+                                "Your go-to platform connecting talent with opportunities, seamlessly blending social networking and job hunting"
+                            }
                         </p>
 
                         <Form {...form}>
@@ -245,7 +245,6 @@ export default function Signup() {
                                                                 {...field}
                                                             />
                                                         </FormControl>
-                                                        <FormMessage />
                                                         <div
                                                             onClick={() =>
                                                                 setShow(!show)

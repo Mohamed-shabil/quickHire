@@ -32,7 +32,7 @@ const PostCard = ({ post }: { post: PostType }) => {
 
     const currentUser = useSelector((state: RootState) => state.user.userData);
     const [truncate, setTruncate] = useState<boolean>(false);
-    const [like, setLike] = useState(post.liked);
+    const [like, setLike] = useState(post.isLikedByCurrentUser);
     const [likeCount, setLikeCount] = useState(post.totalLikes);
     const [comment, setComment] = useState(false);
     const [isFollowing, setIsFollowing] = useState<boolean>(post.isFollowing);
@@ -54,7 +54,7 @@ const PostCard = ({ post }: { post: PostType }) => {
             console.log(error);
             toast({
                 title: "Something went wrong!",
-                description: error.response.errors[0].message,
+                description: error.response.errors[0].message || "",
             });
         }
     };
@@ -106,7 +106,7 @@ const PostCard = ({ post }: { post: PostType }) => {
                     >
                         <Avatar className="mb-2">
                             <AvatarImage
-                                src={post.creator[0].avatar}
+                                src={post.creator[0]?.avatar}
                                 alt="@shadcn"
                                 className="object-cover"
                             />
@@ -117,11 +117,11 @@ const PostCard = ({ post }: { post: PostType }) => {
                                 {post.creator[0]?.name}
                             </h1>
                             <p className="text-xs capitalize">
-                                {post.creator[0].headLine}
+                                {post.creator[0]?.headLine}
                             </p>
                         </div>
                     </Link>
-                    {post.creator[0]._id != currentUser?._id ? (
+                    {post.creator[0]?._id != currentUser?._id ? (
                         <div className="flex items-center justify-center">
                             <Button
                                 variant={"fade"}
