@@ -13,7 +13,7 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
         toast({
             title: "Please verify your account",
         });
-        return redirect("/otpVerify");
+        return redirect("/verifyOtp");
     }
     return (
         <div className="h-full">

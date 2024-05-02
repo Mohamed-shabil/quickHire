@@ -11,11 +11,11 @@ import { toast } from "@/components/ui/use-toast";
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
     const currentUser = useSelector((state: RootState) => state.user.userData);
 
-    if (currentUser?.verified == false) {
+    if (currentUser?.verified === false) {
         toast({
             title: "Please verify your account",
         });
-        return redirect("/otpVerify");
+        return redirect("/verifyOtp");
     }
     return (
         <div className="h-full">
