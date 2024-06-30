@@ -30,14 +30,12 @@ function ProfileCard({ className }: { className?: String }) {
     useEffect(() => {
         getCurrentUser()
             .then((res: AxiosResponse<{ currentUser: currentUser }>) => {
-                console.log(res.data.currentUser);
                 setProfile(res.data.currentUser);
             })
             .catch((err) => {
                 console.log(err);
             });
     }, []);
-    console.log(profile?.fullName);
     return (
         <div className={cn("fixed w-full max-w-sm", className)}>
             <div className="flex flex-col items-center pb-10">

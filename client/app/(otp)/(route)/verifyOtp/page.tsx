@@ -18,9 +18,11 @@ import { redirect, useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/reducers";
 import { axiosInstance } from "@/axios/axios";
-import { verifyOtp } from "@/services/api/auth.service";
+import { resendOtp, verifyOtp } from "@/services/api/auth.service";
+import { useState } from "react";
 
 const VerifyOtp = () => {
+    const [loading, setLoading] = useState<boolean>(false);
     const user = useSelector((state: RootState) => state.user);
     console.log(user);
     const formSchema = z.object({
@@ -76,9 +78,11 @@ const VerifyOtp = () => {
         }
     };
 
-    const resendOtp = async () => {
+    const resendOtpHandler = async () => {
+        setLoading(true);
         try {
             const response = await resendOtp();
+            console.log("reponse from the resed OTP", response);
             toast({
                 title: "New Otp is sent to your Email",
                 description: "check your Email to get the OTP",
@@ -100,6 +104,8 @@ const VerifyOtp = () => {
                     </div>
                 ),
             });
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -134,10 +140,19 @@ const VerifyOtp = () => {
                                     </FormControl>
                                     <Button
                                         variant={"link"}
-                                        onClick={resendOtp}
+                                        onClick={resendOtpHandler}
+                                        type="button"
                                         className="float-end"
+                                        disabled={loading}
                                     >
-                                        Resent Otp
+                                        {loading ? (
+                                            <Loader2
+                                                size={"1em"}
+                                                className="animate-spin"
+                                            />
+                                        ) : (
+                                            "Resend Otp"
+                                        )}
                                     </Button>
                                     <FormMessage />
                                 </FormItem>

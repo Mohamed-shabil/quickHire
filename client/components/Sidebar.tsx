@@ -1,13 +1,13 @@
 "use client";
-import React, { Children, useEffect } from "react";
-import ProfileCard from "./ProfileCard";
-import Image from "next/image";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/reducers";
 
 import { useSocket } from "./Providers/SocketProvider";
 import { redirect, useRouter } from "next/navigation";
 import { axiosInstance } from "@/axios/axios";
+import { TooltipProvider } from "./ui/tooltip";
+import TooltipWrapper from "@/components/Providers/TooltipWrapper";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -76,7 +76,6 @@ function SideBar({ children }: { children: React.ReactNode }) {
     const subscription = useSelector(
         (state: RootState) => state.subscription.subscription
     );
-    console.log("SUBSCRIPTION", subscription);
     return (
         <>
             <nav className="fixed top-0 z-50 w-full bg-background border-b">
@@ -169,128 +168,137 @@ function SideBar({ children }: { children: React.ReactNode }) {
                     </span>
                 </div>
             </nav>
-
-            <aside
-                className="fixed top-0 left-0 z-40 w-64 h-screen pt-24 transition-transform -translate-x-full border-r sm:translate-x-0"
-                aria-label="Sidebar"
-            >
-                <div className="h-full px-3 pb-4 overflow-y-auto ">
-                    <ul className="space-y-2">
-                        <li>
-                            <Link
-                                className="flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg hover:bg-secondary hover:shadow-sm group"
-                                href="/"
-                            >
-                                <Home
-                                    size={"1.2em"}
-                                    className="group-hover:text-primary"
-                                />
-                                Home
-                            </Link>
-                        </li>
-                        <li>
-                            <Link
-                                className="flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg hover:bg-secondary hover:shadow-sm group"
-                                href={`/${user?.name}`}
-                            >
-                                <User
-                                    size={"1.2em"}
-                                    className="group-hover:text-primary"
-                                />
-                                Profile
-                            </Link>
-                        </li>
-                        <li>
-                            <Link
-                                className="flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg hover:bg-secondary hover:shadow-sm group"
-                                href={`/${user?.name}/posts`}
-                            >
-                                <Posts
-                                    size={"1.2em"}
-                                    className="group-hover:text-primary"
-                                />
-                                Posts
-                            </Link>
-                        </li>
-                        <li>
-                            <Link
-                                className="flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg hover:bg-secondary hover:shadow-sm group"
-                                href={`/chats`}
-                            >
-                                <MessageSquareMore
-                                    size={"1.2em"}
-                                    className="group-hover:text-primary"
-                                />
-                                Chats
-                            </Link>
-                        </li>
-                        <li>
-                            <Accordion
-                                type="single"
-                                collapsible
-                                className="w-full border-0 hover:shadow-sm rounded-lg hover:bg-secondary"
-                            >
-                                <AccordionItem
-                                    value="item-1"
-                                    className="border-0"
+            <TooltipProvider delayDuration={100}>
+                <aside
+                    className="fixed top-0 left-0 z-40 w-64 md:w-16 h-screen pt-24 transition-transform -translate-x-full border-r sm:translate-x-0"
+                    aria-label="Sidebar"
+                >
+                    <div className="h-full px-3 pb-4">
+                        <ul className="space-y-2">
+                            <li>
+                                <TooltipWrapper text="Home">
+                                    <Link
+                                        className="flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg hover:bg-secondary hover:shadow-sm group"
+                                        href="/"
+                                    >
+                                        <Home
+                                            size={"1.2em"}
+                                            className="group-hover:text-primary"
+                                        />
+                                    </Link>
+                                </TooltipWrapper>
+                            </li>
+                            <li>
+                                <TooltipWrapper text="Profile">
+                                    <Link
+                                        className="flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg hover:bg-secondary hover:shadow-sm group"
+                                        href={`/${user?.name}`}
+                                    >
+                                        <User
+                                            size={"1.2em"}
+                                            className="group-hover:text-primary"
+                                        />
+                                    </Link>
+                                </TooltipWrapper>
+                            </li>
+                            <li>
+                                <TooltipWrapper text="Posts">
+                                    <Link
+                                        className="flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg hover:bg-secondary hover:shadow-sm group"
+                                        href={`/${user?.name}/posts`}
+                                    >
+                                        <Posts
+                                            size={"1.2em"}
+                                            className="group-hover:text-primary"
+                                        />
+                                    </Link>
+                                </TooltipWrapper>
+                            </li>
+                            <li>
+                                <TooltipWrapper text="Chats">
+                                    <Link
+                                        className="flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg hover:bg-secondary hover:shadow-sm group"
+                                        href={`/chats`}
+                                    >
+                                        <MessageSquareMore
+                                            size={"1.2em"}
+                                            className="group-hover:text-primary"
+                                        />
+                                    </Link>
+                                </TooltipWrapper>
+                            </li>
+                            <li>
+                                <Accordion
+                                    type="single"
+                                    collapsible
+                                    className="w-full relative border-0 hover:shadow-sm rounded-lg hover:bg-secondary overflow-visible z-100"
                                 >
-                                    <AccordionTrigger className="flex items-center p-2 rounded-lg group border-0 no-underline text-sm">
-                                        <span className="flex items-center gap-x-3.5 flex-row pl-1">
-                                            <Briefcase
-                                                size={"1.2em"}
-                                                className="group-hover:text-primary"
-                                            />
-                                            Jobs
-                                        </span>
-                                    </AccordionTrigger>
-                                    <AccordionContent className="p-2">
-                                        <ul className="space-y-2 text-xs px-4">
-                                            <li>
-                                                <Link href="/jobs">Job</Link>
-                                            </li>
-                                            <li>
-                                                <Link href="/jobs/my-jobs">
-                                                    Applied Jobs
-                                                </Link>
-                                            </li>
-                                        </ul>
-                                    </AccordionContent>
-                                </AccordionItem>
-                            </Accordion>
-                        </li>
-                        {user?.role === "recruiter" && (
-                            <>
-                                <li>
-                                    <Link
-                                        className="flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg hover:shadow-sm hover:bg-secondary group"
-                                        href={`/recruiter/${user.name}/dashboard`}
+                                    <AccordionItem
+                                        value="item-1"
+                                        className="border-0"
                                     >
-                                        <BarChart3
-                                            size={"1.2em"}
-                                            className="group-hover:text-primary"
-                                        />
-                                        Dashboard
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link
-                                        className="flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg hover:shadow-sm hover:bg-secondary group"
-                                        href={`/subscription`}
-                                    >
-                                        <Gem
-                                            size={"1.2em"}
-                                            className="group-hover:text-primary"
-                                        />
-                                        Subscriptions
-                                    </Link>
-                                </li>
-                            </>
-                        )}
-                    </ul>
-                </div>
-            </aside>
-
-            <div className="mt-20 pt-2 sm:ml-64">{children}</div>
+                                        <TooltipWrapper text="Jobs">
+                                            <AccordionTrigger className="flex items-center p-2 rounded-lg group border-0 no-underline text-sm">
+                                                <span className="flex items-center gap-x-3.5 flex-row pl-1">
+                                                    <Briefcase
+                                                        size={"1.2em"}
+                                                        className="group-hover:text-primary"
+                                                    />
+                                                </span>
+                                            </AccordionTrigger>
+                                        </TooltipWrapper>
+                                        <AccordionContent className="p-2 absolute w-36 z-[10] bg-slate-100 border shadow-md rounded overflow-visible">
+                                            <ul className="space-y-2 text-xs px-4">
+                                                <li>
+                                                    <Link href="/jobs">
+                                                        Job
+                                                    </Link>
+                                                </li>
+                                                <li>
+                                                    <Link href="/jobs/my-jobs">
+                                                        Applied Jobs
+                                                    </Link>
+                                                </li>
+                                            </ul>
+                                        </AccordionContent>
+                                    </AccordionItem>
+                                </Accordion>
+                            </li>
+                            {user?.role === "recruiter" && (
+                                <>
+                                    <li>
+                                        <TooltipWrapper text="Dashboard">
+                                            <Link
+                                                className="flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg hover:shadow-sm hover:bg-secondary group"
+                                                href={`/recruiter/${user.name}/dashboard`}
+                                            >
+                                                <BarChart3
+                                                    size={"1.2em"}
+                                                    className="group-hover:text-primary"
+                                                />
+                                            </Link>
+                                        </TooltipWrapper>
+                                    </li>
+                                    <li>
+                                        <TooltipWrapper text="Subscription">
+                                            <Link
+                                                className="flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg hover:shadow-sm hover:bg-secondary group"
+                                                href={`/subscription`}
+                                            >
+                                                <Gem
+                                                    size={"1.2em"}
+                                                    className="group-hover:text-primary"
+                                                />
+                                            </Link>
+                                        </TooltipWrapper>
+                                    </li>
+                                </>
+                            )}
+                        </ul>
+                    </div>
+                </aside>
+            </TooltipProvider>
+            <div className="mt-20 pt-2 sm:ml-16">{children}</div>
         </>
     );
 }

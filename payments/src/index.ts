@@ -29,14 +29,6 @@ const start = async () => {
         console.log(process.env.MONGO_URI);
         await mongoose.connect(process.env.MONGO_URI);
 
-        // new kafkaConsumer(kafkaClient, "payment-group-1").consume(
-        //     "user-created",
-        //     createUser
-        // );
-        // new kafkaConsumer(kafkaClient, "payment-group-2").consume(
-        //     "avatar-updated",
-        //     UpdatedUser
-        // );
         const callbackMap: TopicCallbackMap = {
             "avatar-updated": UpdatedUser,
             "headline-updated": UpdatedUser,

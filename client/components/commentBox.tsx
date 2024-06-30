@@ -13,7 +13,7 @@ import { Loader2, SendHorizontal, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/reducers";
-import { getComments } from "@/services/api/posts.service";
+import { createComments, getComments } from "@/services/api/posts.service";
 import { toast } from "./ui/use-toast";
 
 type comment = {
@@ -79,20 +79,24 @@ export function CommentBox({ postId }: { postId: string }) {
 
     console.log({ comments });
 
-    const onSubmit = (values: z.infer<typeof formSchema>) => {
-        axiosInstance
-            .patch("/api/posts/comments", {
-                comment: values.comment,
-                postId,
-            })
-            .then((res) => {
-                console.log("comment is reaching ...", res);
-                form.reset();
-                refetch();
-            })
-            .catch((err) => {
-                console.log(err);
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        try {
+            const repsonse = await createComments(postId, values.comment);
+            form.reset();
+            refetch();
+        } catch (error: any) {
+            console.log(error);
+            toast({
+                title: "Something went wrong!",
+                description:
+                    error.response.errors[0].message || "Please try again",
+                action: (
+                    <div className="h-8 w-8 bg-rose-500 text-white grid place-items-center rounded">
+                        <X />
+                    </div>
+                ),
             });
+        }
     };
 
     return (

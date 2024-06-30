@@ -16,6 +16,11 @@ router.get(
     requireAuth,
     catchAsync(async (req: Request, res: Response) => {
         const currentUser = req.currentUser?._id;
+        let page = Number(req.params.page);
+        const pageSize = 10;
+        if (!page) {
+            page = 1;
+        }
         const posts = await Posts.aggregate([
             {
                 $lookup: {

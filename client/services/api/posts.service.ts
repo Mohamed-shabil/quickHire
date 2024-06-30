@@ -5,13 +5,18 @@ import { cookies, headers } from "next/headers";
 export async function createPost(data: FormData) {
     const url = new BuildUrl().posts("/create");
     const response = await axiosInstance.post(url, data);
-    console.log("Form create Posts function", response);
     return response;
 }
 
 export async function getComments(postId: string) {
     const url = new BuildUrl().posts(`/comments/${postId}`);
     const response = await axiosInstance.get(url);
+    return response;
+}
+
+export async function createComments(postId: string, comment: string) {
+    const url = new BuildUrl().posts(`/comments`);
+    const response = await axiosInstance.patch(url, { postId, comment });
     return response;
 }
 
@@ -73,8 +78,8 @@ export async function deletePostAdmin(postId: string) {
     return response;
 }
 
-export async function getAllPosts(token: string) {
-    const url = new BuildUrl().posts(`/show`);
+export async function getAllPosts(token?: string, page?: number) {
+    const url = new BuildUrl().posts(`/show?page=${page}`);
     const response = await axiosInstance.get(url, {
         ...(token && { headers: { cookie: `jwt=${token}` } }),
     });

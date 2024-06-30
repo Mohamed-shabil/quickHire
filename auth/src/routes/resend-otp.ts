@@ -3,6 +3,7 @@ import catchAsync from "../utils/catchAsync";
 import { body, validationResult } from "express-validator";
 import {
     BadRequestError,
+    NotAutherizedError,
     requireAuth,
     validateRequest,
 } from "@quickhire/common";
@@ -18,31 +19,42 @@ router.post(
     "/api/auth/users/send-otp",
     requireAuth,
     catchAsync(async (req: Request, res: Response) => {
-        const error = validationResult(req);
         console.log(req.currentUser);
-        const UserOtp = await OtpVerification.findOne({
-            owner: req.currentUser!._id,
-        });
-        if (!UserOtp) {
-            throw new BadRequestError("No user with this user ID");
+
+        const currentUser = await User.findById(req.currentUser?._id);
+        if (!currentUser) {
+            throw new NotAutherizedError();
         }
 
-        const newOtp = randomString.generate({
+        const UserOtp = await OtpVerification.findOneAndDelete({
+            owner: req.currentUser!._id,
+        });
+
+        const otp = randomString.generate({
             length: 4,
             charset: "numeric",
         });
 
-        const hashedOtp = await bcrypt.hash(newOtp, 10);
+        const hashedOtp = await bcrypt.hash(otp, 10);
 
-        UserOtp.otp = newOtp;
-        UserOtp.token = hashedOtp;
-        await UserOtp.save();
+        // if(UserOtp){
+        //     UserOtp.otp = newOtp;
+        //     UserOtp.token = hashedOtp;
+        //     await UserOtp.save();
+        // }else{
 
+        // }
+
+        const newOtp = await OtpVerification.create({
+            owner: currentUser._id,
+            otp: otp,
+            token: hashedOtp,
+        });
         const options = {
             from: process.env.EMAIL,
             to: req.currentUser!.email,
             subject: "QuickHire Otp verification",
-            html: otpMail.replace("***", newOtp),
+            html: otpMail.replace("***", otp),
         };
         const transporter = nodemailer.createTransport({
             service: "Gmail",
@@ -60,7 +72,7 @@ router.post(
                 res.send("success");
             }
         });
-
+        console.log(newOtp, otp);
         res.status(200).json({
             status: "success",
             message: "OTP has been sent to your email",

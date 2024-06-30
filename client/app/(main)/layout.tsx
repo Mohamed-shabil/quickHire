@@ -9,14 +9,7 @@ import { RootState } from "@/store/reducers";
 import { redirect } from "next/navigation";
 import { toast } from "@/components/ui/use-toast";
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
-    const currentUser = useSelector((state: RootState) => state.user.userData);
-
-    if (currentUser?.verified === false) {
-        toast({
-            title: "Please verify your account",
-        });
-        return redirect("/verifyOtp");
-    }
+    // const currentUser = useSelector((state: RootState) => state.user.userData);
     return (
         <div className="h-full">
             <ModalProvider />

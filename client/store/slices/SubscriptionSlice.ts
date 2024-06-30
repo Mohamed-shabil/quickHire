@@ -7,7 +7,6 @@ export const fetchSubscription = createAsyncThunk(
     async () => {
         try {
             const response = await currentSubscription();
-            console.log("thunk subscription ----", response.data);
             return response.data.subscription;
         } catch (error: any) {
             console.log(error);
